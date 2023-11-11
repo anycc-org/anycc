@@ -1,0 +1,15 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-I./include",
+      "-o",
+      "main",
+      "src/main.cpp"
+    ],
+    "directory": "/home/kotb/csed/4/1/Compilers/project/phase1",
+    "file": "/home/kotb/csed/4/1/Compilers/project/phase1/src/main.cpp",
+    "output": "/home/kotb/csed/4/1/Compilers/project/phase1/main"
+  }
+]
