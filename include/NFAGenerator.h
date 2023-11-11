@@ -2,5 +2,9 @@
 
 
 class NFAGenerator {
+public:
+    NFAGenerator();
+    ~NFAGenerator();
 
+private:
 };

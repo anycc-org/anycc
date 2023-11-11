@@ -1,3 +1,10 @@
-// yacc -> yet anoter compiler compiler
-// javacc -> java compiler compiler
-// anycc
+#pragma once
+
+class DFAMinimizer {
+public:
+    DFAMinimizer();
+    ~DFAMinimizer();
+
+private:
+    
+};
