@@ -1,4 +1,4 @@
-#include <Regex.h>
+#include <Lex/Regex.h>
 
 Regex::Regex() {
 

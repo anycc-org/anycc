@@ -1,4 +1,4 @@
-#include <NFAGenerator.h>
+#include <Lex/NFAGenerator.h>
 
 NFAGenerator::NFAGenerator() {
 

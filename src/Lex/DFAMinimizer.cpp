@@ -1,4 +1,4 @@
-#include <DFAMinimizer.h>
+#include <Lex/DFAMinimizer.h>
 
 DFAMinimizer::DFAMinimizer() {
 

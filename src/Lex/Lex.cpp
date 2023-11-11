@@ -1,4 +1,4 @@
-#include <Lex.h>
+#include <Lex/Lex.h>
 
 Lex::Lex() {
 

@@ -1,4 +1,4 @@
-#include <NFA.h>
+#include <Lex/NFA.h>
 
 NFA::NFA() {
 

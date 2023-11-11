@@ -1,4 +1,4 @@
-#include <DFA.h>
+#include <Lex/DFA.h>
 
 DFA::DFA() {
 

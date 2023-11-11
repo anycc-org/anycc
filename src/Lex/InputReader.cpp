@@ -1,4 +1,4 @@
-#include <InputReader.h>
+#include <Lex/InputReader.h>
 
 InputReader::InputReader() {
 
