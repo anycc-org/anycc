@@ -11,8 +11,6 @@ public:
 
     NFAState* getStartState() const;
     NFAState* getEndState() const;
-//    void setStartState(const NFAState& state);
-//    void setEndState(const NFAState& state);
     static NFA* basicCharToNFA(char c);
     static NFA* unionNAFs(NFA* nfa1, NFA* nfa2);
     static NFA* concatNAFs(NFA* nfa1, NFA* nfa2);

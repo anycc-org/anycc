@@ -8,13 +8,16 @@ class NFAGenerator {
 public:
     NFAGenerator();
 
-    static NFA* regexToNFA(const std::string& regex);
-    static NFA* combineNFAs(const std::vector<NFA*>& nfas);
+    NFA* buildNFA(const std::unordered_map<std::string, std::string>& regexMap,
+                         const std::unordered_map<std::string, std::string>& regexDefMap);
+    NFA* regexToNFA(const std::string& regex);
+    NFA* combineNFAs(const std::vector<NFA*>& nfas);
 
     ~NFAGenerator();
 
-    static void processOperator(char op, std::stack<NFA*>& nfaStack);
+    void processOperator(char op, std::stack<NFA*>& nfaStack);
 private:
-    static int precedence(char op);
+    std::unordered_map<std::string, NFA*> regexToNFAMap;
+    int precedence(char op);
 
 };

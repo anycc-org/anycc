@@ -33,5 +33,9 @@ int main() {
 //    NFA* aStarNFA = NFA::kleeneStarNFA(aNFA);
 //    NFA* aPlusNFA = NFA::positiveClosureNFA(aNFA);
 
+    NFAGenerator nfaGenerator;
+    NFA* testDigitNFA = nfaGenerator.regexToNFA("a-z|A-Z");
+
+    testDigitNFA->printNFA();
     return 0;
 }

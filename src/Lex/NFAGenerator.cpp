@@ -6,6 +6,22 @@ NFAGenerator::NFAGenerator() = default;
 
 NFAGenerator::~NFAGenerator() = default;
 
+NFA *NFAGenerator::buildNFA(const std::unordered_map<std::string, std::string> &regexMap,
+                            const std::unordered_map<std::string, std::string> &regexDefMap) {
+    std::vector<NFA*> nfas;
+    for (auto& regexDef : regexDefMap) {
+        NFA* nfa = regexToNFA(regexDef.second);
+        nfas.push_back(nfa);
+        regexToNFAMap[regexDef.first] = nfa;
+    }
+
+    for (auto& regex : regexMap) {
+        nfas.push_back(regexToNFA(regex.second));
+    }
+
+    return combineNFAs(nfas);
+}
+
 /**
  * @return NFA after regex evaluation (postfix)
  */
@@ -18,7 +34,7 @@ NFA* NFAGenerator::regexToNFA(const std::string& regex) {
         if (c == '(') {
             operatorStack.push('(');
         }
-        else if (isalpha(c) || c == '.') {
+        else if (isalpha(c) || isdigit(c) || c == '.') {
             nfaStack.push(NFA::basicCharToNFA(c));
         }
         else if (c == ')') {
@@ -111,7 +127,7 @@ NFA* NFAGenerator::combineNFAs(const std::vector<NFA*>& nfas) {
 
 int NFAGenerator::precedence(char op) {
     // Higher value means higher precedence
-    if (op == '-') {
+    if (op == '-') { // assumed higher: range operator
         return 4;
     } else if (op == '*' || op == '+') { // Kleene closure
         return 3;

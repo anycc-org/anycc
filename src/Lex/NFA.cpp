@@ -10,11 +10,7 @@ NFA::~NFA() = default;
 
 NFAState* NFA::getStartState() const { return startState; }
 
-//void NFA::setStartState(const NFAState &state) { startState = state; }
-
 NFAState* NFA::getEndState() const { return endState; }
-
-//void NFA::setEndState(const NFAState &state) { endState = state; }
 
 /**
  * A symbol a of the input alphabet is converted to an NFA with two states.
@@ -73,42 +69,30 @@ NFA* NFA::positiveClosureNFA(NFA* nfa) {
     return nfaPlus;
 }
 
+/**
+ * @return union NFAs on the form [a-z] or [A-Z] or [0-9]
+ */
 NFA* NFA::unionRangeNFAs(NFA* rangeStartNFA, NFA* rangeEndNFA) {
-//    auto startTrans = rangeStartNFA.startState.getTransitions();
-//    auto endTrans = rangeEndNFA.startState.getTransitions();
-//
-//    if (startTrans.count('0') && endTrans.count('9')) { // 0 - 9 encountered
-//        return
-//    }
-//    else if (startTrans.count('a') && endTrans.count('z')) { // a - z encountered
-//
-//    }
-//    else if (startTrans.count('A') && endTrans.count('Z')) { // A - Z encountered
-//
-//    }
-//    else {
-//        // Throw an Error
-//    }
+    NFA* rangeNFA = new NFA();
 
+    char startSymbol = rangeStartNFA->startState->getTransitions().begin()->first;
+    char endSymbol = rangeEndNFA->startState->getTransitions().begin()->first;
+
+    rangeNFA->startState->addTransition('e', rangeStartNFA->startState);
+    rangeStartNFA->endState->addTransition('e', rangeNFA->endState);
+
+    // loop over all symbols in range
+    for (char c = (char)(startSymbol + 1); c < endSymbol; c++) {
+        NFA* basicNFA = NFA::basicCharToNFA(c);
+        rangeNFA->startState->addTransition('e', basicNFA->startState);
+        basicNFA->endState->addTransition('e', rangeNFA->endState);
+    }
+
+    rangeNFA->startState->addTransition('e', rangeEndNFA->startState);
+    rangeEndNFA->endState->addTransition('e', rangeNFA->endState);
+
+    return rangeNFA;
 }
-
-NFA NFA::constructDigitNFA(NFA &startDigitNFA) {
-//    std::vector<NFA> digits(10);
-//    digits.push_back(startDigitNFA);
-//    for (int i = 1; i <= 9; i++) { // 1 '1'
-//        digits.push_back(NFA::basicCharToNFA('0' + i));
-//    }
-//    NFA digitNFA;
-//    for (int i = 0; i < 10; i++) {
-//        digitNFA.startState->addTransition('e', digits[i].startState);
-//        digits[i].endState->addTransition('e', digitNFA.endState);
-//    }
-//    return digitNFA;
-}
-
-NFA NFA::constructLowerCaseNFA(NFA &startLetterNFA) {}
-
-NFA NFA::constructUpperCaseNFA(NFA &startLetterNFA) {}
 
 /**
  * Prints the NFA.
