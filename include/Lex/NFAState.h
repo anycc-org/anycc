@@ -1,9 +1,20 @@
 #pragma once
+#include <unordered_map>
+#include <vector>
 
-class State {
+class NFAState {
 public:
-    int id;
-    bool isAccepting;
+    NFAState();
 
-    explicit State(int id, bool isAccepting = false);
+    void addTransition(char c, NFAState *state);
+
+    std::unordered_map<char, std::vector<NFAState*>> getTransitions() const;
+
+    int getStateId() const;
+
+    void printState() const;
+private:
+    static int id;
+    const int stateId;
+    std::unordered_map<char, std::vector<NFAState*>> transitions;
 };
