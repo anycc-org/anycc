@@ -1,0 +1,15 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-I./include",
+      "-o",
+      "main",
+      "src/main.cpp"
+    ],
+    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc",
+    "file": "/home/kotb/csed/4/1/Compilers/project/anycc/src/main.cpp",
+    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/main"
+  }
+]
