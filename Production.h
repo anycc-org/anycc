@@ -3,11 +3,16 @@
 //
 
 #pragma once
+#ifndef PRODUCTION_H
+#define PRODUCTION_H
 
-#include <vector>
 #include <string>
+#include <vector>
+using namespace std;
 
 struct Production {
-    std::string nonTerminal;
-    std::vector<std::vector<std::string>> productions;
+    string nonTerminal;
+    vector<vector<string>> productions;
 };
+
+#endif // PRODUCTION_H

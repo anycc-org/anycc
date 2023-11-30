@@ -2,30 +2,34 @@
 // Created by abdel on 30/11/2023.
 //
 #pragma once
+#ifndef GRAMMAR_CHECKER_H
+#define GRAMMAR_CHECKER_H
 
-
-#include <vector>
-#include <unordered_map>
-#include <set>
 #include <iostream>
-
-// Forward declaration
-struct Production;
+#include <set>
+#include <unordered_map>
+#include <vector>
+#include "Production.h"
+using namespace std;
 
 class GrammarChecker {
 public:
-    GrammarChecker(const std::unordered_map<std::string, std::vector<std::vector<std::string>>>& grammar);
+    GrammarChecker(const unordered_map<string, vector<vector<string>>>& grammar);
+
     bool isLL1Grammar();
 
 private:
-    std::unordered_map<std::string, std::set<char>> computeFirst(char nonTerminal);
-    std::set<char> computeFollow(char nonTerminal);
+    vector<Production> productionVector;
+    unordered_map<string,  set<char>> computedFirstSets;
+    unordered_map<string,  set<char>> computedFollowSets;
 
-    bool hasCommonElements(const std::unordered_map<std::string, std::set<char>>& sets);
-    bool hasCommonIntersection();
+    set<char> computeFirst(char nonTerminal);
+    set<char> computeFollow(char nonTerminal);
 
-    std::vector<Production> productionVector;
-    std::unordered_map<std::string, std::set<char>> firstSets;
-    std::unordered_map<std::string, std::set<char>> followSets;
+    bool hasCommonElements(const unordered_map<string, set<char>>& sets);
+    bool hasCommonIntersection(const unordered_map<string, set<char>>& sets);
+
 };
+
+#endif // GRAMMAR_CHECKER_H
 

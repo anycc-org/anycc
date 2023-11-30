@@ -5,16 +5,16 @@
 #include "GrammarChecker.h"
 #include "Production.h"
 
-GrammarChecker::GrammarChecker(const std::unordered_map<std::string, std::vector<std::vector<std::string>>>& grammar) {
+GrammarChecker::GrammarChecker(const unordered_map<string, vector<vector<string>>>& grammar) {
 for (const auto& entry : grammar) {
-const std::string& nonTerminal = entry.first;
-const std::vector<std::vector<std::string>>& productions = entry.second;
+const string& nonTerminal = entry.first;
+const vector<vector<string>>& productions = entry.second;
 
 productionVector.push_back({nonTerminal, productions});
 }
 }
 
-std::unordered_map<std::string, std::set<char>> GrammarChecker::computeFirst(char nonTerminal) {
+unordered_map<string, set<char>> GrammarChecker::computeFirst(char nonTerminal) {
     set<char> firstSet;
 
     for (const Production& rule : grammar) {
@@ -40,7 +40,7 @@ std::unordered_map<std::string, std::set<char>> GrammarChecker::computeFirst(cha
     return firstSet;
 }
 
-std::set<char> GrammarChecker::computeFollow(char nonTerminal) {
+set<char> GrammarChecker::computeFollow(char nonTerminal) {
     set<char> followSet;
 
     for (const Production& rule : grammar) {
@@ -78,7 +78,7 @@ std::set<char> GrammarChecker::computeFollow(char nonTerminal) {
     return followSet;
 }
 
-bool GrammarChecker::hasCommonElements(const std::unordered_map<std::string, std::set<char>>& sets) {
+bool GrammarChecker::hasCommonElements(const unordered_map<string, set<char>>& sets) {
     for (const auto& entry : sets) {
         const string& nonTerminal = entry.first;
         const set<char>& currentSet = entry.second;
