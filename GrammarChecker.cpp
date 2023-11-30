@@ -3,27 +3,7 @@
 #include <unordered_map>
 #include <vector>
 #include "Production.h"
-
-using namespace std;
-
-class GrammarChecker {
-public:
-    GrammarChecker(const unordered_map<string, vector<vector<string>>>& grammar);
-
-    bool isLL1Grammar();
-
-private:
-    vector<Production> productionVector;
-    unordered_map<string, set<char>> computedFirstSets;
-    unordered_map<string, set<char>> computedFollowSets;
-
-    set<char> computeFirst(char nonTerminal);
-    set<char> computeFollow(char nonTerminal);
-
-    bool hasCommonElements(const unordered_map<string, set<char>>& sets);
-    bool hasCommonIntersection();
-
-};
+#include "GrammarChecker.h"
 
 GrammarChecker::GrammarChecker(const unordered_map<string, vector<vector<string>>>& grammar) {
     for (const auto& entry : grammar) {
@@ -168,12 +148,42 @@ bool GrammarChecker::isLL1Grammar() {
 
 int main() {
     unordered_map<string, vector<vector<string>>> grammar = {
-            {"S", {{"A", "a'"}, {"b"}}},
-            {"A'", {{"S", "c"}, {"d"}}},
+            {"E", {{"T", "E'"}}},
+            {"E'", {{"+", "T", "E'"}, {""}}},
+            {"T", {{"F", "T'"}}},
+            {"T'", {{"*", "F", "T'"}, {""}}},
+            {"F", {{"(", "E", ")"}, {"id"}}},
     };
+
 
     GrammarChecker grammarChecker(grammar);
     grammarChecker.isLL1Grammar();
+    // Print firstSets
+    const auto& firstSets = grammarChecker.getFirstSets();
+    std::cout << "First Sets:\n";
+    for (const auto& entry : firstSets) {
+        const std::string& nonTerminal = entry.first;
+        const std::set<char>& firstSet = entry.second;
 
+        std::cout << nonTerminal << ": { ";
+        for (char symbol : firstSet) {
+            std::cout << symbol << ' ';
+        }
+        std::cout << "}\n";
+    }
+
+    // Print followSets
+    const auto& followSets = grammarChecker.getFollowSets();
+    std::cout << "\nFollow Sets:\n";
+    for (const auto& entry : followSets) {
+        const std::string& nonTerminal = entry.first;
+        const std::set<char>& followSet = entry.second;
+
+        std::cout << nonTerminal << ": { ";
+        for (char symbol : followSet) {
+            std::cout << symbol << ' ';
+        }
+        std::cout << "}\n";
+    }
     return 0;
 }
