@@ -8,5 +8,6 @@
 #include <string>
 
 #define EPSILON "ε"
+#define START_SYMBOL "S"
 
 #endif // CONSTANTS_H
