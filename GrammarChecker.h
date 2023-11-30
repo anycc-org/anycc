@@ -29,9 +29,10 @@ private:
     unordered_map<string, set<char>> computedFirstSets;
     unordered_map<string, set<char>> computedFollowSets;
 
-    set<char> computeFirst(string nonTerminal);
+    set<char> computeFirst(const string& nonTerminal);
     set<char> computeFollow(char nonTerminal);
     set<string> collectNonTerminals(const vector<Production>& grammar);
+    bool nonTerminalHasEpsilon(const string& nonTerminal);
     void computeFirstSets(unordered_map<string, set<char>>& firstSets);
     void computeFollowSets(unordered_map<string, set<char>>& followSets,unordered_map<string, set<char>>& firstSets);
     bool hasCommonElements(const unordered_map<string, set<char>>& sets, const vector<Production>& grammar);
