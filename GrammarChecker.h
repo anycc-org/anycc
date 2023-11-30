@@ -9,6 +9,7 @@
 #include <set>
 #include <unordered_map>
 #include <vector>
+#include <algorithm>
 #include "Production.h"
 using namespace std;
 class GrammarChecker {
@@ -30,7 +31,9 @@ private:
 
     set<char> computeFirst(char nonTerminal);
     set<char> computeFollow(char nonTerminal);
-
+    set<string> collectNonTerminals(const vector<Production>& grammar);
+    void computeFirstSets(unordered_map<string, set<char>>& firstSets);
+    void computeFollowSets(unordered_map<string, set<char>>& followSets);
     bool hasCommonElements();
     bool hasCommonIntersection();
 };

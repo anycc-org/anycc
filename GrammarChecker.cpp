@@ -1,7 +1,3 @@
-#include <iostream>
-#include <set>
-#include <unordered_map>
-#include <vector>
 #include "Production.h"
 #include "GrammarChecker.h"
 
@@ -111,34 +107,64 @@ bool GrammarChecker::hasCommonIntersection() {
 
     return true;
 }
+set<string>  GrammarChecker::collectNonTerminals(const vector<Production>& grammar) {
+    set<string> nonTerminals;
+    for (const Production& rule : grammar) {
+        nonTerminals.insert(rule.nonTerminal);
+    }
+    return nonTerminals;
+}
+// Function to compute First sets for each non-terminal
+void  GrammarChecker::computeFirstSets(unordered_map<string, set<char>>& firstSets) {
+    for (const Production& rule : productionVector ) {
+        firstSets[rule.nonTerminal] = computeFirst(rule.nonTerminal[0]);
+    }
+}
 
-bool GrammarChecker::isLL1Grammar() {
-    set<string> nonTerminalsToComputeFirst;
-    set<string> nonTerminalsToComputeFollow;
-
+// Function to compute Follow sets for each non-terminal
+void  GrammarChecker::computeFollowSets(unordered_map<string, set<char>>& followSets) {
     for (const Production& rule : productionVector) {
-        nonTerminalsToComputeFirst.insert(rule.nonTerminal);
-        nonTerminalsToComputeFollow.insert(rule.nonTerminal);
+        followSets[rule.nonTerminal] = computeFollow(rule.nonTerminal[0]);
+    }
+}
+bool GrammarChecker::isLL1Grammar() {
+
+    computeFirstSets(computedFirstSets);
+
+    // Compute Follow sets for each non-terminal
+    computeFollowSets(computedFollowSets);
+
+    set<string> nonTerminals = collectNonTerminals(productionVector);
+
+    // Check if there are any common elements in the First sets of different rules for the same non-terminal
+    for (const string& nonTerminal : nonTerminals) {
+        set<char> commonFirstSet;
+        for (const Production& rule : productionVector) {
+            if (rule.nonTerminal == nonTerminal) {
+                for (const auto& production : rule.productions) {
+                    for (char first : computedFirstSets[rule.nonTerminal]) {
+                        if (commonFirstSet.count(first) > 0) {
+                            cout << "Not an LL(1) grammar." << endl;
+                            return false;
+                        }
+                    }
+                    commonFirstSet.insert(computedFirstSets[rule.nonTerminal].begin(), computedFirstSets[rule.nonTerminal].end());
+                    commonFirstSet.clear();  // Clear the set for the next production
+                }
+            }
+        }
     }
 
-    while (!nonTerminalsToComputeFirst.empty()) {
-        string currentNonTerminal = *nonTerminalsToComputeFirst.begin();
-        nonTerminalsToComputeFirst.erase(nonTerminalsToComputeFirst.begin());
-        computedFirstSets[currentNonTerminal] = computeFirst(currentNonTerminal[0]);
-    }
-
-    while (!nonTerminalsToComputeFollow.empty()) {
-        string currentNonTerminal = *nonTerminalsToComputeFollow.begin();
-        nonTerminalsToComputeFollow.erase(nonTerminalsToComputeFollow.begin());
-        computedFollowSets[currentNonTerminal] = computeFollow(currentNonTerminal[0]);
-    }
-
-    if (!hasCommonElements()) {
-        return false;
-    }
-
-    if (!hasCommonIntersection()) {
-        return false;
+    // Check if there are any common elements in the First and Follow sets for the same non-terminal
+    for (const string& nonTerminal : nonTerminals) {
+        set<char> intersection;
+        set_intersection(computedFirstSets[nonTerminal].begin(), computedFirstSets[nonTerminal].end(),
+                         computedFollowSets[nonTerminal].begin(), computedFollowSets[nonTerminal].end(),
+                         inserter(intersection, intersection.begin()));
+        if (!intersection.empty()) {
+            cout << "Not an LL(1) grammar." << endl;
+            return false;
+        }
     }
 
     cout << "The grammar is LL(1)." << endl;
