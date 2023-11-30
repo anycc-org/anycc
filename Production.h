@@ -3,10 +3,6 @@
 //
 
 #pragma once
-#ifndef ANYCC_PRODUCTION_H
-#define ANYCC_PRODUCTION_H
-
-
 
 #include <vector>
 #include <string>

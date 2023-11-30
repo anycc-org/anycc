@@ -2,9 +2,6 @@
 // Created by abdel on 30/11/2023.
 //
 #pragma once
-#ifndef ANYCC_GRAMMARCHECKER_H
-#define ANYCC_GRAMMARCHECKER_H
-
 
 
 #include <vector>
