@@ -33,7 +33,7 @@ private:
     set<char> computeFollow(char nonTerminal);
     set<string> collectNonTerminals(const vector<Production>& grammar);
     void computeFirstSets(unordered_map<string, set<char>>& firstSets);
-    void computeFollowSets(unordered_map<string, set<char>>& followSets);
+    void computeFollowSets(unordered_map<string, set<char>>& followSets,unordered_map<string, set<char>>& firstSets);
     bool hasCommonElements(const unordered_map<string, set<char>>& sets, const vector<Production>& grammar);
     bool hasCommonIntersection(const unordered_map<string, set<char>>& firstSets,
                           const unordered_map<string, set<char>>& followSets);

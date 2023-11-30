@@ -129,9 +129,23 @@ void  GrammarChecker::computeFirstSets(unordered_map<string, set<char>>& firstSe
 }
 
 // Function to compute Follow sets for each non-terminal
-void  GrammarChecker::computeFollowSets(unordered_map<string, set<char>>& followSets) {
+void  GrammarChecker::computeFollowSets(unordered_map<string, set<char>>& followSets,unordered_map<string, set<char>>& firstSets) {
     for (const Production& rule : productionVector) {
         followSets[rule.nonTerminal] = computeFollow(rule.nonTerminal[0]);
+    }
+    for (auto& production : followSets) {
+        string nonTerminal = production.first;
+        set<char>& followSet = production.second;
+
+        // For each element in Follow set, replace it with its corresponding First set
+        for (auto& element : followSet) {
+            if (firstSets.find(string(1, element)) != firstSets.end()) {
+                set<char>& firstSet = firstSets[string(1, element)];
+                // Replace the element in Follow set with the corresponding First set
+                followSet.erase(element);
+                followSet.insert(firstSet.begin(), firstSet.end());
+            }
+        }
     }
 }
 bool GrammarChecker::isLL1Grammar() {
@@ -139,7 +153,7 @@ bool GrammarChecker::isLL1Grammar() {
     computeFirstSets(computedFirstSets);
 
     // Compute Follow sets for each non-terminal
-    computeFollowSets(computedFollowSets);
+    computeFollowSets(computedFollowSets,computedFirstSets);
 
     set<string> nonTerminals = collectNonTerminals(productionVector);
     // Check if there are any common elements in the First sets of different rules for the same non-terminal
