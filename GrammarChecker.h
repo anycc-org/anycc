@@ -10,24 +10,23 @@
 #include <unordered_map>
 #include <vector>
 #include "Production.h"
-using namespace std;
 
 class GrammarChecker {
 public:
-    GrammarChecker(const unordered_map<string, vector<vector<string>>>& grammar);
+    GrammarChecker(const std::unordered_map<std::string, std::vector<std::vector<std::string>>>& grammar);
 
     bool isLL1Grammar();
 
 private:
-    vector<Production> productionVector;
-    unordered_map<string,  set<char>> computedFirstSets;
-    unordered_map<string,  set<char>> computedFollowSets;
+    std::vector<Production> productionVector;
+    std::unordered_map<std::string, set<char>> computedFirstSets;
+    std::unordered_map<std::string, set<char>> computedFollowSets;
 
-    set<char> computeFirst(char nonTerminal);
-    set<char> computeFollow(char nonTerminal);
+    std::set<char> computeFirst(char nonTerminal);
+    std::set<char> computeFollow(char nonTerminal);
 
-    bool hasCommonElements(const unordered_map<string, set<char>>& sets);
-    bool hasCommonIntersection(const unordered_map<string, set<char>>& sets);
+    bool hasCommonElements(const std::unordered_map<std::string, std::set<char>>& sets);
+    bool hasCommonIntersection(const std::unordered_map<std::string, std::set<char>>& sets);
 
 };
 

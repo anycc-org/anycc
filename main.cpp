@@ -5,7 +5,7 @@
 
 int main() {
     // Modified example grammar with unique non-terminals
-    std::unordered_map<std::string, std::vector<std::vector<std::string>>> grammar = {
+    unordered_map<string, vector<vector<string>>> grammar = {
             {"S", {{"A", "a'"}, {"b"}}},
             {"A'", {{"S", "c"}, {"d"}}},
     };

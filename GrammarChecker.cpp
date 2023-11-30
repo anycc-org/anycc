@@ -1,23 +1,43 @@
-//
-// Created by abdel on 30/11/2023.
-//
-
-#include "GrammarChecker.h"
+#include <iostream>
+#include <set>
+#include <unordered_map>
+#include <vector>
 #include "Production.h"
 
+using namespace std;
+
+class GrammarChecker {
+public:
+    GrammarChecker(const unordered_map<string, vector<vector<string>>>& grammar);
+
+    bool isLL1Grammar();
+
+private:
+    vector<Production> productionVector;
+    unordered_map<string, set<char>> computedFirstSets;
+    unordered_map<string, set<char>> computedFollowSets;
+
+    set<char> computeFirst(char nonTerminal);
+    set<char> computeFollow(char nonTerminal);
+
+    bool hasCommonElements(const unordered_map<string, set<char>>& sets);
+    bool hasCommonIntersection();
+
+};
+
 GrammarChecker::GrammarChecker(const unordered_map<string, vector<vector<string>>>& grammar) {
-for (const auto& entry : grammar) {
-const string& nonTerminal = entry.first;
-const vector<vector<string>>& productions = entry.second;
+    for (const auto& entry : grammar) {
+        const string& nonTerminal = entry.first;
+        const vector<vector<string>>& productions = entry.second;
 
-productionVector.push_back({nonTerminal, productions});
-}
+        productionVector.push_back({nonTerminal, productions});
+    }
 }
 
-unordered_map<string, set<char>> GrammarChecker::computeFirst(char nonTerminal) {
+set<char> GrammarChecker::computeFirst(char nonTerminal) {
     set<char> firstSet;
 
-    for (const Production& rule : grammar) {
+    for (const Production& rule : productionVector) {
         if (rule.nonTerminal[0] == nonTerminal) {
             for (const auto& production : rule.productions) {
                 for (char symbol : production[0]) {
@@ -25,7 +45,6 @@ unordered_map<string, set<char>> GrammarChecker::computeFirst(char nonTerminal) 
                         if (computedFirstSets.find(string(1, symbol)) != computedFirstSets.end()) {
                             firstSet.insert(computedFirstSets[string(1, symbol)].begin(), computedFirstSets[string(1, symbol)].end());
                         } else {
-                            // Symbol not yet computed, add it to the set of non-terminals to compute
                             firstSet.insert(symbol);
                         }
                     } else {
@@ -43,29 +62,25 @@ unordered_map<string, set<char>> GrammarChecker::computeFirst(char nonTerminal) 
 set<char> GrammarChecker::computeFollow(char nonTerminal) {
     set<char> followSet;
 
-    for (const Production& rule : grammar) {
+    for (const Production& rule : productionVector) {
         for (const auto& production : rule.productions) {
             for (size_t i = 0; i < production.size(); ++i) {
                 if (production[i][0] == nonTerminal) {
                     if (i < production.size() - 1) {
-                        // If the non-terminal is followed by a terminal, add it to the Follow set
                         if (!isupper(production[i + 1][0])) {
                             followSet.insert(production[i + 1][0]);
                         } else {
                             if (computedFollowSets.find(string(1, production[i + 1][0])) != computedFollowSets.end()) {
                                 followSet.insert(computedFollowSets[string(1, production[i + 1][0])].begin(), computedFollowSets[string(1, production[i + 1][0])].end());
                             } else {
-                                // Symbol not yet computed, add it to the set of non-terminals to compute
                                 followSet.insert(production[i + 1][0]);
                             }
                         }
                     } else {
-                        // If the non-terminal is at the end of the production, add the Follow set of the left-hand side to the Follow set
                         if (rule.nonTerminal[0] != nonTerminal) {
                             if (computedFollowSets.find(rule.nonTerminal) != computedFollowSets.end()) {
                                 followSet.insert(computedFollowSets[rule.nonTerminal].begin(), computedFollowSets[rule.nonTerminal].end());
                             } else {
-                                // Symbol not yet computed, add it to the set of non-terminals to compute
                                 followSet.insert(rule.nonTerminal[0]);
                             }
                         }
@@ -84,7 +99,7 @@ bool GrammarChecker::hasCommonElements(const unordered_map<string, set<char>>& s
         const set<char>& currentSet = entry.second;
 
         set<char> commonSet;
-        for (const Production& rule : grammar) {
+        for (const Production& rule : productionVector) {
             if (rule.nonTerminal == nonTerminal) {
                 for (const auto& production : rule.productions) {
                     for (char symbol : currentSet) {
@@ -103,7 +118,7 @@ bool GrammarChecker::hasCommonElements(const unordered_map<string, set<char>>& s
 }
 
 bool GrammarChecker::hasCommonIntersection() {
-    for (const auto& entry : firstSets) {
+    for (const auto& entry : computedFirstSets) {
         const string& nonTerminal = entry.first;
         const set<char>& intersection = entry.second;
 
@@ -118,47 +133,47 @@ bool GrammarChecker::hasCommonIntersection() {
 }
 
 bool GrammarChecker::isLL1Grammar() {
-    // Map to store First sets for each non-terminal
     unordered_map<string, set<char>> firstSets;
-
-    // Map to store Follow sets for each non-terminal
     unordered_map<string, set<char>> followSets;
-
-    // Set to keep track of non-terminals for which First sets need to be computed
     set<string> nonTerminalsToComputeFirst;
-
-    // Set to keep track of non-terminals for which Follow sets need to be computed
     set<string> nonTerminalsToComputeFollow;
 
-    // Initialize the sets
-    for (const Production& rule : grammar) {
+    for (const Production& rule : productionVector) {
         nonTerminalsToComputeFirst.insert(rule.nonTerminal);
         nonTerminalsToComputeFollow.insert(rule.nonTerminal);
     }
 
-    // Compute First sets for each non-terminal
     while (!nonTerminalsToComputeFirst.empty()) {
         string currentNonTerminal = *nonTerminalsToComputeFirst.begin();
         nonTerminalsToComputeFirst.erase(nonTerminalsToComputeFirst.begin());
-        firstSets[currentNonTerminal] = computeFirst(currentNonTerminal[0], grammar, firstSets);
+        firstSets[currentNonTerminal] = computeFirst(currentNonTerminal[0]);
     }
 
-    // Compute Follow sets for each non-terminal
     while (!nonTerminalsToComputeFollow.empty()) {
         string currentNonTerminal = *nonTerminalsToComputeFollow.begin();
         nonTerminalsToComputeFollow.erase(nonTerminalsToComputeFollow.begin());
-        followSets[currentNonTerminal] = computeFollow(currentNonTerminal[0], grammar, followSets);
+        followSets[currentNonTerminal] = computeFollow(currentNonTerminal[0]);
     }
 
-    // Check if there are any common elements in the First sets of different rules for the same non-terminal
-    if (!hasCommonElements(firstSets, grammar)) {
+    if (!hasCommonElements(firstSets)) {
         return false;
     }
 
-    // Check if there are any common elements in the First and Follow sets for the same non-terminal
-    if (!hasCommonIntersection(firstSets)) {
+    if (!hasCommonIntersection()) {
         return false;
     }
 
     return true;
+}
+
+int main() {
+    unordered_map<string, vector<vector<string>>> grammar = {
+            {"S", {{"A", "a'"}, {"b"}}},
+            {"A'", {{"S", "c"}, {"d"}}},
+    };
+
+    GrammarChecker grammarChecker(grammar);
+    grammarChecker.isLL1Grammar();
+
+    return 0;
 }
