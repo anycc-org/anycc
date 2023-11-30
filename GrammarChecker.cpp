@@ -10,11 +10,11 @@ GrammarChecker::GrammarChecker(const unordered_map<string, vector<vector<string>
     }
 }
 
-set<char> GrammarChecker::computeFirst(char nonTerminal) {
+set<char> GrammarChecker::computeFirst(string nonTerminal) {
     set<char> firstSet;
 
     for (const Production& rule : productionVector) {
-        if (rule.nonTerminal[0] == nonTerminal) {
+        if (rule.nonTerminal == nonTerminal) {
             for (const auto& production : rule.productions) {
                 for (char symbol : production[0]) {
                     if (isupper(symbol)) {
@@ -85,8 +85,8 @@ bool GrammarChecker::hasCommonElements(const unordered_map<string, set<char>>& s
                         }
                     }
                     commonSet.insert(currentSet.begin(), currentSet.end());
-                    commonSet.clear();  // Clear the set for the next production
                 }
+                commonSet.clear();
             }
         }
     }
@@ -124,7 +124,7 @@ set<string>  GrammarChecker::collectNonTerminals(const vector<Production>& gramm
 // Function to compute First sets for each non-terminal
 void  GrammarChecker::computeFirstSets(unordered_map<string, set<char>>& firstSets) {
     for (const Production& rule : productionVector ) {
-        firstSets[rule.nonTerminal] = computeFirst(rule.nonTerminal[0]);
+        firstSets[rule.nonTerminal] = computeFirst(rule.nonTerminal);
     }
 }
 

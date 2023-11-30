@@ -29,7 +29,7 @@ private:
     unordered_map<string, set<char>> computedFirstSets;
     unordered_map<string, set<char>> computedFollowSets;
 
-    set<char> computeFirst(char nonTerminal);
+    set<char> computeFirst(string nonTerminal);
     set<char> computeFollow(char nonTerminal);
     set<string> collectNonTerminals(const vector<Production>& grammar);
     void computeFirstSets(unordered_map<string, set<char>>& firstSets);
