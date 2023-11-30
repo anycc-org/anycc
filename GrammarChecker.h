@@ -32,13 +32,3 @@ private:
     std::unordered_map<std::string, std::set<char>> followSets;
 };
 
-// Production.h
-#pragma once
-
-#include <vector>
-#include <string>
-
-struct Production {
-    std::string nonTerminal;
-    std::vector<std::vector<std::string>> productions;
-};
