@@ -21,26 +21,22 @@ set<char> GrammarChecker::computeFirst(const string& nonTerminal) {
                         // Handle non-terminal symbols
                         const string& symbolStr = symbol;
 
-                        if (computedFirstSets.count(symbolStr) != 0) {
-                            // If the first set for the non-terminal is computed, merge it
-                            const set<char>& nonTerminalFirstSet = computedFirstSets[symbolStr];
-                            firstSet.insert(nonTerminalFirstSet.begin(), nonTerminalFirstSet.end());
-                        } else {
-                            // If the first set is not computed, insert the symbol itself
-                            firstSet.insert(symbol[0]);
-                        }
+                        // Compute First set for the non-terminal
+                        const set<char>& nonTerminalFirstSet = computeFirst(symbolStr);
+                        firstSet.insert(nonTerminalFirstSet.begin(), nonTerminalFirstSet.end());
 
                         // Check if the non-terminal has an epsilon production
-                        if (nonTerminalHasEpsilon(symbolStr)) {
-                            continue; // Continue to the next symbol in the production
-                        } else {
-                            break; // Break the loop if the non-terminal doesn't have an epsilon production
+                        if (!nonTerminalHasEpsilon(symbolStr)) {
+                            // If it doesn't have epsilon, break the loop
+                            break;
                         }
+                        // If it has epsilon, continue to the next symbol in the production
                     } else {
                         // Handle terminal symbols
                         if (symbol != "ε") {
                             firstSet.insert(symbol[0]);
                         }
+                        // Break the loop for terminal symbols
                         break;
                     }
                 }
@@ -50,7 +46,6 @@ set<char> GrammarChecker::computeFirst(const string& nonTerminal) {
 
     return firstSet;
 }
-
 bool GrammarChecker::nonTerminalHasEpsilon(const string& nonTerminal) {
     // Check if the non-terminal has an epsilon production
     for (const Production& rule : productionVector) {
