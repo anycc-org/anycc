@@ -1,6 +1,6 @@
 #include "Production.h"
 #include "GrammarChecker.h"
-
+#include "constants.h"
 GrammarChecker::GrammarChecker(const unordered_map<string, vector<vector<string>>>& grammar) {
     for (const auto& entry : grammar) {
         const string& nonTerminal = entry.first;
@@ -48,7 +48,7 @@ bool GrammarChecker::nonTerminalHasEpsilon(const string& nonTerminal) {
     for (const Production& rule : productionVector) {
         if (rule.nonTerminal == nonTerminal) {
             for (const auto& production : rule.productions) {
-                if (production.size() == 1 && production[0] == "ε") {
+                if (production.size() == 1 && production[0] == EPSILON) {
                     return true;
                 }
             }
@@ -195,11 +195,11 @@ bool GrammarChecker::isLL1Grammar() {
 int main() {
     std::unordered_map<std::string, std::vector<std::vector<std::string>>> grammar = {
             {"S", {{"a", "B", "D", "h"}}},
-            {"B", {{"c", "C"},  {"ε"}}},  // Here, I changed "Є" to an empty vector for clarity
-            {"C", {{"b", "C"},  {"ε"}}},  // Same here
+            {"B", {{"c", "C"},  {EPSILON}}},  // Here, I changed "Є" to an empty vector for clarity
+            {"C", {{"b", "C"},  {EPSILON}}},  // Same here
             {"D", {{"E", "F"}}},
-            {"E", {{"g"},  {"ε"}}},  // Here, I changed "Є" to an empty vector for clarity
-            {"F", {{"f"},  {"ε"}}},  // Same here
+            {"E", {{"g"},  {EPSILON}}},  // Here, I changed "Є" to an empty vector for clarity
+            {"F", {{"f"},  {EPSILON}}},  // Same here
     };
 
     GrammarChecker grammarChecker(grammar);
