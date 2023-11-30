@@ -30,11 +30,11 @@ private:
     unordered_map<string, set<char>> computedFollowSets;
 
     set<char> computeFirst(const string& nonTerminal);
-    set<char> computeFollow(char nonTerminal);
+    set<char> computeFollow(const string& nonTerminal);
     set<string> collectNonTerminals(const vector<Production>& grammar);
     bool nonTerminalHasEpsilon(const string& nonTerminal);
-    void computeFirstSets(unordered_map<string, set<char>>& firstSets);
-    void computeFollowSets(unordered_map<string, set<char>>& followSets,unordered_map<string, set<char>>& firstSets);
+    void  computeFirstSets(unordered_map<string, set<char>>& firstSets,set<string> nonTerminals) ;
+    void computeFollowSets(unordered_map<string, set<char>>& followSets,set<string> nonTerminals);
 };
 
 #endif // GRAMMAR_CHECKER_H

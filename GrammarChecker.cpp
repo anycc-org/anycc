@@ -56,39 +56,68 @@ bool GrammarChecker::nonTerminalHasEpsilon(const string& nonTerminal) {
     }
     return false;
 }
-set<char> GrammarChecker::computeFollow(char nonTerminal) {
+set<char> GrammarChecker::computeFollow(const string& nonTerminal) {
+    // If Follow set is already computed, return it
+    if (computedFollowSets.find(nonTerminal) != computedFollowSets.end()) {
+        return computedFollowSets[nonTerminal];
+    }
+
     set<char> followSet;
+
+    // Mark the Follow set as computed to handle recursive calls
+    computedFollowSets[nonTerminal] = followSet;
+
+    // The start symbol has $ (end of input) in its Follow set
+    if (nonTerminal == START_SYMBOL) {
+        followSet.insert('$');
+    }
 
     for (const Production& rule : productionVector) {
         for (const auto& production : rule.productions) {
             for (size_t i = 0; i < production.size(); ++i) {
-                if (production[i][0] == nonTerminal) {
-                    if (i < production.size() - 1) { // there is something after it
-                        if (!isupper(production[i + 1][0])) {
-                            followSet.insert(production[i + 1][0]);
+                if (production[i] == nonTerminal) {
+                    // Case: A -> αBβ, where B is non-terminal
+                    if (i + 1 < production.size()) {
+                        const string& nextSymbol = production[i + 1];
+
+                        // Compute First set of the symbols following B in the production
+                        set<char> firstSet;
+
+                        // Note: First of a terminal is the terminal itself
+                        if (islower(nextSymbol[0])) {
+                            firstSet.insert(nextSymbol[0]);
                         } else {
-                            if (computedFollowSets.find(string(1, production[i + 1][0])) != computedFollowSets.end()) {
-                                followSet.insert(computedFollowSets[string(1, production[i + 1][0])].begin(), computedFollowSets[string(1, production[i + 1][0])].end());
-                            } else {
-                                followSet.insert(production[i + 1][0]);
-                            }
+                            // If it's a non-terminal, use the precomputed First set
+                            const set<char>& nextFirstSet = computedFirstSets[nextSymbol];
+                            firstSet.insert(nextFirstSet.begin(), nextFirstSet.end());
+                        }
+
+                        // Add First set excluding epsilon to Follow set
+                        followSet.insert(firstSet.begin(), firstSet.end());
+                        followSet.erase(EPSILON[0]);
+
+                        // If B can derive epsilon, add Follow(A) to Follow(B)
+                        if (nonTerminalHasEpsilon(nextSymbol)) {
+                            const set<char>& followASet = computeFollow(rule.nonTerminal);
+                            followSet.insert(followASet.begin(), followASet.end());
                         }
                     } else {
-                        if (rule.nonTerminal[0] != nonTerminal) {
-                            if (computedFollowSets.find(rule.nonTerminal) != computedFollowSets.end()) {
-                                followSet.insert(computedFollowSets[rule.nonTerminal].begin(), computedFollowSets[rule.nonTerminal].end());
-                            } else {
-                                followSet.insert(rule.nonTerminal[0]);
-                            }
-                        }
+                        // Case: A -> αB, where B is the last symbol
+                        // Add Follow(A) to Follow(B)
+                        const set<char>& followASet = computeFollow(rule.nonTerminal);
+                        followSet.insert(followASet.begin(), followASet.end());
                     }
                 }
             }
         }
     }
 
+    // Save the computed Follow set
+    computedFollowSets[nonTerminal] = followSet;
+
     return followSet;
 }
+
 set<string>  GrammarChecker::collectNonTerminals(const vector<Production>& grammar) {
     set<string> nonTerminals;
     for (const Production& rule : grammar) {
@@ -97,40 +126,25 @@ set<string>  GrammarChecker::collectNonTerminals(const vector<Production>& gramm
     return nonTerminals;
 }
 // Function to compute First sets for each non-terminal
-void  GrammarChecker::computeFirstSets(unordered_map<string, set<char>>& firstSets) {
-    for (const Production& rule : productionVector ) {
-        firstSets[rule.nonTerminal] = computeFirst(rule.nonTerminal);
+void  GrammarChecker::computeFirstSets(unordered_map<string, set<char>>& firstSets,set<string> nonTerminals) {
+    for (const string& nonTerminal : nonTerminals ) {
+        firstSets[nonTerminal] = computeFirst(nonTerminal);
     }
 }
-
 // Function to compute Follow sets for each non-terminal
-void  GrammarChecker::computeFollowSets(unordered_map<string, set<char>>& followSets,unordered_map<string, set<char>>& firstSets) {
-    for (const Production& rule : productionVector) {
-        followSets[rule.nonTerminal] = computeFollow(rule.nonTerminal[0]);
-    }
-    for (auto& production : followSets) {
-        string nonTerminal = production.first;
-        set<char>& followSet = production.second;
-
-        // For each element in Follow set, replace it with its corresponding First set
-        for (auto& element : followSet) {
-            if (firstSets.find(string(1, element)) != firstSets.end()) {
-                set<char>& firstSet = firstSets[string(1, element)];
-                // Replace the element in Follow set with the corresponding First set
-                followSet.erase(element);
-                followSet.insert(firstSet.begin(), firstSet.end());
-            }
-        }
+void  GrammarChecker::computeFollowSets(unordered_map<string, set<char>>& followSets,set<string> nonTerminals) {
+    for (const string& nonTerminal : nonTerminals ) {
+        followSets[nonTerminal] = computeFollow(nonTerminal);
     }
 }
 bool GrammarChecker::isLL1Grammar() {
 
     set<string> nonTerminals = collectNonTerminals(productionVector);
 
-    computeFirstSets(computedFirstSets);
+    computeFirstSets(computedFirstSets,nonTerminals);
 
     // Compute Follow sets for each non-terminal
-    computeFollowSets(computedFollowSets,computedFirstSets);
+    computeFollowSets(computedFollowSets,nonTerminals);
 
     return true;
 }
