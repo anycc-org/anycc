@@ -41,8 +41,41 @@ std::unordered_map<std::string, std::set<char>> GrammarChecker::computeFirst(cha
 }
 
 std::set<char> GrammarChecker::computeFollow(char nonTerminal) {
-    // Implementation of computeFollow
-    // ...
+    set<char> followSet;
+
+    for (const Production& rule : grammar) {
+        for (const auto& production : rule.productions) {
+            for (size_t i = 0; i < production.size(); ++i) {
+                if (production[i][0] == nonTerminal) {
+                    if (i < production.size() - 1) {
+                        // If the non-terminal is followed by a terminal, add it to the Follow set
+                        if (!isupper(production[i + 1][0])) {
+                            followSet.insert(production[i + 1][0]);
+                        } else {
+                            if (computedFollowSets.find(string(1, production[i + 1][0])) != computedFollowSets.end()) {
+                                followSet.insert(computedFollowSets[string(1, production[i + 1][0])].begin(), computedFollowSets[string(1, production[i + 1][0])].end());
+                            } else {
+                                // Symbol not yet computed, add it to the set of non-terminals to compute
+                                followSet.insert(production[i + 1][0]);
+                            }
+                        }
+                    } else {
+                        // If the non-terminal is at the end of the production, add the Follow set of the left-hand side to the Follow set
+                        if (rule.nonTerminal[0] != nonTerminal) {
+                            if (computedFollowSets.find(rule.nonTerminal) != computedFollowSets.end()) {
+                                followSet.insert(computedFollowSets[rule.nonTerminal].begin(), computedFollowSets[rule.nonTerminal].end());
+                            } else {
+                                // Symbol not yet computed, add it to the set of non-terminals to compute
+                                followSet.insert(rule.nonTerminal[0]);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return followSet;
 }
 
 bool GrammarChecker::hasCommonElements(const std::unordered_map<std::string, std::set<char>>& sets) {
