@@ -30,12 +30,9 @@ set<char> GrammarChecker::computeFirst(const string& nonTerminal) {
                             // If it doesn't have epsilon, break the loop
                             break;
                         }
-                        // If it has epsilon, continue to the next symbol in the production
                     } else {
                         // Handle terminal symbols
-                        if (symbol != "ε") {
-                            firstSet.insert(symbol[0]);
-                        }
+                         firstSet.insert(symbol[0]);
                         // Break the loop for terminal symbols
                         break;
                     }
@@ -196,14 +193,14 @@ bool GrammarChecker::isLL1Grammar() {
 }
 
 int main() {
-    unordered_map<string, vector<vector<string>>> grammar = {
-            {"E", {{"T", "E`"}}},
-            {"E`", {{"+", "T", "E`"}, {"ε"}}},
-            {"T", {{"F", "T`"}}},
-            {"T`", {{"*", "F", "T`"}, {"ε"}}},
-            {"F", {{"(", "E", ")"}, {"id"}}},
+    std::unordered_map<std::string, std::vector<std::vector<std::string>>> grammar = {
+            {"S", {{"a", "B", "D", "h"}}},
+            {"B", {{"c", "C"},  {"ε"}}},  // Here, I changed "Є" to an empty vector for clarity
+            {"C", {{"b", "C"},  {"ε"}}},  // Same here
+            {"D", {{"E", "F"}}},
+            {"E", {{"g"},  {"ε"}}},  // Here, I changed "Є" to an empty vector for clarity
+            {"F", {{"f"},  {"ε"}}},  // Same here
     };
-
 
     GrammarChecker grammarChecker(grammar);
     grammarChecker.isLL1Grammar();
