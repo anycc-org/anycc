@@ -31,7 +31,7 @@ private:
     set<char> computeFirst(char nonTerminal);
     set<char> computeFollow(char nonTerminal);
 
-    bool hasCommonElements(const unordered_map<string, set<char>>& sets);
+    bool hasCommonElements();
     bool hasCommonIntersection();
 };
 

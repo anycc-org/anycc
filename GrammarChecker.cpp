@@ -73,8 +73,8 @@ set<char> GrammarChecker::computeFollow(char nonTerminal) {
     return followSet;
 }
 
-bool GrammarChecker::hasCommonElements(const unordered_map<string, set<char>>& sets) {
-    for (const auto& entry : sets) {
+bool GrammarChecker::hasCommonElements() {
+    for (const auto& entry : computedFirstSets) {
         const string& nonTerminal = entry.first;
         const set<char>& currentSet = entry.second;
 
@@ -89,6 +89,7 @@ bool GrammarChecker::hasCommonElements(const unordered_map<string, set<char>>& s
                         }
                     }
                     commonSet.insert(currentSet.begin(), currentSet.end());
+                    commonSet.clear();  // Clear the set for the next production
                 }
             }
         }
@@ -108,13 +109,10 @@ bool GrammarChecker::hasCommonIntersection() {
         }
     }
 
-    cout << "The grammar is LL(1)." << endl;
     return true;
 }
 
 bool GrammarChecker::isLL1Grammar() {
-    unordered_map<string, set<char>> firstSets;
-    unordered_map<string, set<char>> followSets;
     set<string> nonTerminalsToComputeFirst;
     set<string> nonTerminalsToComputeFollow;
 
@@ -126,16 +124,16 @@ bool GrammarChecker::isLL1Grammar() {
     while (!nonTerminalsToComputeFirst.empty()) {
         string currentNonTerminal = *nonTerminalsToComputeFirst.begin();
         nonTerminalsToComputeFirst.erase(nonTerminalsToComputeFirst.begin());
-        firstSets[currentNonTerminal] = computeFirst(currentNonTerminal[0]);
+        computedFirstSets[currentNonTerminal] = computeFirst(currentNonTerminal[0]);
     }
 
     while (!nonTerminalsToComputeFollow.empty()) {
         string currentNonTerminal = *nonTerminalsToComputeFollow.begin();
         nonTerminalsToComputeFollow.erase(nonTerminalsToComputeFollow.begin());
-        followSets[currentNonTerminal] = computeFollow(currentNonTerminal[0]);
+        computedFollowSets[currentNonTerminal] = computeFollow(currentNonTerminal[0]);
     }
 
-    if (!hasCommonElements(firstSets)) {
+    if (!hasCommonElements()) {
         return false;
     }
 
@@ -143,6 +141,7 @@ bool GrammarChecker::isLL1Grammar() {
         return false;
     }
 
+    cout << "The grammar is LL(1)." << endl;
     return true;
 }
 
