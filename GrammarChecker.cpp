@@ -74,39 +74,40 @@ set<char> GrammarChecker::computeFollow(const string& nonTerminal) {
 
     for (const Production& rule : productionVector) {
         for (const auto& production : rule.productions) {
-            for (size_t i = 0; i < production.size(); ++i) {
-                if (production[i] == nonTerminal) {
-                    // Case: A -> αBβ, where B is non-terminal
-                    if (i + 1 < production.size()) {
-                        const string& nextSymbol = production[i + 1];
+            auto pos = std::find(production.begin(), production.end(), nonTerminal);
+            if (pos != production.end()) {
+                size_t index = std::distance(production.begin(), pos);
 
-                        // Compute First set of the symbols following B in the production
-                        set<char> firstSet;
+                // Case: A -> αBβ, where B is non-terminal
+                if (index + 1 < production.size()) {
+                    const string& nextSymbol = production[index + 1];
 
-                        // Note: First of a terminal is the terminal itself
-                        if (islower(nextSymbol[0])) {
-                            firstSet.insert(nextSymbol[0]);
-                        } else {
-                            // If it's a non-terminal, use the precomputed First set
-                            const set<char>& nextFirstSet = computedFirstSets[nextSymbol];
-                            firstSet.insert(nextFirstSet.begin(), nextFirstSet.end());
-                        }
+                    // Compute First set of the symbols following B in the production
+                    set<char> firstSet;
 
-                        // Add First set excluding epsilon to Follow set
-                        followSet.insert(firstSet.begin(), firstSet.end());
-                        followSet.erase(EPSILON[0]);
-
-                        // If B can derive epsilon, add Follow(A) to Follow(B)
-                        if (nonTerminalHasEpsilon(nextSymbol)) {
-                            const set<char>& followASet = computeFollow(rule.nonTerminal);
-                            followSet.insert(followASet.begin(), followASet.end());
-                        }
+                    // Note: First of a terminal is the terminal itself
+                    if (islower(nextSymbol[0])) {
+                        firstSet.insert(nextSymbol[0]);
                     } else {
-                        // Case: A -> αB, where B is the last symbol
-                        // Add Follow(A) to Follow(B)
+                        // If it's a non-terminal, use the precomputed First set
+                        const set<char>& nextFirstSet = computedFirstSets[nextSymbol];
+                        firstSet.insert(nextFirstSet.begin(), nextFirstSet.end());
+                    }
+
+                    // Add First set excluding epsilon to Follow set
+                    followSet.insert(firstSet.begin(), firstSet.end());
+                    followSet.erase(EPSILON[0]);
+
+                    // If B can derive epsilon, add Follow(A) to Follow(B)
+                    if (nonTerminalHasEpsilon(nextSymbol)) {
                         const set<char>& followASet = computeFollow(rule.nonTerminal);
                         followSet.insert(followASet.begin(), followASet.end());
                     }
+                } else {
+                    // Case: A -> αB, where B is the last symbol
+                    // Add Follow(A) to Follow(B)
+                    const set<char>& followASet = computeFollow(rule.nonTerminal);
+                    followSet.insert(followASet.begin(), followASet.end());
                 }
             }
         }
@@ -117,7 +118,6 @@ set<char> GrammarChecker::computeFollow(const string& nonTerminal) {
 
     return followSet;
 }
-
 set<string>  GrammarChecker::collectNonTerminals(const vector<Production>& grammar) {
     set<string> nonTerminals;
     for (const Production& rule : grammar) {
@@ -151,12 +151,10 @@ bool GrammarChecker::isLL1Grammar() {
 
 int main() {
     std::unordered_map<std::string, std::vector<std::vector<std::string>>> grammar = {
-            {"S", {{"a", "B", "D", "h"}}},
-            {"B", {{"c", "C"}}},  // Here, I changed "Є" to an empty vector for clarity
-            {"C", {{"b", "C"},  {EPSILON}}},  // Same here
-            {"D", {{"E", "F"}}},
-            {"E", {{"g"},  {EPSILON}}},  // Here, I changed "Є" to an empty vector for clarity
-            {"F", {{"f"},  {EPSILON}}},  // Same here
+            {"S", {{"A", "C", "B"}, {"C", "b", "b"}, {"B", "a"}}},
+            {"A", {{"d", "a"}, {"B", "C"}}},
+            {"B", {{"g"}, {EPSILON}}},
+            {"C", {{"h"}, {EPSILON}}}
     };
 
     GrammarChecker grammarChecker(grammar);
