@@ -195,7 +195,7 @@ bool GrammarChecker::isLL1Grammar() {
 int main() {
     std::unordered_map<std::string, std::vector<std::vector<std::string>>> grammar = {
             {"S", {{"a", "B", "D", "h"}}},
-            {"B", {{"c", "C"},  {EPSILON}}},  // Here, I changed "Є" to an empty vector for clarity
+            {"B", {{"c", "C"}}},  // Here, I changed "Є" to an empty vector for clarity
             {"C", {{"b", "C"},  {EPSILON}}},  // Same here
             {"D", {{"E", "F"}}},
             {"E", {{"g"},  {EPSILON}}},  // Here, I changed "Є" to an empty vector for clarity
