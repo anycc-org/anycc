@@ -34,8 +34,9 @@ private:
     set<string> collectNonTerminals(const vector<Production>& grammar);
     void computeFirstSets(unordered_map<string, set<char>>& firstSets);
     void computeFollowSets(unordered_map<string, set<char>>& followSets);
-    bool hasCommonElements();
-    bool hasCommonIntersection();
+    bool hasCommonElements(const unordered_map<string, set<char>>& sets, const vector<Production>& grammar);
+    bool hasCommonIntersection(const unordered_map<string, set<char>>& firstSets,
+                          const unordered_map<string, set<char>>& followSets);
 };
 
 #endif // GRAMMAR_CHECKER_H
