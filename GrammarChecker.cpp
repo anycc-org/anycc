@@ -158,10 +158,10 @@ bool GrammarChecker::isLL1Grammar() {
 
 int main() {
     unordered_map<string, vector<vector<string>>> grammar = {
-            {"E", {{"T", "E'"}}},
-            {"E'", {{"+", "T", "E'"}, {""}}},
-            {"T", {{"F", "T'"}}},
-            {"T'", {{"*", "F", "T'"}, {""}}},
+            {"E", {{"T", "G"}}},
+            {"G", {{"+", "T", "G"}, {""}}},
+            {"T", {{"F", "K"}}},
+            {"K", {{"*", "F", "K"}, {""}}},
             {"F", {{"(", "E", ")"}, {"id"}}},
     };
 
