@@ -79,16 +79,86 @@ std::set<char> GrammarChecker::computeFollow(char nonTerminal) {
 }
 
 bool GrammarChecker::hasCommonElements(const std::unordered_map<std::string, std::set<char>>& sets) {
-    // Implementation of hasCommonElements
-    // ...
+    for (const auto& entry : sets) {
+        const string& nonTerminal = entry.first;
+        const set<char>& currentSet = entry.second;
+
+        set<char> commonSet;
+        for (const Production& rule : grammar) {
+            if (rule.nonTerminal == nonTerminal) {
+                for (const auto& production : rule.productions) {
+                    for (char symbol : currentSet) {
+                        if (commonSet.count(symbol) > 0) {
+                            cout << "Not an LL(1) grammar." << endl;
+                            return false;
+                        }
+                    }
+                    commonSet.insert(currentSet.begin(), currentSet.end());
+                }
+            }
+        }
+    }
+
+    return true;
 }
 
 bool GrammarChecker::hasCommonIntersection() {
-    // Implementation of hasCommonIntersection
-    // ...
+    for (const auto& entry : firstSets) {
+        const string& nonTerminal = entry.first;
+        const set<char>& intersection = entry.second;
+
+        if (!intersection.empty()) {
+            cout << "Not an LL(1) grammar." << endl;
+            return false;
+        }
+    }
+
+    cout << "The grammar is LL(1)." << endl;
+    return true;
 }
 
 bool GrammarChecker::isLL1Grammar() {
-    // Implementation of isLL1Grammar
-    // ...
+    // Map to store First sets for each non-terminal
+    unordered_map<string, set<char>> firstSets;
+
+    // Map to store Follow sets for each non-terminal
+    unordered_map<string, set<char>> followSets;
+
+    // Set to keep track of non-terminals for which First sets need to be computed
+    set<string> nonTerminalsToComputeFirst;
+
+    // Set to keep track of non-terminals for which Follow sets need to be computed
+    set<string> nonTerminalsToComputeFollow;
+
+    // Initialize the sets
+    for (const Production& rule : grammar) {
+        nonTerminalsToComputeFirst.insert(rule.nonTerminal);
+        nonTerminalsToComputeFollow.insert(rule.nonTerminal);
+    }
+
+    // Compute First sets for each non-terminal
+    while (!nonTerminalsToComputeFirst.empty()) {
+        string currentNonTerminal = *nonTerminalsToComputeFirst.begin();
+        nonTerminalsToComputeFirst.erase(nonTerminalsToComputeFirst.begin());
+        firstSets[currentNonTerminal] = computeFirst(currentNonTerminal[0], grammar, firstSets);
+    }
+
+    // Compute Follow sets for each non-terminal
+    while (!nonTerminalsToComputeFollow.empty()) {
+        string currentNonTerminal = *nonTerminalsToComputeFollow.begin();
+        nonTerminalsToComputeFollow.erase(nonTerminalsToComputeFollow.begin());
+        followSets[currentNonTerminal] = computeFollow(currentNonTerminal[0], grammar, followSets);
+    }
+
+    // Check if there are any common elements in the First sets of different rules for the same non-terminal
+    if (!hasCommonElements(firstSets, grammar)) {
+        return false;
+    }
+
+    // Check if there are any common elements in the First and Follow sets for the same non-terminal
+    if (!hasCommonIntersection(firstSets)) {
+        return false;
+    }
+
+    return true;
 }
