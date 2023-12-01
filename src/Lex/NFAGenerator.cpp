@@ -8,7 +8,10 @@ NFAGenerator::NFAGenerator() = default;
 NFAGenerator::~NFAGenerator() = default;
 
 NFA *NFAGenerator::buildNFA(const std::unordered_map<std::string, std::string> &regexMap,
-                            const std::map<std::string, std::string> &regexDefMap) {
+                            const std::vector<std::pair<std::string, std::string>> &regexDefMap,
+                            const std::vector<std::string> &keywords,
+                            const std::vector<std::string> &operators,
+                            const std::vector<std::string> &punctuations) {
     std::vector<NFA*> nfas;
     for (auto& regexDef : regexDefMap) {
         NFA* nfa = regexToNFA(regexDef.second);
@@ -18,6 +21,18 @@ NFA *NFAGenerator::buildNFA(const std::unordered_map<std::string, std::string> &
 
     for (auto& regex : regexMap) {
         nfas.push_back(regexToNFA(regex.second));
+    }
+
+    for (auto& keyword : keywords) {
+        nfas.push_back(NFA::wordToNFA(keyword));
+    }
+
+    for (auto& op : operators) {
+        nfas.push_back(NFA::wordToNFA(op));
+    }
+
+    for (auto& punc : punctuations) {
+        nfas.push_back(NFA::wordToNFA(punc));
     }
 
     return combineNFAs(nfas);

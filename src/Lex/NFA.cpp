@@ -40,6 +40,9 @@ NFA* NFA::basicCharToNFA(char c) {
  * @return NFA of word
  */
 NFA* NFA::wordToNFA(const std::string& word) {
+    if (word.size() == 1) {
+        return basicCharToNFA(word[0]);
+    }
     NFA* wordNFA = new NFA();
     NFAState* currentState = wordNFA->getStartState();
 

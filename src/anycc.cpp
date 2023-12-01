@@ -17,16 +17,16 @@ int main() {
             // Add more regular expressions as needed
     };
 
-    std::map<std::string, std::string> regexDefMap = {
+    std::vector<std::pair<std::string, std::string>> regexDefMap = {
 //            {"letter", "a-z|A-Z"},
-            {"digit", "ab"},
-            {"digits", "digit+"},
+//            {"digit", "0-9"},
+//            {"digits", "digit+"},
             // Add more regular definitions as needed
     };
 
-//    std::vector<std::string> keywords = {"boolean", "int", "float", "if", "else", "while"};
-//    std::vector<std::string> operators = {"+", "-", "*", "/", "=", "<=", "<", ">", ">=", "!=", "=="};
-//    std::vector<std::string> punctuations = {";", ",", "\\(", "\\)", "{", "}"};
+    std::vector<std::string> keywords = {"boolean", "int", "float", "if", "else", "while"};
+    std::vector<std::string> operators = {"+", "-", "*", "/", "=", "<=", "<", ">", ">=", "!=", "=="};
+    std::vector<std::string> punctuations = {";", ",", "\\(", "\\)", "{", "}"};
 
 //    NFA* idNFA = NFAGenerator::regexToNFA("l (l|d)*");
 
@@ -49,11 +49,12 @@ int main() {
 //    NFA* digitNFA = nfaGenerator.regexToNFA("a|b");
 //    digitNFA->printNFA();
 
-//    NFA* wordNFA = NFA::wordToNFA("abc");
+//    NFA* wordNFA = NFA::wordToNFA("{");
+//    wordNFA->printNFA();
 
-    NFA* digitsNFA = nfaGenerator.buildNFA(regexMap, regexDefMap);
+    NFA* testNFA = nfaGenerator.buildNFA(regexMap, regexDefMap, keywords, operators, punctuations);
 //
-    digitsNFA->printNFA();
+    testNFA->printNFA();
 
     // Create an original NFA
 //    NFA* originalNFA = NFA::basicCharToNFA('a');
