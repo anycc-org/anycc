@@ -23,8 +23,6 @@
     <list default="true" id="9c4c9459-5510-4863-99aa-212ab29e908a" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GrammarChecker.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/GrammarChecker.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GrammarCheckerUtility.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/GrammarCheckerUtility.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GrammarCheckerUtility.h" beforeDir="false" afterPath="$PROJECT_DIR$/GrammarCheckerUtility.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/.ninja_deps" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/.ninja_deps" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/.ninja_log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/.ninja_log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
@@ -90,7 +88,7 @@
       <option name="presentableId" value="Default" />
       <updated>1701447414866</updated>
       <workItem from="1701447416486" duration="7640000" />
-      <workItem from="1701461545940" duration="3423000" />
+      <workItem from="1701461545940" duration="7343000" />
     </task>
     <servers />
   </component>

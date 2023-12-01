@@ -21,11 +21,10 @@ set<char> GrammarChecker::computeFirst(const string &nonTerminal) {
         if (rule.nonTerminal == nonTerminal) {
             for (const auto &production: rule.productions) {
                 for (const string &symbol: production) {
-                    if (isupper(symbol[0])) {
+                    if (nonTerminals.count(symbol)) {
                         // Handle non-terminal symbols
-                        //first occurence of NonTerminal
-                        vector<SubstringInfo> substringInfoVec =  findAllLongestSubstringIndices(symbol,nonTerminals);
-                        const string& symbolStr = symbol.substr(substringInfoVec[0].start, substringInfoVec[0].end - substringInfoVec[0].start);
+                        const string &symbolStr = symbol;
+
                         // Compute First set for the non-terminal
                         const set<char> &nonTerminalFirstSet = computeFirst(symbolStr);
                         firstSet.insert(nonTerminalFirstSet.begin(), nonTerminalFirstSet.end());
@@ -96,7 +95,7 @@ set<char> GrammarChecker::computeFollow(const string &nonTerminal) {
                     //2) If A -> pBq is a production, where p, B and q are any grammar symbols,
                     //   then everything in FIRST(q)  except Є is in FOLLOW(B).
                     // Note: First of a terminal is the terminal itself
-                    if (!isupper(nextSymbol[0])) {
+                    if (!nonTerminals.count(nextSymbol)) {
                         firstSet.insert(nextSymbol[0]);
                     } else {
                         // If it's a non-terminal, use the precomputed First set
@@ -115,11 +114,11 @@ set<char> GrammarChecker::computeFollow(const string &nonTerminal) {
                         size_t qIndex = index + 2;
 
                         set<char> firstQSet;
-                        while (qIndex < production.size() && isupper(production[qIndex][0])
+                        while (qIndex < production.size() && nonTerminals.count(production[qIndex])
                                && (computedFirstSets[production[qIndex]].count(EPSILON[0]) ||
                                    nonTerminalHasEpsilon(production[qIndex]))) {
                             const string &qSymbol = production[qIndex];
-                            if (!isupper(qSymbol[0])) {
+                            if (!nonTerminals.count(qSymbol)) {
                                 followSet.insert(production[qIndex][0]);
                                 qIndex++;
                                 break;
@@ -134,7 +133,7 @@ set<char> GrammarChecker::computeFollow(const string &nonTerminal) {
                         }
 
                         followSet.insert(firstQSet.begin(), firstQSet.end());
-                        if (qIndex < production.size() && !isupper(production[qIndex][0]))
+                        if (qIndex < production.size() && !nonTerminals.count(production[qIndex]))
                             followSet.insert(production[qIndex][0]);
                         else {
                             //4) If A->pBq is a production and FIRST(q) contains Є,
