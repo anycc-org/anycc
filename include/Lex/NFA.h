@@ -9,6 +9,7 @@ class NFA {
 public:
     NFA();
     NFA(NFAState* start, NFAState* end);
+    NFA(const NFA& other) noexcept;
     ~NFA();
 
     NFAState* getStartState() const;

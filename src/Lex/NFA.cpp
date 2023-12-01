@@ -1,5 +1,6 @@
 #include <Lex/NFA.h>
 #include <iostream>
+#include <stack>
 
 NFA::NFA() {
     startState = new NFAState();
@@ -9,6 +10,12 @@ NFA::NFA() {
 NFA::NFA(NFAState *start, NFAState *end) {
     startState = start;
     endState = end;
+}
+
+NFA::NFA(const NFA &other) noexcept {
+    std::unordered_map<int, NFAState*> copiedStates;
+    endState = new NFAState(*(other.endState), copiedStates);
+    startState = new NFAState(*(other.startState), copiedStates);
 }
 
 NFA::~NFA() = default;

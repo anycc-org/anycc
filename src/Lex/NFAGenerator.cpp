@@ -74,8 +74,8 @@ NFA* NFAGenerator::regexToNFA(const std::string& regex) {
             }
             // check if that word in the regular definition map
             if (regexToNFAMap.find(word) != regexToNFAMap.end()) {
-                // TODO: take a deep copy from this nfa
-                nfaStack.push(regexToNFAMap[word]);
+                // take a deep copy from this nfa
+                nfaStack.push(new NFA(*regexToNFAMap[word]));
             }
             else {
                 if (word.size() == 1) {
