@@ -72,6 +72,7 @@ set<char> GrammarChecker::computeFollow(const string& nonTerminal) {
     computedFollowSets[nonTerminal] = followSet;
 
     // The start symbol has $ (end of input) in its Follow set
+    //1) FOLLOW(S) = { $ }   // where S is the starting Non-Terminal
     if (nonTerminal == START_SYMBOL) {
         followSet.insert('$');
     }
@@ -89,6 +90,8 @@ set<char> GrammarChecker::computeFollow(const string& nonTerminal) {
                     // Compute First set of the symbols following B in the production
                     set<char> firstSet;
 
+                    //2) If A -> pBq is a production, where p, B and q are any grammar symbols,
+                    //   then everything in FIRST(q)  except Є is in FOLLOW(B).
                     // Note: First of a terminal is the terminal itself
                     if (islower(nextSymbol[0])) {
                         firstSet.insert(nextSymbol[0]);
@@ -102,6 +105,8 @@ set<char> GrammarChecker::computeFollow(const string& nonTerminal) {
                     followSet.insert(firstSet.begin(), firstSet.end());
                     followSet.erase(EPSILON[0]);
 
+                    //4) If A->pBq is a production and FIRST(q) contains Є,
+                    //   then FOLLOW(B) contains { FIRST(q) – Є } U FOLLOW(A)
                     // If B can derive epsilon, add Follow(A) to Follow(B)
                     if (nonTerminalHasEpsilon(nextSymbol)) {
                         //TODO : not always it could have another Non terminal after this symbol
@@ -111,6 +116,7 @@ set<char> GrammarChecker::computeFollow(const string& nonTerminal) {
                 } else {
                     // Case: A -> αB, where B is the last symbol
                     // Add Follow(A) to Follow(B)
+                    // If A->pB is a production, then everything in FOLLOW(A) is in FOLLOW(B).
                     const set<char>& followASet = computeFollow(rule.nonTerminal);
                     followSet.insert(followASet.begin(), followASet.end());
                 }
