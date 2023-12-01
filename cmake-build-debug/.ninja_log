@@ -1,0 +1,7 @@
+# ninja log v5
+8	706	7231506707698075	CMakeFiles/anycc.dir/GrammarCheckerUtility.cpp.obj	8c10573dbc21bd2a
+14	1207	7231506712676041	CMakeFiles/anycc.dir/main.cpp.obj	9d6bd04c898e9834
+1	1533	7231506715948350	CMakeFiles/anycc.dir/GrammarChecker.cpp.obj	cfa850cee000c5c6
+5	988	7231507269394884	CMakeFiles/anycc.dir/main.cpp.obj	9d6bd04c898e9834
+5	1734	7231507643837505	CMakeFiles/anycc.dir/GrammarChecker.cpp.obj	cfa850cee000c5c6
+1735	2065	7231507647119598	anycc.exe	78dcb033b3633f4e

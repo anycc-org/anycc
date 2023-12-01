@@ -5,45 +5,44 @@
 #include <set>
 #include <unordered_map>
 #include <vector>
-#include "Production.h"
 #include "GrammarChecker.h"
-
+#include "constants.h"
 int main() {
-    std::unordered_map<std::string, std::vector<std::vector<std::string>>> grammar = {
-            {"S", {{"A", "a'"}, {"b"}}},
-            {"A'", {{"S", "c"}, {"d"}}},
+    unordered_map<string, vector<vector<string>>> grammar = {
+            {"S", {{"A", "C", "B"}, {"C", "b", "b"}, {"B", "a"}}},
+            {"A", {{"d", "a"}, {"B", "C"}}},
+            {"B", {{"g"}, {EPSILON}}},
+            {"C", {{"h"}, {EPSILON}}}
     };
 
     GrammarChecker grammarChecker(grammar);
     grammarChecker.isLL1Grammar();
-
     // Print firstSets
     const auto& firstSets = grammarChecker.getFirstSets();
-    std::cout << "First Sets:\n";
+    cout << "First Sets:\n";
     for (const auto& entry : firstSets) {
-        const std::string& nonTerminal = entry.first;
-        const std::set<char>& firstSet = entry.second;
+        const string& nonTerminal = entry.first;
+        const set<char>& firstSet = entry.second;
 
-        std::cout << nonTerminal << ": { ";
+        cout << nonTerminal << ": { ";
         for (char symbol : firstSet) {
-            std::cout << symbol << ' ';
+            cout << symbol << ' ';
         }
-        std::cout << "}\n";
+        cout << "}\n";
     }
 
     // Print followSets
     const auto& followSets = grammarChecker.getFollowSets();
-    std::cout << "\nFollow Sets:\n";
+    cout << "\nFollow Sets:\n";
     for (const auto& entry : followSets) {
-        const std::string& nonTerminal = entry.first;
-        const std::set<char>& followSet = entry.second;
+        const string& nonTerminal = entry.first;
+        const set<char>& followSet = entry.second;
 
-        std::cout << nonTerminal << ": { ";
+        cout << nonTerminal << ": { ";
         for (char symbol : followSet) {
-            std::cout << symbol << ' ';
+            cout << symbol << ' ';
         }
-        std::cout << "}\n";
+        cout << "}\n";
     }
-
     return 0;
 }
