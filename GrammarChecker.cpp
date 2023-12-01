@@ -93,7 +93,7 @@ set<char> GrammarChecker::computeFollow(const string& nonTerminal) {
                     //2) If A -> pBq is a production, where p, B and q are any grammar symbols,
                     //   then everything in FIRST(q)  except Є is in FOLLOW(B).
                     // Note: First of a terminal is the terminal itself
-                    if (islower(nextSymbol[0])) {
+                    if (!isupper(nextSymbol[0])) {
                         firstSet.insert(nextSymbol[0]);
                     } else {
                         // If it's a non-terminal, use the precomputed First set

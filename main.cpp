@@ -8,13 +8,13 @@
 #include "GrammarChecker.h"
 #include "constants.h"
 int main() {
-    unordered_map<string, vector<vector<string>>> grammar = {
-            {"S", {{"A", "C", "B"}, {"C", "b", "b"}, {"B", "a"}}},
-            {"A", {{"d", "a"}, {"B", "C"}}},
-            {"B", {{"g"}, {EPSILON}}},
-            {"C", {{"h"}, {EPSILON}}}
+    std::unordered_map<std::string, std::vector<std::vector<std::string>>> grammar = {
+            {"S", {{"T", "G"}}},
+            {"G", {{"+", "T", "G"}, {EPSILON}}},
+            {"T", {{"F", "K"}}},
+            {"K", {{"*", "F", "K"}, {EPSILON}}},
+            {"F", {{"(", "S", ")"}, {"id"}}}
     };
-
     GrammarChecker grammarChecker(grammar);
     grammarChecker.isLL1Grammar();
     // Print firstSets
