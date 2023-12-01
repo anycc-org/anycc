@@ -8,6 +8,8 @@ GrammarChecker::GrammarChecker(const unordered_map<string, vector<vector<string>
 
         productionVector.push_back({nonTerminal, productions});
     }
+
+    nonTerminals = collectNonTerminals(productionVector);
 }
 
 set<char> GrammarChecker::computeFirst(const string& nonTerminal) {
@@ -126,25 +128,23 @@ set<string>  GrammarChecker::collectNonTerminals(const vector<Production>& gramm
     return nonTerminals;
 }
 // Function to compute First sets for each non-terminal
-void  GrammarChecker::computeFirstSets(unordered_map<string, set<char>>& firstSets,set<string> nonTerminals) {
+void  GrammarChecker::computeFirstSets(unordered_map<string, set<char>>& firstSets) {
     for (const string& nonTerminal : nonTerminals ) {
         firstSets[nonTerminal] = computeFirst(nonTerminal);
     }
 }
 // Function to compute Follow sets for each non-terminal
-void  GrammarChecker::computeFollowSets(unordered_map<string, set<char>>& followSets,set<string> nonTerminals) {
+void  GrammarChecker::computeFollowSets(unordered_map<string, set<char>>& followSets) {
     for (const string& nonTerminal : nonTerminals ) {
         followSets[nonTerminal] = computeFollow(nonTerminal);
     }
 }
 bool GrammarChecker::isLL1Grammar() {
 
-    set<string> nonTerminals = collectNonTerminals(productionVector);
-
-    computeFirstSets(computedFirstSets,nonTerminals);
+    computeFirstSets(computedFirstSets);
 
     // Compute Follow sets for each non-terminal
-    computeFollowSets(computedFollowSets,nonTerminals);
+    computeFollowSets(computedFollowSets);
 
     return true;
 }

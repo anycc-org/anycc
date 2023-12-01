@@ -26,6 +26,7 @@ public:
 
 private:
     vector<Production> productionVector;
+    set<string> nonTerminals;
     unordered_map<string, set<char>> computedFirstSets;
     unordered_map<string, set<char>> computedFollowSets;
 
@@ -33,8 +34,8 @@ private:
     set<char> computeFollow(const string& nonTerminal);
     set<string> collectNonTerminals(const vector<Production>& grammar);
     bool nonTerminalHasEpsilon(const string& nonTerminal);
-    void  computeFirstSets(unordered_map<string, set<char>>& firstSets,set<string> nonTerminals) ;
-    void computeFollowSets(unordered_map<string, set<char>>& followSets,set<string> nonTerminals);
+    void  computeFirstSets(unordered_map<string, set<char>>& firstSets) ;
+    void computeFollowSets(unordered_map<string, set<char>>& followSets);
 };
 
 #endif // GRAMMAR_CHECKER_H
