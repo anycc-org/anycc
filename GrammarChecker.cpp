@@ -1,6 +1,8 @@
 #include "Production.h"
 #include "GrammarChecker.h"
 #include "constants.h"
+#include "GrammarCheckerUtility.h"
+
 GrammarChecker::GrammarChecker(const unordered_map<string, vector<vector<string>>>& grammar) {
     for (const auto& entry : grammar) {
         const string& nonTerminal = entry.first;
@@ -76,9 +78,9 @@ set<char> GrammarChecker::computeFollow(const string& nonTerminal) {
 
     for (const Production& rule : productionVector) {
         for (const auto& production : rule.productions) {
-            auto pos = std::find(production.begin(), production.end(), nonTerminal);
+            auto pos = find(production.begin(), production.end(), nonTerminal);
             if (pos != production.end()) {
-                size_t index = std::distance(production.begin(), pos);
+                size_t index = distance(production.begin(), pos);
 
                 // Case: A -> αBβ, where B is non-terminal
                 if (index + 1 < production.size()) {
@@ -120,13 +122,6 @@ set<char> GrammarChecker::computeFollow(const string& nonTerminal) {
 
     return followSet;
 }
-set<string>  GrammarChecker::collectNonTerminals(const vector<Production>& grammar) {
-    set<string> nonTerminals;
-    for (const Production& rule : grammar) {
-        nonTerminals.insert(rule.nonTerminal);
-    }
-    return nonTerminals;
-}
 // Function to compute First sets for each non-terminal
 void  GrammarChecker::computeFirstSets(unordered_map<string, set<char>>& firstSets) {
     for (const string& nonTerminal : nonTerminals ) {
@@ -150,7 +145,7 @@ bool GrammarChecker::isLL1Grammar() {
 }
 
 int main() {
-    std::unordered_map<std::string, std::vector<std::vector<std::string>>> grammar = {
+    unordered_map<string, vector<vector<string>>> grammar = {
             {"S", {{"A", "C", "B"}, {"C", "b", "b"}, {"B", "a"}}},
             {"A", {{"d", "a"}, {"B", "C"}}},
             {"B", {{"g"}, {EPSILON}}},
@@ -161,30 +156,30 @@ int main() {
     grammarChecker.isLL1Grammar();
     // Print firstSets
     const auto& firstSets = grammarChecker.getFirstSets();
-    std::cout << "First Sets:\n";
+    cout << "First Sets:\n";
     for (const auto& entry : firstSets) {
-        const std::string& nonTerminal = entry.first;
-        const std::set<char>& firstSet = entry.second;
+        const string& nonTerminal = entry.first;
+        const set<char>& firstSet = entry.second;
 
-        std::cout << nonTerminal << ": { ";
+        cout << nonTerminal << ": { ";
         for (char symbol : firstSet) {
-            std::cout << symbol << ' ';
+            cout << symbol << ' ';
         }
-        std::cout << "}\n";
+        cout << "}\n";
     }
 
     // Print followSets
     const auto& followSets = grammarChecker.getFollowSets();
-    std::cout << "\nFollow Sets:\n";
+    cout << "\nFollow Sets:\n";
     for (const auto& entry : followSets) {
-        const std::string& nonTerminal = entry.first;
-        const std::set<char>& followSet = entry.second;
+        const string& nonTerminal = entry.first;
+        const set<char>& followSet = entry.second;
 
-        std::cout << nonTerminal << ": { ";
+        cout << nonTerminal << ": { ";
         for (char symbol : followSet) {
-            std::cout << symbol << ' ';
+            cout << symbol << ' ';
         }
-        std::cout << "}\n";
+        cout << "}\n";
     }
     return 0;
 }
