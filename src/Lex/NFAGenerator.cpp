@@ -1,13 +1,14 @@
 #include <Lex/NFAGenerator.h>
 #include <stack>
 #include <iostream>
+#include <map>
 
 NFAGenerator::NFAGenerator() = default;
 
 NFAGenerator::~NFAGenerator() = default;
 
 NFA *NFAGenerator::buildNFA(const std::unordered_map<std::string, std::string> &regexMap,
-                            const std::unordered_map<std::string, std::string> &regexDefMap) {
+                            const std::map<std::string, std::string> &regexDefMap) {
     std::vector<NFA*> nfas;
     for (auto& regexDef : regexDefMap) {
         NFA* nfa = regexToNFA(regexDef.second);
@@ -26,16 +27,33 @@ NFA *NFAGenerator::buildNFA(const std::unordered_map<std::string, std::string> &
  * @return NFA after regex evaluation (postfix)
  */
 NFA* NFAGenerator::regexToNFA(const std::string& regex) {
+    size_t n = regex.size();
     std::stack<NFA*> nfaStack;
-    std::stack<char> operatorStack;
+    std::stack<char> operatorStack; // word + (space or '\' or operator)
+    int i;
 
-    for (char c : regex) { // l (l|d)*
-
-        if (c == '(') {
-            operatorStack.push('(');
+    for (i = 0; i < n; i++) { // {"l (l|d)*", "\+|-", "d+|d+ . s (\L|E s)"
+        char c = regex[i];
+        if (c == '\\') { // escape-backslash for reserved symbols
+            if (i + 1 < n && regex[i + 1] == 'L') { // epsilon
+                nfaStack.push(NFA::basicCharToNFA('e'));
+            }
+            else { // eg. \+ \* \= \( \)
+                nfaStack.push(NFA::basicCharToNFA(regex[i + 1]));
+            }
+            i++;
         }
-        else if (isalpha(c) || isdigit(c) || c == '.') {
-            nfaStack.push(NFA::basicCharToNFA(c));
+        else if (isOperator(c)) { // Operator {*, +, ' ', |, -}
+            while (!operatorStack.empty() && precedence(operatorStack.top()) >= precedence(c)) {
+                char op = operatorStack.top();
+                operatorStack.pop();
+
+                processOperator(op, nfaStack);
+            }
+            operatorStack.push(c);
+        }
+        else if (c == '(') {
+            operatorStack.push('(');
         }
         else if (c == ')') {
             while (!operatorStack.empty() && operatorStack.top() != '(') {
@@ -48,14 +66,26 @@ NFA* NFAGenerator::regexToNFA(const std::string& regex) {
             if (!operatorStack.empty())
                 operatorStack.pop();
         }
-        else { // Operator encountered {*, +, ' ', |, -}
-            while (!operatorStack.empty() && precedence(operatorStack.top()) >= precedence(c)) {
-                char op = operatorStack.top();
-                operatorStack.pop();
-
-                processOperator(op, nfaStack);
+        else { // symbol encountered
+            // try to form a complete word
+            std::string word = std::string(1, c);
+            while (i + 1 < n && !isOperator(regex[i + 1]) && regex[i + 1] != '(' && regex[i + 1] != ')') {
+                word += regex[++i];
             }
-            operatorStack.push(c);
+            // check if that word in the regular definition map
+            if (regexToNFAMap.find(word) != regexToNFAMap.end()) {
+                // TODO: take a deep copy from this nfa
+                nfaStack.push(regexToNFAMap[word]);
+            }
+            else {
+                if (word.size() == 1) {
+                    nfaStack.push(NFA::basicCharToNFA(c));
+                }
+                else {
+                    // form an NFA by concatenating the characters of that word
+                    nfaStack.push(NFA::wordToNFA(word));
+                }
+            }
         }
     }
 
@@ -125,7 +155,7 @@ NFA* NFAGenerator::combineNFAs(const std::vector<NFA*>& nfas) {
     return combinedNFA;
 }
 
-int NFAGenerator::precedence(char op) {
+int NFAGenerator::precedence(char op) const {
     // Higher value means higher precedence
     if (op == '-') { // assumed higher: range operator
         return 4;
@@ -138,4 +168,8 @@ int NFAGenerator::precedence(char op) {
     } else {
         return -1;
     }
+}
+
+bool NFAGenerator::isOperator(char op) const {
+    return op == ' '|| op == '|' || op == '*' || op == '+' || op == '-';
 }

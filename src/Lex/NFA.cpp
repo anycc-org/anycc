@@ -6,6 +6,11 @@ NFA::NFA() {
     endState = new NFAState();
 }
 
+NFA::NFA(NFAState *start, NFAState *end) {
+    startState = start;
+    endState = end;
+}
+
 NFA::~NFA() = default;
 
 NFAState* NFA::getStartState() const { return startState; }
@@ -25,6 +30,26 @@ NFA* NFA::basicCharToNFA(char c) {
 }
 
 /**
+ * @return NFA of word
+ */
+NFA* NFA::wordToNFA(const std::string& word) {
+    NFA* wordNFA = new NFA();
+    NFAState* currentState = wordNFA->getStartState();
+
+    for (char c : word) {
+        if (c == '\\') { // eg ab\+c -> ab+c
+            continue;
+        }
+        NFAState* nextState = new NFAState();
+        currentState->addTransition(c, nextState);
+        currentState = nextState;
+    }
+
+    wordNFA->endState = currentState;
+    return wordNFA;
+}
+
+/**
  * @return union NFA of nfa1 | nfa2.
  */
 NFA* NFA::unionNAFs(NFA *nfa1, NFA *nfa2) {
@@ -41,9 +66,9 @@ NFA* NFA::unionNAFs(NFA *nfa1, NFA *nfa2) {
  * @return concatenation NFA of nfa1 . nfa2.
  */
 NFA* NFA::concatNAFs(NFA* nfa1, NFA* nfa2) {
-    nfa1->endState->addTransition('e', nfa2->startState);
-    nfa1->endState = nfa2->endState;
-    return nfa1;
+    NFA* resNFA = new NFA(nfa1->startState, nfa2->endState);
+    nfa1->endState->setTransitions(nfa2->startState->getTransitions());
+    return resNFA;
 }
 
 /**

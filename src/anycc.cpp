@@ -2,6 +2,7 @@
 #include <unordered_map>
 #include <Lex/NFA.h>
 #include <Lex/NFAGenerator.h>
+#include <map>
 
 
 int main() {
@@ -9,13 +10,17 @@ int main() {
     std::unordered_map<std::string, std::string> regexMap = {
             {"id", "letter (letter|digit)*"},
             {"num", "digit+|digit+ . digits (\\L|E digits)"},
-            {"relop", R"(\= \=|!\=|>|> \=|<|< \=)"},
+            {"relop", R"(\= \=|! \=|>|> \=|<|< \=)"},
+            {"assign", "="},
+            {"addop", "\\+|\\-"},
+            {"mulop", "\\*|/"},
             // Add more regular expressions as needed
     };
 
-    std::unordered_map<std::string, std::string> regexDefMap = {
+    std::map<std::string, std::string> regexDefMap = {
             {"letter", "a-z|A-Z"},
             {"digit", "0-9"},
+            {"digits", "digit+"},
             // Add more regular definitions as needed
     };
 
@@ -23,7 +28,7 @@ int main() {
     std::vector<std::string> operators = {"+", "-", "*", "/", "=", "<=", "<", ">", ">=", "!=", "=="};
     std::vector<std::string> punctuations = {";", ",", "\\(", "\\)", "{", "}"};
 
-//    NFA* testIdNFA = NFAGenerator::regexToNFA("l (l|d)*");
+//    NFA* idNFA = NFAGenerator::regexToNFA("l (l|d)*");
 
 //    NFA *aNFA = NFA::basicCharToNFA('a');
 //    NFA *bNFA = NFA::basicCharToNFA('b');
@@ -34,8 +39,18 @@ int main() {
 //    NFA* aPlusNFA = NFA::positiveClosureNFA(aNFA);
 
     NFAGenerator nfaGenerator;
-    NFA* testDigitNFA = nfaGenerator.regexToNFA("a-z|A-Z");
+    NFA* sentenceNFA = nfaGenerator.regexToNFA("ab cd");
 
-    testDigitNFA->printNFA();
+//    NFA* addopNFA = nfaGenerator.regexToNFA("\\+|\\-");
+//    NFA* mulopNFA = nfaGenerator.regexToNFA("\\*|/");
+//    NFA* relopNFA = nfaGenerator.regexToNFA(R"(\= \=|! \=|>|> \=|<|< \=)");
+
+//    NFA* digitNFA = nfaGenerator.regexToNFA("a-z|A-Z");
+
+//    NFA* wordNFA = NFA::wordToNFA("abc");
+
+//    NFA* digitsNFA = nfaGenerator.buildNFA(regexMap, regexDefMap);
+
+//    digitsNFA->printNFA();
     return 0;
 }

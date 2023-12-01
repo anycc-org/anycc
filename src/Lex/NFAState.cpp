@@ -1,5 +1,6 @@
 #include <Lex/NFAState.h>
 #include <iostream>
+#include <utility>
 
 int NFAState::id = 1;
 
@@ -11,6 +12,10 @@ void NFAState::addTransition(char c, NFAState* state) {
 
 std::unordered_map<char, std::vector<NFAState*>> NFAState::getTransitions() const {
     return transitions;
+}
+
+void NFAState::setTransitions(std::unordered_map<char, std::vector<NFAState *>> trans) {
+    transitions = std::move(trans);
 }
 
 int NFAState::getStateId() const { return stateId; }

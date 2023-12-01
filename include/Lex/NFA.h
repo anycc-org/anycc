@@ -2,16 +2,19 @@
 #include <vector>
 #include <unordered_map>
 #include <set>
+#include <string>
 #include "NFAState.h"
 
 class NFA {
 public:
     NFA();
+    NFA(NFAState* start, NFAState* end);
     ~NFA();
 
     NFAState* getStartState() const;
     NFAState* getEndState() const;
     static NFA* basicCharToNFA(char c);
+    static NFA* wordToNFA(const std::string& word);
     static NFA* unionNAFs(NFA* nfa1, NFA* nfa2);
     static NFA* concatNAFs(NFA* nfa1, NFA* nfa2);
     static NFA* kleeneStarNFA(NFA* nfa);
@@ -20,10 +23,6 @@ public:
     void printNFA() const;
 
 private:
-    NFAState *startState;
-    NFAState *endState;
-
-    NFA constructDigitNFA(NFA& startDigitNFA);
-    NFA constructLowerCaseNFA(NFA& startLetterNFA);
-    NFA constructUpperCaseNFA(NFA& startLetterNFA);
+    NFAState* startState;
+    NFAState* endState;
 };

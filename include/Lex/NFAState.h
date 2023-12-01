@@ -9,6 +9,7 @@ public:
     void addTransition(char c, NFAState *state);
 
     std::unordered_map<char, std::vector<NFAState*>> getTransitions() const;
+    void setTransitions(std::unordered_map<char, std::vector<NFAState*>> trans);
 
     int getStateId() const;
 
