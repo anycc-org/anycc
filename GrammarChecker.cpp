@@ -100,18 +100,35 @@ set<char> GrammarChecker::computeFollow(const string& nonTerminal) {
                         const set<char>& nextFirstSet = computedFirstSets[nextSymbol];
                         firstSet.insert(nextFirstSet.begin(), nextFirstSet.end());
                     }
-
                     // Add First set excluding epsilon to Follow set
                     followSet.insert(firstSet.begin(), firstSet.end());
                     followSet.erase(EPSILON[0]);
 
-                    //4) If A->pBq is a production and FIRST(q) contains Є,
-                    //   then FOLLOW(B) contains { FIRST(q) – Є } U FOLLOW(A)
+
                     // If B can derive epsilon, add Follow(A) to Follow(B)
                     if (nonTerminalHasEpsilon(nextSymbol)) {
-                        //TODO : not always it could have another Non terminal after this symbol
-                        const set<char>& followASet = computeFollow(rule.nonTerminal);
-                        followSet.insert(followASet.begin(), followASet.end());
+                        //5) If A->pBqd is a production and FIRST(q) contains Є,
+                        //   then FOLLOW(B) contains { FIRST(q) – Є } U First(d)
+                        size_t qIndex = index + 2;
+                        set<char> firstQSet;
+                        while (qIndex < production.size() && nonTerminalHasEpsilon(production[qIndex])) {
+                            const string& qSymbol = production[qIndex];
+                            const set<char>& qFirstSet = computedFirstSets[qSymbol];
+                            for (char symbol : qFirstSet) {
+                                if (symbol != EPSILON[0]) {
+                                    firstQSet.insert(symbol);
+                                }
+                            }
+                            qIndex++;
+                        }
+                        qIndex--;
+                        //4) If A->pBq is a production and FIRST(q) contains Є,
+                        //   then FOLLOW(B) contains { FIRST(q) – Є } U FOLLOW(A)
+                        followSet.insert(firstQSet.begin(), firstQSet.end());
+                        if (qIndex < production.size() &&nonTerminalHasEpsilon(production[qIndex])) {
+                            const set<char> &followASet = computeFollow(rule.nonTerminal);
+                            followSet.insert(followASet.begin(), followASet.end());
+                        }
                     }
                 } else {
                     // Case: A -> αB, where B is the last symbol
