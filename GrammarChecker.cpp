@@ -106,28 +106,36 @@ set<char> GrammarChecker::computeFollow(const string& nonTerminal) {
 
 
                     // If B can derive epsilon, add Follow(A) to Follow(B)
-                    if (nonTerminalHasEpsilon(nextSymbol)) {
+                    if (firstSet.count(EPSILON[0]) || nonTerminalHasEpsilon(nextSymbol)) {
                         //5) If A->pBqd is a production and FIRST(q) contains Є,
                         //   then FOLLOW(B) contains { FIRST(q) – Є } U First(d)
                         size_t qIndex = index + 2;
-                        set<char> firstQSet;
-                        while (qIndex < production.size() && nonTerminalHasEpsilon(production[qIndex])) {
-                            const string& qSymbol = production[qIndex];
-                            const set<char>& qFirstSet = computedFirstSets[qSymbol];
-                            for (char symbol : qFirstSet) {
-                                if (symbol != EPSILON[0]) {
-                                    firstQSet.insert(symbol);
+                        if(qIndex < production.size() && !isupper(production[qIndex][0])) //TODO: check for multiple layers
+                            followSet.insert(production[qIndex][0]);
+
+                        else{
+
+                            set<char> firstQSet;
+                            while (qIndex < production.size()  &&(computedFirstSets[production[qIndex]].count(EPSILON[0])
+                                                                    ||nonTerminalHasEpsilon(production[qIndex]))) {
+                                const string& qSymbol = production[qIndex];
+                                const set<char>& qFirstSet = computedFirstSets[qSymbol];
+                                for (char symbol : qFirstSet) {
+                                    if (symbol != EPSILON[0]) {
+                                        firstQSet.insert(symbol);
+                                    }
                                 }
+                                qIndex++;
                             }
-                            qIndex++;
-                        }
-                        qIndex--;
-                        //4) If A->pBq is a production and FIRST(q) contains Є,
-                        //   then FOLLOW(B) contains { FIRST(q) – Є } U FOLLOW(A)
-                        followSet.insert(firstQSet.begin(), firstQSet.end());
-                        if (qIndex < production.size() &&nonTerminalHasEpsilon(production[qIndex])) {
-                            const set<char> &followASet = computeFollow(rule.nonTerminal);
-                            followSet.insert(followASet.begin(), followASet.end());
+                            qIndex--;
+                            //4) If A->pBq is a production and FIRST(q) contains Є,
+                            //   then FOLLOW(B) contains { FIRST(q) – Є } U FOLLOW(A)
+                            followSet.insert(firstQSet.begin(), firstQSet.end());
+                            if (qIndex < production.size()  &&(computedFirstSets[production[qIndex]].count(EPSILON[0])
+                                                               ||nonTerminalHasEpsilon(production[qIndex]))) {
+                                const set<char> &followASet = computeFollow(rule.nonTerminal);
+                                followSet.insert(followASet.begin(), followASet.end());
+                            }
                         }
                     }
                 } else {
