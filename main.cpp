@@ -9,15 +9,12 @@
 #include "constants.h"
 int main() {
     std::unordered_map<std::string, std::vector<std::vector<std::string>>> grammar = {
-            {"S", {{"a", "B", "D", "Y","h"}}},
-            {"B", {{"c", "C"}}},
-            {"C", {{"b", "C"}, {EPSILON}}},
-            {"D", {{"E", "F"}}},
-            {"E", {{"g"}, {EPSILON}}},
-            {"Y", {{"y"}, {EPSILON}}},
-            {"F", {{"f"}, {EPSILON}}}
+            {"E", {{"T", "E'"}}},
+            {"E'", {{"+", "T", "E'"}, {EPSILON}}},
+            {"T", {{"F", "T'"}}},
+            {"T'", {{"*", "F", "T'"}, {EPSILON}}},
+            {"F", {{"(", "E", ")"}, {"id"}}}
     };
-
     GrammarChecker grammarChecker(grammar);
     grammarChecker.isLL1Grammar();
     // Print firstSets

@@ -23,8 +23,9 @@ set<char> GrammarChecker::computeFirst(const string &nonTerminal) {
                 for (const string &symbol: production) {
                     if (isupper(symbol[0])) {
                         // Handle non-terminal symbols
-                        const string &symbolStr = symbol;
-
+                        //first occurence of NonTerminal
+                        vector<SubstringInfo> substringInfoVec =  findAllLongestSubstringIndices(symbol,nonTerminals);
+                        const string& symbolStr = symbol.substr(substringInfoVec[0].start, substringInfoVec[0].end - substringInfoVec[0].start);
                         // Compute First set for the non-terminal
                         const set<char> &nonTerminalFirstSet = computeFirst(symbolStr);
                         firstSet.insert(nonTerminalFirstSet.begin(), nonTerminalFirstSet.end());

@@ -1,6 +1,7 @@
 //
 // Created by abdel on 01/12/2023.
 //
+#include <algorithm>
 #include "GrammarCheckerUtility.h"
 vector<SubstringInfo> findAllLongestSubstringIndices(const string& input, const set<string>& substrings) {
     vector<SubstringInfo> substringInfoVec;
@@ -26,10 +27,11 @@ vector<SubstringInfo> findAllLongestSubstringIndices(const string& input, const 
             pos = input.find(substring, pos + 1);  // Move to the next occurrence
         }
     }
+    sort(substringInfoVec.begin(), substringInfoVec.end(), compareSubstringInfo);
 
     return substringInfoVec;
 }
-bool isNT(const string& s,set<std::string>& nonTerminals) {
+bool isNT(const string& s,set<string>& nonTerminals) {
     return nonTerminals.find(s) != nonTerminals.end();
 }
 
@@ -39,4 +41,28 @@ set<string>  collectNonTerminals(const vector<Production>& grammar) {
         nonTerminals.insert(rule.nonTerminal);
     }
     return nonTerminals;
+}
+string getLongestUpperCaseSequence(const string& str) {
+     string currentSequence;
+     string longestSequence;
+
+    for (char ch : str) {
+        if (isupper(ch)) {
+            currentSequence += ch;
+        } else {
+            // Check if the current sequence is longer than the longest
+            if (currentSequence.length() > longestSequence.length()) {
+                longestSequence = currentSequence;
+            }
+            // Reset the current sequence
+            currentSequence.clear();
+        }
+    }
+
+    // Check if the last sequence is longer than the longest
+    if (currentSequence.length() > longestSequence.length()) {
+        longestSequence = currentSequence;
+    }
+
+    return longestSequence;
 }
