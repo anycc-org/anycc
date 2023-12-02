@@ -3,3 +3,5 @@ Makefile
 main
 .cache
 .vscode
+.idea/
+cmake-build-debug/
