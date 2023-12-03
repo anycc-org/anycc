@@ -1,16 +1,16 @@
 #include <Lex/InputReader.h>
 #include "Utilities.h"
 
-InputReader::~InputReader() {
-    delete non_terminal_symbols;
-}
-
 InputReader::InputReader(std::string *rules_file_name, Rules *rules) {
     this->rules = rules;
     this->non_terminal_symbols = new std::set<std::string>();
     auto *file = new std::ifstream(*rules_file_name);
 
     buildRules(file);
+}
+
+InputReader::~InputReader() {
+    delete non_terminal_symbols;
 }
 
 void InputReader::buildRules(std::ifstream *file) {
