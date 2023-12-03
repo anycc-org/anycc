@@ -29,6 +29,7 @@ void InputReader::parse_file(std::ifstream *file) {
             build_rule(line_type, &line);
         }
         file->close();
+        delete file;
     } else {
         std::cout << "Unable to open file";
     }

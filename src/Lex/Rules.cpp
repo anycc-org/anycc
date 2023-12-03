@@ -90,11 +90,11 @@ void Rules::print_rules() {
 }
 
 std::unordered_map<std::string, std::pair<std::string, int>> *Rules::getRegularExpressionsMap() const {
-    return new std::unordered_map<std::string, std::pair<std::string, int>>(*regular_expressions_map);
+    return regular_expressions_map;
 }
 
 std::unordered_map<std::string, std::pair<std::string, int>> *Rules::getRegularDefinitionsMap() const {
-    return new std::unordered_map<std::string, std::pair<std::string, int>>(*regular_definitions_map);
+    return regular_definitions_map;
 }
 
 std::vector<Token*> *Rules::getRegularExpressions() const {
@@ -114,7 +114,7 @@ std::vector<std::string> *Rules::getPunctuations() const {
 }
 
 void Rules::setRegularExpressionsTokensVector(std::vector<Token*> *regularExpressionsTokensVector) {
-    regular_expressions_tokens_vector = new std::vector<Token*>(*regularExpressionsTokensVector);
+    regular_expressions_tokens_vector = regularExpressionsTokensVector;
 }
 
 void Rules::setRegularDefinitionsTokensVector(std::vector<Token*> *regularDefinitionsTokensVector) {
