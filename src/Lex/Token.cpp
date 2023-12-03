@@ -1,8 +1,6 @@
 #include <Lex/Token.h>
 
-Token::Token() {
-
-}
+Token::Token() = default;
 
 Token::Token(std::string *key, std::string *value) {
     this->key = key;
@@ -10,7 +8,8 @@ Token::Token(std::string *key, std::string *value) {
 }
 
 Token::~Token() {
-
+    delete key;
+    delete value;
 }
 
 std::string *Token::getKey() const {

@@ -65,13 +65,19 @@ void InputReader::build_rule(RuleType type, std::string *pString) {
 }
 
 void InputReader::add_punctuation(const std::string *pString) {
-    std::string expression = pString->substr(1, pString->length() - 2);
-    add_punctuations(&expression);
+    auto *expression = new std::string(pString->substr(1, pString->length() - 2));
+    add_punctuations(expression);
+
+    delete expression;
 }
 
 void InputReader::add_keyword(const std::string *pString) {
-    std::string expression = pString->substr(1, pString->length() - 2);
-    add_keywords(&expression, new std::string(" "));
+    auto *expression = new std::string(pString->substr(1, pString->length() - 2));
+    auto *delimiter = new std::string(" ");
+    add_keywords(expression, delimiter);
+
+    delete expression;
+    delete delimiter;
 }
 
 void InputReader::add_regular_definition_or_expression(const std::string *pString, RuleType type) {
@@ -85,6 +91,9 @@ void InputReader::add_regular_definition_or_expression(const std::string *pStrin
 
     non_terminal_symbols->insert(*name);
     rules->add_rule(type, name, expression);
+
+    delete name;
+    delete expression;
 }
 
 void InputReader::add_keywords(std::string *string, std::string *delimiter) {
@@ -94,9 +103,12 @@ void InputReader::add_keywords(std::string *string, std::string *delimiter) {
         auto *keyword = new std::string(string->substr(prev, pos - prev));
         rules->add_rule(RuleType::KEYWORDS, nullptr, keyword);
         prev = pos + 1;
+        delete keyword;
     }
     auto *keyword = new std::string(string->substr(prev, pos - prev));
     rules->add_rule(RuleType::KEYWORDS, nullptr, keyword);
+
+    delete keyword;
 }
 
 void InputReader::add_punctuations(std::string *pString) {
@@ -111,11 +123,13 @@ void InputReader::add_punctuations(std::string *pString) {
             *punctuation += (*pString)[pos + 1];
             rules->add_rule(RuleType::PUNCTUATION, nullptr, punctuation);
             pos += 2;
+            delete punctuation;
         } else {
             auto *punctuation = new std::string();
             *punctuation += (*pString)[pos];
             rules->add_rule(RuleType::PUNCTUATION, nullptr, punctuation);
             pos++;
+            delete punctuation;
         }
     }
 }
