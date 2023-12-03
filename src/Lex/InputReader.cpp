@@ -65,50 +65,39 @@ void InputReader::buildRule(RuleType type, std::string *pString) {
 }
 
 void InputReader::addPunctuation(const std::string *pString) {
-    auto *expression = new std::string(pString->substr(1, pString->length() - 2));
-    addPunctuations(expression);
-
-    delete expression;
+    std::string expression = pString->substr(1, pString->length() - 2);
+    addPunctuations(&expression);
 }
 
 void InputReader::addKeyword(const std::string *pString) {
-    auto *expression = new std::string(pString->substr(1, pString->length() - 2));
-    auto *delimiter = new std::string(" ");
-    addKeywords(expression, delimiter);
-
-    delete expression;
-    delete delimiter;
+    std::string expression = pString->substr(1, pString->length() - 2);
+    std::string delimiter = " ";
+    addKeywords(&expression, &delimiter);
 }
 
 void InputReader::addRegularDefinitionOrExpression(const std::string *pString, RuleType type) {
     char c = type == RuleType::REGULAR_DEFINITION ? '=' : ':';
 
-    auto *name = new std::string(pString->substr(0, pString->find(c)));
-    name->erase(std::remove(name->begin(), name->end(), ' '), name->end());
+    std::string name = pString->substr(0, pString->find(c));
+    name.erase(std::remove(name.begin(), name.end(), ' '), name.end());
 
-    auto *expression = new std::string(pString->substr(pString->find(c) + 1));
-    expression->erase(std::remove(expression->begin(), expression->end(), ' '), expression->end());
+    std::string expression = pString->substr(pString->find(c) + 1);
+    expression.erase(std::remove(expression.begin(), expression.end(), ' '), expression.end());
 
-    non_terminal_symbols->insert(*name);
-    rules->addRule(type, name, expression);
-
-    delete name;
-    delete expression;
+    non_terminal_symbols->insert(name);
+    rules->addRule(type, &name, &expression);
 }
 
 void InputReader::addKeywords(std::string *string, std::string *delimiter) {
     std::string::size_type pos;
     std::string::size_type prev = 0;
     while ((pos = string->find(*delimiter, prev)) != std::string::npos) {
-        auto *keyword = new std::string(string->substr(prev, pos - prev));
-        rules->addRule(RuleType::KEYWORDS, nullptr, keyword);
+        std::string keyword = string->substr(prev, pos - prev);
+        rules->addRule(RuleType::KEYWORDS, nullptr, &keyword);
         prev = pos + 1;
-        delete keyword;
     }
-    auto *keyword = new std::string(string->substr(prev, pos - prev));
-    rules->addRule(RuleType::KEYWORDS, nullptr, keyword);
-
-    delete keyword;
+    std::string keyword = string->substr(prev, pos - prev);
+    rules->addRule(RuleType::KEYWORDS, nullptr, &keyword);
 }
 
 void InputReader::addPunctuations(std::string *pString) {
@@ -118,18 +107,16 @@ void InputReader::addPunctuations(std::string *pString) {
         if ((*pString)[pos] == ' ') {
             pos++;
         } else if ((*pString)[pos] == '\\') {
-            auto *punctuation = new std::string();
-            *punctuation += (*pString)[pos];
-            *punctuation += (*pString)[pos + 1];
-            rules->addRule(RuleType::PUNCTUATION, nullptr, punctuation);
+            std::string punctuation;
+            punctuation += (*pString)[pos];
+            punctuation += (*pString)[pos + 1];
+            rules->addRule(RuleType::PUNCTUATION, nullptr, &punctuation);
             pos += 2;
-            delete punctuation;
         } else {
-            auto *punctuation = new std::string();
-            *punctuation += (*pString)[pos];
-            rules->addRule(RuleType::PUNCTUATION, nullptr, punctuation);
+            std::string punctuation;
+            punctuation += (*pString)[pos];
+            rules->addRule(RuleType::PUNCTUATION, nullptr, &punctuation);
             pos++;
-            delete punctuation;
         }
     }
 }
