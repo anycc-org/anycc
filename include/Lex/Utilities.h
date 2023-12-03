@@ -10,7 +10,7 @@ public:
     static std::vector<SubstringInfo>
     findAllLongestSubstringIndices(std::string *input, std::set<std::string> *substrings);
 
-    static void fixSpacesGivenType(std::unordered_map<std::string, std::pair<std::string, int>> regular_rules, Rules *rules,
+    static void fixSpacesGivenType(const std::unordered_map<std::string, std::pair<std::string, int>>& regular_rules, Rules *rules,
                                    std::set<std::string> *non_terminal_symbols, RuleType type);
 
     static int
@@ -24,4 +24,16 @@ public:
     static std::vector<Token*> convertMapToVector(const std::unordered_map<std::string, std::pair<std::string, int>>& map);
 
     static void deleteVectorOfTokens(std::vector<Token*> *vector);
+
+    static bool isCloseBrace(const std::string *expression, int i);
+
+    static bool isConcat(const std::string *expression, int i);
+
+    static bool isOr(const std::string *expression, int i);
+
+    static bool isKleeneClosure(const std::string *expression, int i);
+
+    static bool isPositiveClosure(const std::string *expression, int i);
+
+    static bool isOpenBrace(const std::string *expression, int i);
 };

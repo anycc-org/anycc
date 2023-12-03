@@ -26,4 +26,5 @@ add_executable(anycc
         src/anycc.cpp
         include/Lex/Utilities.h
         src/Lex/Utilities.cpp
+        include/Lex/Operator.h
 )

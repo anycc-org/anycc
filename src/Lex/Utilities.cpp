@@ -1,4 +1,5 @@
 #include "Utilities.h"
+#include "Operator.h"
 
 std::vector<SubstringInfo>
 Utilities::findAllLongestSubstringIndices(std::string *input, std::set<std::string> *substrings) {
@@ -9,7 +10,8 @@ Utilities::findAllLongestSubstringIndices(std::string *input, std::set<std::stri
         while (pos != std::string::npos) {
             int endIndex = static_cast<int>(pos + substring.length());
 
-            if ((endIndex < input->length()) && ((*input)[endIndex] == '+' || (*input)[endIndex] == '*'))
+            if ((endIndex < input->length()) && ((*input)[endIndex] == (char) Operator::PLUS ||
+                                                 (*input)[endIndex] == (char) Operator::STAR))
                 endIndex++;
 
             bool found = false;
@@ -43,8 +45,9 @@ void Utilities::fixSpaces(Rules *rules, std::set<std::string> *non_terminal_symb
     fixSpacesGivenType(regular_definitions, rules, non_terminal_symbols, RuleType::REGULAR_DEFINITION);
 }
 
-void Utilities::fixSpacesGivenType(std::unordered_map<std::string, std::pair<std::string, int>> regular_rules, Rules *rules,
-                                   std::set<std::string> *non_terminal_symbols, RuleType type) {
+void
+Utilities::fixSpacesGivenType(const std::unordered_map<std::string, std::pair<std::string, int>> &regular_rules,
+                              Rules *rules, std::set<std::string> *non_terminal_symbols, RuleType type) {
     for (auto &re: regular_rules) {
         auto *expression = new std::string(re.second.first);
         auto *name = new std::string(re.first);
@@ -67,16 +70,17 @@ Utilities::detectConcatThenAddSpaces(std::string *expression, const std::vector<
     int startIdx = substringInfoVec[i].start;
     int endIdx = substringInfoVec[i].end;
 
-    if (startIdx != 0 && (*expression)[startIdx + offset - 1] != '(' &&
-        (*expression)[startIdx + offset - 1] != ')' &&
-        (*expression)[startIdx + offset - 1] != '|' && (i == 0 || substringInfoVec[i - 1].end + offset !=
-                                                                  startIdx + offset)) {
+    if (startIdx != 0 && isOpenBrace(expression, startIdx + offset - 1) &&
+        isCloseBrace(expression, startIdx + offset - 1) &&
+        isOr(expression, startIdx + offset - 1) &&
+        (i == 0 || substringInfoVec[i - 1].end + offset != startIdx + offset)) {
         expression->insert(startIdx + offset, " ");
         offset++;
     }
 
-    if ((*expression)[endIdx + offset] != '(' && (*expression)[endIdx + offset] != ')' &&
-        (*expression)[endIdx + offset] != '|') {
+    if (isOpenBrace(expression, endIdx + offset) &&
+        isCloseBrace(expression, endIdx + offset) &&
+        isOr(expression, endIdx + offset)) {
         expression->insert(endIdx + offset, " ");
         offset++;
     }
@@ -85,24 +89,52 @@ Utilities::detectConcatThenAddSpaces(std::string *expression, const std::vector<
 
 void Utilities::addSpaceAfterAndBeforeBraces(std::string *expression) {
     for (int i = 0; i < expression->length() - 1; i++) {
-        if ((*expression)[i] == ')' && (*expression)[i + 1] != ' ' && (*expression)[i + 1] != '|' &&
-            (*expression)[i + 1] != '*' && (*expression)[i + 1] != '+') {
+        if (isCloseBrace(expression, i) &&
+            isConcat(expression, i) &&
+            isOr(expression, i) &&
+            isKleeneClosure(expression, i) &&
+            isPositiveClosure(expression, i)) {
             expression->insert(i + 1, " ");
             i++;
-        } else if (i + 2 < expression->length() && (*expression)[i] == ')' &&
-                   ((*expression)[i + 1] == '*' || (*expression)[i + 1] == '+')
-                   && (*expression)[i + 2] != ' ' && (*expression)[i + 2] != '|') {
+        } else if (i + 2 < expression->length() && isCloseBrace(expression, i) &&
+                   (isKleeneClosure(expression, i + 1) || isPositiveClosure(expression, i + 1))
+                   && isConcat(expression, i + 2) && isOr(expression, i + 2)) {
             expression->insert(i + 2, " ");
             i++;
-        } else if (i != 0 && (*expression)[i] == '(' && (*expression)[i - 1] != ' ' && (*expression)[i - 1] != '|') {
+        } else if (i != 0 && isOpenBrace(expression, i) &&
+                   isConcat(expression, i - 1) &&
+                   isOr(expression, i - 1)) {
             expression->insert(i, " ");
             i++;
         }
     }
 }
 
-std::vector<Token*> Utilities::convertMapToVector(const std::unordered_map<std::string, std::pair<std::string, int>>& map) {
-    auto vector = std::vector<Token*>(map.size());
+bool Utilities::isOpenBrace(const std::string *expression, int i) {
+    return (*expression)[i] == (char) Operator::OPEN_BRACE;
+}
+
+bool Utilities::isPositiveClosure(const std::string *expression, int i) {
+    return (*expression)[i + 1] != (char) Operator::PLUS;
+}
+
+bool Utilities::isKleeneClosure(const std::string *expression, int i) {
+    return (*expression)[i + 1] != (char) Operator::STAR;
+}
+
+bool Utilities::isOr(const std::string *expression, int i) { return (*expression)[i + 1] != (char) Operator::OR; }
+
+bool Utilities::isConcat(const std::string *expression, int i) {
+    return (*expression)[i + 1] != (char) Operator::CONCAT;
+}
+
+bool Utilities::isCloseBrace(const std::string *expression, int i) {
+    return (*expression)[i] == (char) Operator::CLOSE_BRACE;
+}
+
+std::vector<Token *>
+Utilities::convertMapToVector(const std::unordered_map<std::string, std::pair<std::string, int>> &map) {
+    auto vector = std::vector<Token *>(map.size());
 
     for (auto &item: map) {
         auto *key = new std::string(item.first);
@@ -114,8 +146,8 @@ std::vector<Token*> Utilities::convertMapToVector(const std::unordered_map<std::
     return vector;
 }
 
-void Utilities::deleteVectorOfTokens(std::vector<Token*> *vector) {
-    for (auto token : *vector) {
+void Utilities::deleteVectorOfTokens(std::vector<Token *> *vector) {
+    for (auto token: *vector) {
         delete token;
     }
 }
