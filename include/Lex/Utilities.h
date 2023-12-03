@@ -3,6 +3,7 @@
 #include <vector>
 #include "RuleType.h"
 #include "InputReader.h"
+#include "Operator.h"
 
 
 class Utilities {
