@@ -39,7 +39,8 @@ private:
     std::vector<Token*> regular_definitions_tokens_vector;
     std::vector<std::string> keywords;
     std::vector<std::string> punctuations;
-    int expression_id, definition_id;
+    int expression_id;
+    int definition_id;
 
     void addRegularExpression(std::string *name, std::string *expression);
 
