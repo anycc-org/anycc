@@ -46,15 +46,15 @@ int main() {
 //    NFA* mulopNFA = nfaGenerator.regexToNFA("\\*|/");
 //    NFA* relopNFA = nfaGenerator.regexToNFA(R"(\= \=|! \=|>|> \=|<|< \=)");
 
-//    NFA* digitNFA = nfaGenerator.regexToNFA("a|b");
-//    digitNFA->printNFA();
+   NFA* digitNFA = nfaGenerator.regexToNFA("a|b");
+   digitNFA->printNFA();
 
 //    NFA* wordNFA = NFA::wordToNFA("{");
 //    wordNFA->printNFA();
 
-    NFA* testNFA = nfaGenerator.buildNFA(regexMap, regexDefMap, keywords, operators, punctuations);
-//
-    testNFA->printNFA();
+//     NFA* testNFA = nfaGenerator.buildNFA(regexMap, regexDefMap, keywords, operators, punctuations);
+// //
+//     testNFA->printNFA();
 
     // Create an original NFA
 //    NFA* originalNFA = NFA::basicCharToNFA('a');
@@ -70,6 +70,12 @@ int main() {
     // Cleanup memory
 //    delete originalNFA;
 //    delete copiedNFA;
+
+    NFA* nfa = new NFA();
+
+    NFA::removeEpsilonTransitions(nfa);
+    NFA::removeEpsilonTransitions(nfa, true);
+    NFA::removeEpsilonTransitions(nfa, false);
 
     return 0;
 }
