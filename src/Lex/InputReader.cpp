@@ -1,5 +1,5 @@
 #include <Lex/InputReader.h>
-#include "utilities.h"
+#include "Utilities.h"
 
 InputReader::~InputReader() {
     delete non_terminal_symbols;
@@ -15,9 +15,9 @@ InputReader::InputReader(std::string *rules_file_name, Rules *rules) {
 
 void InputReader::buildRules(std::ifstream *file) {
     parseFile(file);
-    utilities::fixSpaces(rules, non_terminal_symbols);
-    rules->setRegularDefinitionsTokensVector(utilities::convertMapToVector(rules->getRegularDefinitionsMap()));
-    rules->setRegularExpressionsTokensVector(utilities::convertMapToVector(rules->getRegularExpressionsMap()));
+    Utilities::fixSpaces(rules, non_terminal_symbols);
+    rules->setRegularDefinitionsTokensVector(Utilities::convertMapToVector(rules->getRegularDefinitionsMap()));
+    rules->setRegularExpressionsTokensVector(Utilities::convertMapToVector(rules->getRegularExpressionsMap()));
 }
 
 void InputReader::parseFile(std::ifstream *file) {

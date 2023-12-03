@@ -1,7 +1,7 @@
-#include "utilities.h"
+#include "Utilities.h"
 
 std::vector<SubstringInfo>
-utilities::findAllLongestSubstringIndices(std::string *input, std::set<std::string> *substrings) {
+Utilities::findAllLongestSubstringIndices(std::string *input, std::set<std::string> *substrings) {
     std::vector<SubstringInfo> substringInfoVec;
 
     for (const auto &substring: *substrings) {
@@ -33,7 +33,7 @@ utilities::findAllLongestSubstringIndices(std::string *input, std::set<std::stri
     return substringInfoVec;
 }
 
-void utilities::fixSpaces(Rules *rules, std::set<std::string> *non_terminal_symbols) {
+void Utilities::fixSpaces(Rules *rules, std::set<std::string> *non_terminal_symbols) {
     auto regular_expressions = rules->getRegularExpressionsMap();
 
     fixSpacesGivenType(regular_expressions, rules, non_terminal_symbols, RuleType::REGULAR_EXPRESSION);
@@ -43,7 +43,7 @@ void utilities::fixSpaces(Rules *rules, std::set<std::string> *non_terminal_symb
     fixSpacesGivenType(regular_definitions, rules, non_terminal_symbols, RuleType::REGULAR_DEFINITION);
 }
 
-void utilities::fixSpacesGivenType(std::unordered_map<std::string, std::pair<std::string, int>> regular_rules, Rules *rules,
+void Utilities::fixSpacesGivenType(std::unordered_map<std::string, std::pair<std::string, int>> regular_rules, Rules *rules,
                                    std::set<std::string> *non_terminal_symbols, RuleType type) {
     for (auto &re: regular_rules) {
         auto *expression = new std::string(re.second.first);
@@ -61,7 +61,7 @@ void utilities::fixSpacesGivenType(std::unordered_map<std::string, std::pair<std
 }
 
 int
-utilities::detectConcatThenAddSpaces(std::string *expression, const std::vector<SubstringInfo> &substringInfoVec,
+Utilities::detectConcatThenAddSpaces(std::string *expression, const std::vector<SubstringInfo> &substringInfoVec,
                                      int offset, int i) {
 
     int startIdx = substringInfoVec[i].start;
@@ -83,7 +83,7 @@ utilities::detectConcatThenAddSpaces(std::string *expression, const std::vector<
     return offset;
 }
 
-void utilities::addSpaceAfterAndBeforeBraces(std::string *expression) {
+void Utilities::addSpaceAfterAndBeforeBraces(std::string *expression) {
     for (int i = 0; i < expression->length() - 1; i++) {
         if ((*expression)[i] == ')' && (*expression)[i + 1] != ' ' && (*expression)[i + 1] != '|' &&
             (*expression)[i + 1] != '*' && (*expression)[i + 1] != '+') {
@@ -101,7 +101,7 @@ void utilities::addSpaceAfterAndBeforeBraces(std::string *expression) {
     }
 }
 
-std::vector<Token*> utilities::convertMapToVector(const std::unordered_map<std::string, std::pair<std::string, int>>& map) {
+std::vector<Token*> Utilities::convertMapToVector(const std::unordered_map<std::string, std::pair<std::string, int>>& map) {
     auto vector = std::vector<Token*>(map.size());
 
     for (auto &item: map) {
@@ -114,7 +114,7 @@ std::vector<Token*> utilities::convertMapToVector(const std::unordered_map<std::
     return vector;
 }
 
-void utilities::deleteVectorOfTokens(std::vector<Token*> *vector) {
+void Utilities::deleteVectorOfTokens(std::vector<Token*> *vector) {
     for (auto token : *vector) {
         delete token;
     }

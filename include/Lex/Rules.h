@@ -16,17 +16,17 @@ public:
 
     void printRules();
 
-    std::unordered_map<std::string, std::pair<std::string, int>> getRegularExpressionsMap() const;
+    std::unordered_map<std::string, std::pair<std::string, int>> &getRegularExpressionsMap();
 
-    std::unordered_map<std::string, std::pair<std::string, int>> getRegularDefinitionsMap() const;
+    std::unordered_map<std::string, std::pair<std::string, int>> &getRegularDefinitionsMap();
 
-    std::vector<Token *> getRegularExpressions() const;
+    std::vector<Token *> &getRegularExpressions();
 
-    std::vector<Token *> getRegularDefinitions() const;
+    std::vector<Token *> &getRegularDefinitions();
 
-    std::vector<std::string> getKeywords() const;
+    std::vector<std::string> &getKeywords();
 
-    std::vector<std::string> getPunctuations() const;
+    std::vector<std::string> &getPunctuations();
 
     void setRegularExpressionsTokensVector(std::vector<Token*> regular_expressions_vector);
 

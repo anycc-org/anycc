@@ -1,7 +1,7 @@
 #include <iostream>
 #include <utility>
 #include "Rules.h"
-#include "utilities.h"
+#include "Utilities.h"
 
 Rules::Rules() {
     regular_expressions_map = std::unordered_map<std::string, std::pair<std::string, int>>();
@@ -15,8 +15,8 @@ Rules::Rules() {
 }
 
 Rules::~Rules() {
-    utilities::deleteVectorOfTokens(&regular_definitions_tokens_vector);
-    utilities::deleteVectorOfTokens(&regular_expressions_tokens_vector);
+    Utilities::deleteVectorOfTokens(&regular_definitions_tokens_vector);
+    Utilities::deleteVectorOfTokens(&regular_expressions_tokens_vector);
 }
 
 void Rules::addPunctuation(std::string *punctuation) {
@@ -89,27 +89,27 @@ void Rules::printRules() {
     }
 }
 
-std::unordered_map<std::string, std::pair<std::string, int>> Rules::getRegularExpressionsMap() const {
+std::unordered_map<std::string, std::pair<std::string, int>> &Rules::getRegularExpressionsMap() {
     return regular_expressions_map;
 }
 
-std::unordered_map<std::string, std::pair<std::string, int>> Rules::getRegularDefinitionsMap() const {
+std::unordered_map<std::string, std::pair<std::string, int>> &Rules::getRegularDefinitionsMap() {
     return regular_definitions_map;
 }
 
-std::vector<Token *> Rules::getRegularExpressions() const {
+std::vector<Token *> &Rules::getRegularExpressions() {
     return regular_expressions_tokens_vector;
 }
 
-std::vector<Token *> Rules::getRegularDefinitions() const {
+std::vector<Token *> &Rules::getRegularDefinitions() {
     return regular_definitions_tokens_vector;
 }
 
-std::vector<std::string> Rules::getKeywords() const {
+std::vector<std::string> &Rules::getKeywords() {
     return keywords;
 }
 
-std::vector<std::string> Rules::getPunctuations() const {
+std::vector<std::string> &Rules::getPunctuations() {
     return punctuations;
 }
 

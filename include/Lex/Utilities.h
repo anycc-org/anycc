@@ -5,7 +5,7 @@
 #include "InputReader.h"
 
 
-class utilities {
+class Utilities {
 public:
     static std::vector<SubstringInfo>
     findAllLongestSubstringIndices(std::string *input, std::set<std::string> *substrings);

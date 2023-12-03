@@ -24,6 +24,6 @@ add_executable(anycc
         src/Lex/Token.cpp
         src/Lex/TransTable.cpp
         src/anycc.cpp
-        include/Lex/utilities.h
-        src/Lex/utilities.cpp
+        include/Lex/Utilities.h
+        src/Lex/Utilities.cpp
 )
