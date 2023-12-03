@@ -15,5 +15,5 @@ void Lex::read_rules() {
     rules = new Rules();
     inputReader = new InputReader(this->rules_file_name, rules);
 
-    rules->print_rules();
+    rules->printRules();
 }
