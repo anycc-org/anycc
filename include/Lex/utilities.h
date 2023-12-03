@@ -21,7 +21,7 @@ public:
 
     static void fixSpaces(Rules *rules, std::set<std::string> *non_terminal_symbols);
 
-    static std::vector<Token*> convertMapToVector(std::unordered_map<std::string, std::pair<std::string, int>> map);
+    static std::vector<Token*> convertMapToVector(const std::unordered_map<std::string, std::pair<std::string, int>>& map);
 
     static void deleteVectorOfTokens(std::vector<Token*> *vector);
 };

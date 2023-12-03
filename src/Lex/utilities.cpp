@@ -101,7 +101,7 @@ void utilities::addSpaceAfterAndBeforeBraces(std::string *expression) {
     }
 }
 
-std::vector<Token*> utilities::convertMapToVector(std::unordered_map<std::string, std::pair<std::string, int>> map) {
+std::vector<Token*> utilities::convertMapToVector(const std::unordered_map<std::string, std::pair<std::string, int>>& map) {
     auto vector = std::vector<Token*>(map.size());
 
     for (auto &item: map) {
