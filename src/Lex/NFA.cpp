@@ -15,13 +15,12 @@ NFA::NFA(NFAState *start, NFAState *end) {
 NFA::NFA(const NFA& other) noexcept { // copy constructor
     std::unordered_map<int, NFAState*> copiedStates;
     endState = new NFAState(*(other.endState), copiedStates);
+    endState->setTokenName(other.endState->getTokenName());
     startState = new NFAState(*(other.startState), copiedStates);
     copiedStates.clear();
 }
 
-NFA::~NFA() {
-    delete startState;
-}
+NFA::~NFA() { delete startState; }
 
 NFAState* NFA::getStartState() const { return startState; }
 
@@ -30,6 +29,8 @@ NFAState* NFA::getEndState() const { return endState; }
 std::string NFA::getTokenName() const { return endState->getTokenName(); }
 
 void NFA::setTokenName(const std::string& name) { endState->setTokenName(name); }
+
+void NFA::addEndState(NFAState *state) { endStates.push_back(state); }
 
 /**
  * A symbol a of the input alphabet is converted to an NFA with two states.
@@ -143,4 +144,5 @@ void NFA::printNFA() const {
     std::cout << "Start state: " << startState->getStateId() << std::endl;
     std::cout << "End state: " << endState->getStateId() << "\n\n";
     startState->printState();
+    std::cout << "Token: " << tokenName << std::endl;
 }

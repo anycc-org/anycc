@@ -153,7 +153,7 @@ void NFAGenerator::processOperator(char op, std::stack<NFA*>& nfaStack) {
         nfaStack.push(NFA::unionRangeNFAs(lhs, rhs));
     }
     else {
-        // unknown operator
+        std::cerr << "Invalid operator: " << op << std::endl;
     }
 }
 
@@ -163,6 +163,7 @@ NFA* NFAGenerator::combineNFAs(std::vector<NFA*>& nfas) {
 
     for (const NFA* nfa : nfas) {
         combinedStart->addTransition('e', nfa->getStartState());
+        combinedNFA->addEndState(nfa->getEndState());
     }
 
     nfas.clear();
@@ -183,6 +184,7 @@ int NFAGenerator::precedence(char op) const {
     } else if (op == '|') { // Union
         return 1;
     } else {
+        std::cerr << "Invalid operator: " << op << std::endl;
         return -1;
     }
 }

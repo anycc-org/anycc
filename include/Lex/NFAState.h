@@ -13,9 +13,9 @@ public:
     std::unordered_map<char, std::vector<NFAState*>> getTransitions() const;
     void setTransitions(std::unordered_map<char, std::vector<NFAState*>> trans);
     int getStateId() const;
-    bool isEndState() const;
     std::string getTokenName() const;
     void setTokenName(const std::string& name);
+    bool isEndState() const;
     void printState() const;
 private:
     static int id;
