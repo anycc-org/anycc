@@ -2,15 +2,19 @@
 #include "Rules.h"
 
 Rules::Rules() {
-    regular_expressions = new std::unordered_map<std::string, std::string>();
-    regular_definitions = new std::unordered_map<std::string, std::string>();
+    regular_expressions_map = new std::unordered_map<std::string, std::pair<std::string, int>>();
+    regular_definitions_map = new std::unordered_map<std::string, std::pair<std::string, int>>();
     keywords = new std::vector<std::string>();
     punctuations = new std::vector<std::string>();
+    expression_id = 0;
+    definition_id = 0;
 }
 
 Rules::~Rules() {
-    delete regular_expressions;
-    delete regular_definitions;
+    delete regular_expressions_map;
+    delete regular_definitions_map;
+    delete regular_expressions_tokens_vector;
+    delete regular_definitions_tokens_vector;
     delete keywords;
     delete punctuations;
 }
@@ -20,11 +24,20 @@ void Rules::add_punctuation(std::string *punctuation) {
 }
 
 void Rules::add_regular_definition(std::string *name, std::string *definition) {
-    this->regular_definitions->insert(std::make_pair(*name, *definition));
+    if (regular_definitions_map->find(*name) != regular_definitions_map->end()) {
+        (*regular_definitions_map)[*name] = {*definition, (*regular_definitions_map)[*name].second};
+        return;
+    }
+    (*regular_definitions_map)[*name] = {*definition, definition_id++};
 }
 
 void Rules::add_regular_expression(std::string *name, std::string *expression) {
-    this->regular_expressions->insert(std::make_pair(*name, *expression));
+    if (regular_expressions_map->find(*name) != regular_expressions_map->end()) {
+        (*regular_expressions_map)[*name] = {*expression, (*regular_expressions_map)[*name].second};
+        return;
+    }
+
+    (*regular_expressions_map)[*name] = {*expression, expression_id++};
 }
 
 void Rules::add_keyword(std::string *keyword) {
@@ -53,14 +66,14 @@ void Rules::add_rule(RuleType type, std::string *name, std::string *expression) 
 
 void Rules::print_rules() {
     std::cout << "\n\n" << "Regular Expressions:" << "\n";
-    for (auto &re : *regular_expressions) {
-        std::cout << re.first << " : " << re.second << std::endl;
+    for (auto re : *regular_expressions_tokens_vector) {
+        std::cout << *re->getKey() << " : " << *re->getValue() << std::endl;
     }
     std::cout << "\n\n";
 
     std::cout << "Regular Definitions:" << "\n";
-    for (auto &rd : *regular_definitions) {
-        std::cout << rd.first << " : " << rd.second << std::endl;
+    for (auto rd : *regular_definitions_tokens_vector) {
+        std::cout << *rd->getKey() << " = " << *rd->getValue() << std::endl;
     }
     std::cout << "\n\n";
 
@@ -74,4 +87,36 @@ void Rules::print_rules() {
     for (auto &punc : *punctuations) {
         std::cout << punc << std::endl;
     }
+}
+
+std::unordered_map<std::string, std::pair<std::string, int>> *Rules::getRegularExpressionsMap() const {
+    return new std::unordered_map<std::string, std::pair<std::string, int>>(*regular_expressions_map);
+}
+
+std::unordered_map<std::string, std::pair<std::string, int>> *Rules::getRegularDefinitionsMap() const {
+    return new std::unordered_map<std::string, std::pair<std::string, int>>(*regular_definitions_map);
+}
+
+std::vector<Token*> *Rules::getRegularExpressions() const {
+    return regular_expressions_tokens_vector;
+}
+
+std::vector<Token*> *Rules::getRegularDefinitions() const {
+    return regular_definitions_tokens_vector;
+}
+
+std::vector<std::string> *Rules::getKeywords() const {
+    return keywords;
+}
+
+std::vector<std::string> *Rules::getPunctuations() const {
+    return punctuations;
+}
+
+void Rules::setRegularExpressionsTokensVector(std::vector<Token*> *regularExpressionsTokensVector) {
+    regular_expressions_tokens_vector = new std::vector<Token*>(*regularExpressionsTokensVector);
+}
+
+void Rules::setRegularDefinitionsTokensVector(std::vector<Token*> *regularDefinitionsTokensVector) {
+    regular_definitions_tokens_vector = regularDefinitionsTokensVector;
 }
