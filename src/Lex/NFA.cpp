@@ -1,8 +1,6 @@
-#include "Lex/NFAState.h"
 #include <Lex/NFA.h>
 #include <iostream>
 #include <stack>
-#include <unordered_map>
 
 NFA::NFA() {
     startState = new NFAState();
@@ -79,9 +77,7 @@ NFA* NFA::unionNAFs(NFA *nfa1, NFA *nfa2) {
  */
 NFA* NFA::concatNAFs(NFA* nfa1, NFA* nfa2) {
     NFA* resNFA = new NFA(nfa1->startState, nfa2->endState);
-    std::unordered_map<char, std::vector<State*>> trans = nfa2->startState->getTransitions(); 
-    std::unordered_map<char, std::vector<NFAState*>> new_trans(trans.begin(), trans.end());
-    nfa1->endState->setTransitions(new_trans);
+    nfa1->endState->setTransitions(nfa2->startState->getTransitions());
     return resNFA;
 }
 
@@ -133,15 +129,7 @@ NFA* NFA::unionRangeNFAs(NFA* rangeStartNFA, NFA* rangeEndNFA) {
     return rangeNFA;
 }
 
-
-NFA* NFA::removeEpsilonTransitions(NFA *nfa, bool inplace) {
-    
-    NFA* epsilon_nfa = nfa;
-    if(!inplace) epsilon_nfa = new NFA(*nfa);
-    
-        
-
-
+NFA* NFA::removeEpsilonTransitions(NFA* nfa, bool inplace) {
     return nullptr;
 }
 
@@ -153,5 +141,3 @@ void NFA::printNFA() const {
     std::cout << "End state: " << endState->getStateId() << std::endl;
     startState->printState();
 }
-
-

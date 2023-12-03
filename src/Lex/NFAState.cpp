@@ -1,4 +1,3 @@
-#include "Lex/State.h"
 #include <Lex/NFAState.h>
 #include <iostream>
 #include <utility>
@@ -32,8 +31,8 @@ void NFAState::addTransition(char c, NFAState* state) {
     transitions[c].push_back(state);
 }
 
-std::unordered_map<char, std::vector<State*>> NFAState::getTransitions() {
-    return std::unordered_map<char, std::vector<State*>>(transitions.begin(), transitions.end());
+std::unordered_map<char, std::vector<NFAState*>> NFAState::getTransitions() const {
+    return transitions;
 }
 
 void NFAState::setTransitions(std::unordered_map<char, std::vector<NFAState *>> trans) {
@@ -45,4 +44,29 @@ int NFAState::getStateId() const { return stateId; }
 
 bool NFAState::isEndState() const {
     return transitions.empty();
+}
+
+void NFAState::printState() const {
+    // visualize the NFA using dfs
+    std::unordered_map<int, bool> visited;
+    std::stack<NFAState*> stack;
+    stack.push(const_cast<NFAState*>(this));
+
+    while (!stack.empty()) {
+        NFAState* currentState = stack.top();
+        stack.pop();
+        visited[currentState->getStateId()] = true;
+        std::cout << currentState->getStateId();
+
+        for (auto& transition : currentState->getTransitions()) {
+            std::cout << "  on(" << transition.first << ") -> ";
+            for (NFAState* state : transition.second) {
+                std::cout << state->getStateId() << " ";
+                if (visited.find(state->getStateId()) == visited.end()) {
+                    stack.push(state);
+                }
+            }
+        }
+        std::cout << std::endl;
+    }
 }

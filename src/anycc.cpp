@@ -1,9 +1,10 @@
+#include "Lex/NFAState.h"
 #include <iostream>
 #include <unordered_map>
 #include <Lex/NFA.h>
 #include <Lex/NFAGenerator.h>
 #include <map>
-
+#include <Lex/TransitionDiagram.h>
 
 int main() {
     // Example usage
@@ -46,9 +47,14 @@ int main() {
 //    NFA* mulopNFA = nfaGenerator.regexToNFA("\\*|/");
 //    NFA* relopNFA = nfaGenerator.regexToNFA(R"(\= \=|! \=|>|> \=|<|< \=)");
 
-   NFA* digitNFA = nfaGenerator.regexToNFA("a|b");
-   digitNFA->printNFA();
-
+    NFA* digitNFA = nfaGenerator.regexToNFA("a|b");
+    digitNFA->printNFA();
+    TransitionDiagram* table = new TransitionDiagram(digitNFA->getStartState());
+    std::vector<const NFAState*> states = table->lookup(4, 'e');
+    for(auto s : states) {
+        std::cout << s->getStateId() << " ";
+    }
+    std::cout << "\n";
 //    NFA* wordNFA = NFA::wordToNFA("{");
 //    wordNFA->printNFA();
 
@@ -71,11 +77,7 @@ int main() {
 //    delete originalNFA;
 //    delete copiedNFA;
 
-    NFA* nfa = new NFA();
 
-    NFA::removeEpsilonTransitions(nfa);
-    NFA::removeEpsilonTransitions(nfa, true);
-    NFA::removeEpsilonTransitions(nfa, false);
 
     return 0;
 }
