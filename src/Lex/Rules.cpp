@@ -5,8 +5,8 @@
 Rules::Rules() {
     regular_expressions_map = new std::unordered_map<std::string, std::pair<std::string, int>>();
     regular_definitions_map = new std::unordered_map<std::string, std::pair<std::string, int>>();
-    regular_expressions_tokens_vector = new std::vector<Token>();
-    regular_definitions_tokens_vector = new std::vector<Token>();
+    regular_expressions_tokens_vector = new std::vector<Token*>();
+    regular_definitions_tokens_vector = new std::vector<Token*>();
     keywords = new std::vector<std::string>();
     punctuations = new std::vector<std::string>();
     expression_id = 0;
@@ -75,13 +75,13 @@ void Rules::add_rule(RuleType type, std::string *name, std::string *expression) 
 void Rules::print_rules() {
     std::cout << "\n\n" << "Regular Expressions:" << "\n";
     for (const auto& re: *regular_expressions_tokens_vector) {
-        std::cout << *re.getKey() << " : " << *re.getValue() << std::endl;
+        std::cout << *re->getKey() << " : " << *re->getValue() << std::endl;
     }
     std::cout << "\n\n";
 
     std::cout << "Regular Definitions:" << "\n";
     for (const auto& rd: *regular_definitions_tokens_vector) {
-        std::cout << *rd.getKey() << " = " << *rd.getValue() << std::endl;
+        std::cout << *rd->getKey() << " = " << *rd->getValue() << std::endl;
     }
     std::cout << "\n\n";
 
@@ -105,11 +105,11 @@ std::unordered_map<std::string, std::pair<std::string, int>> *Rules::getRegularD
     return regular_definitions_map;
 }
 
-std::vector<Token> *Rules::getRegularExpressions() const {
+std::vector<Token*> *Rules::getRegularExpressions() const {
     return regular_expressions_tokens_vector;
 }
 
-std::vector<Token> *Rules::getRegularDefinitions() const {
+std::vector<Token*> *Rules::getRegularDefinitions() const {
     return regular_definitions_tokens_vector;
 }
 
@@ -121,10 +121,10 @@ std::vector<std::string> *Rules::getPunctuations() const {
     return punctuations;
 }
 
-void Rules::setRegularExpressionsTokensVector(std::vector<Token> *regularExpressionsTokensVector) {
+void Rules::setRegularExpressionsTokensVector(std::vector<Token*> *regularExpressionsTokensVector) {
     regular_expressions_tokens_vector = regularExpressionsTokensVector;
 }
 
-void Rules::setRegularDefinitionsTokensVector(std::vector<Token> *regularDefinitionsTokensVector) {
+void Rules::setRegularDefinitionsTokensVector(std::vector<Token*> *regularDefinitionsTokensVector) {
     regular_definitions_tokens_vector = regularDefinitionsTokensVector;
 }

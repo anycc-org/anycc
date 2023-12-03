@@ -101,22 +101,21 @@ void utilities::add_space_after_and_before_braces(std::string *expression) {
     }
 }
 
-std::vector<Token> *utilities::convert_map_to_vector(std::unordered_map<std::string, std::pair<std::string, int>> *map) {
-    auto *vector = new std::vector<Token>(map->size());
+std::vector<Token*> *utilities::convert_map_to_vector(std::unordered_map<std::string, std::pair<std::string, int>> *map) {
+    auto *vector = new std::vector<Token*>(map->size());
 
     for (auto &item: *map) {
         auto *key = new std::string(item.first);
         auto *value = new std::string(item.second.first);
         auto *token = new Token(key, value);
-        (*vector)[item.second.second] = *token;
+        (*vector)[item.second.second] = token;
     }
 
     return vector;
 }
 
-void utilities::delete_vector_of_tokens(std::vector<Token> *vector) {
-    for (const auto& token : *vector) {
-        delete token.getKey();
-        delete token.getValue();
+void utilities::delete_vector_of_tokens(std::vector<Token*> *vector) {
+    for (auto token : *vector) {
+        delete token;
     }
 }
