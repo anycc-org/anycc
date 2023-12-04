@@ -1,5 +1,5 @@
 #include <Lex/InputReader.h>
-#include "Utilities.h"
+#include "Lex/Utilities.h"
 
 InputReader::InputReader(std::string *rules_file_name, Rules *rules) {
     this->rules = rules;

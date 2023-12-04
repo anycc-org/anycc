@@ -10,19 +10,19 @@
 
 class TransitionDiagram {
 public:
-    TransitionDiagram(const NFAState* start_state);
+    TransitionDiagram(const NFAState* start_state, std::vector<const NFAState*> end_states);
     ~TransitionDiagram() = default;
-    std::vector<char> getInputs();
-    std::vector<const NFAState*> getStates();
-    const NFAState* getStartState();
-    const NFAState* getEndState();
-    std::vector<const NFAState*> getDeadStates();
+    std::vector<char> getInputs() const;
+    std::vector<const NFAState*> getStates() const;
+    const NFAState* getStartState() const;
+    std::vector<const NFAState*> getEndStates() const;
+    std::vector<const NFAState*> getDeadStates() const;
     std::vector<const NFAState*> lookup(const NFAState* state, char input); 
     std::vector<const NFAState*> lookup(int state_id, char input); 
     std::unordered_map<char, std::vector<const NFAState*>> lookup(const NFAState* state);
     std::unordered_map<char, std::vector<const NFAState*>> lookup(int state_id); 
     std::vector<const NFAState*> getRecursiveEpsilonClosure(const NFAState* state);
-    std::vector<const NFAState*> getAllNextStates(std::vector<const NFAState*> states, char input);
+    std::vector<const NFAState*> getAllNextStates(std::vector<const NFAState*>& states, char input);
     
     /**
      * @brief create a new NFA using the transition diagram
@@ -71,14 +71,16 @@ private:
     std::unordered_set<char> inputs;
     std::unordered_set<const NFAState*> states;
     std::unordered_set<const NFAState*> dead_states;
+    std::unordered_set<const NFAState*> end_states;
+    std::unordered_map<const NFAState*, std::vector<std::string>> end_states_tokens_map;
     const NFAState* startState;
-    const NFAState* endtState;
-    void fillTable(const NFAState* state);
+
+    void fillTable(const NFAState* state, std::vector<const NFAState*> end_states);
     const NFAState* getStateId(int state_id);
     TransitionDiagram* removeEpsilonTransitionsInplace(TransitionDiagram* transdig);
     TransitionDiagram* subsetConstructionInplace(TransitionDiagram* transdig);
     TransitionDiagram* minimizeInplace(TransitionDiagram* transdig);
-    static const NFAState* mergeStates(std::map<std::vector<const NFAState*>,  std::map<char, std::vector<const NFAState*>>>& new_table, const NFAState* start_state, std::vector<char> inputs);
+    static const NFAState* mergeStates(std::map<std::vector<const NFAState*>, std::map<char, std::vector<const NFAState*>>>& new_table, const NFAState* start_state, std::vector<const NFAState*>& new_end_states, std::vector<char> inputs);
     bool static isDeadState(const NFAState* state);
-
+    bool static isDeadStateNew(std::vector<const NFAState*> states);
 };

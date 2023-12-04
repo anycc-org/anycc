@@ -3,8 +3,8 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
-#include "RuleType.h"
-#include "Token.h"
+#include "Lex/RuleType.h"
+#include "Lex/Token.h"
 
 class Rules {
 public:

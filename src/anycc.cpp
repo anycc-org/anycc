@@ -49,7 +49,12 @@ int main() {
 
     NFA* digitNFA = nfaGenerator.regexToNFA("a|b");
     digitNFA->printNFA();
-    TransitionDiagram* table = new TransitionDiagram(digitNFA->getStartState());
+    std::cout << digitNFA->getEndState()->getStateId() << "\n";
+    for(auto s : digitNFA->getEndStates()) {
+        std::cout << s->getStateId() << " ";
+    }
+    std::cout << "\n";
+    TransitionDiagram* table = new TransitionDiagram(digitNFA->getStartState(), std::vector<const NFAState*>{digitNFA->getEndState()});
     TransitionDiagram* epsilon_free_table = table->removeEpsilonTransitions();
     epsilon_free_table->print();
     TransitionDiagram* dfa = table->subsetConstruction();

@@ -24,14 +24,12 @@ public:
     static NFA* kleeneStarNFA(NFA* nfa);
     static NFA* positiveClosureNFA(NFA* nfa);
     static NFA* unionRangeNFAs(NFA* rangeStartNFA, NFA* rangeEndNFA);
-
-    
-    
     void printNFA() const;
+    std::vector<const NFAState*> getEndStates() const;
 
 private:
     std::string tokenName;
     NFAState* startState;
     NFAState* endState;
-    std::vector<NFAState*> endStates;
+    std::vector<const NFAState*> endStates;
 };

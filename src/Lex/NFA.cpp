@@ -150,3 +150,7 @@ void NFA::printNFA() const {
     startState->printState();
     std::cout << "Token: " << tokenName << std::endl;
 }
+
+std::vector<const NFAState*> NFA::getEndStates() const {
+    return this->endStates;
+}
