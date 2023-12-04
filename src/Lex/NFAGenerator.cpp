@@ -55,11 +55,21 @@ NFA* NFAGenerator::regexToNFA(const std::string& regex) {
         if (c == '\\') { // escape-backslash for reserved symbols
             if (i + 1 < n && regex[i + 1] == 'L') { // epsilon
                 nfaStack.push(NFA::basicCharToNFA('e'));
+                i++;
             }
-            else { // eg. \+ \* \= \( \)
-                nfaStack.push(NFA::basicCharToNFA(regex[i + 1]));
+            else { // eg. \+ \* \= \( \) or \=\=
+                // handle \=\= case
+                std::string word = std::string(1, regex[i + 1]);
+                i++;
+                while (i + 1 < n && regex[i + 1] != ' ' && !isOperator(regex[i + 1]) && regex[i + 1] != '(' && regex[i + 1] != ')') {
+                    if (regex[i + 1] == '\\') {
+                        i++;
+                        continue;
+                    }
+                    word += regex[++i];
+                }
+                nfaStack.push(NFA::wordToNFA(word));
             }
-            i++;
         }
         else if (isOperator(c)) { // Operator {*, +, ' ', |, -}
             while (!operatorStack.empty() && precedence(operatorStack.top()) >= precedence(c)) {
@@ -184,7 +194,6 @@ int NFAGenerator::precedence(char op) const {
     } else if (op == '|') { // Union
         return 1;
     } else {
-        std::cerr << "Invalid operator: " << op << std::endl;
         return -1;
     }
 }
