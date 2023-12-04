@@ -16,6 +16,7 @@ add_executable(anycc
         src/Lex/LexError.cpp
         src/Lex/NFA.cpp
         src/Lex/NFAGenerator.cpp
+        src/Lex/NFAState.cpp
         src/Lex/Output.cpp
         src/Lex/OutputReader.cpp
         src/Lex/Regex.cpp
