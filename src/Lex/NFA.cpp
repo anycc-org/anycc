@@ -144,5 +144,9 @@ void NFA::printNFA() const {
     std::cout << "Start state: " << startState->getStateId() << std::endl;
     std::cout << "End state: " << endState->getStateId() << "\n\n";
     startState->printState();
-    std::cout << "Token: " << tokenName << std::endl;
+    std::cout << "\nTokens: ";
+    for (NFAState* state : endStates) {
+        std::cout << state->getTokenName() << ", ";
+    }
+    std::cout << std::endl;
 }
