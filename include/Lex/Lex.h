@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include "InputReader.h"
+#include "NFA.h"
 
 
 class Lex {
@@ -10,10 +11,14 @@ public:
 
     ~Lex();
 
-    void read_rules();
+    void buildLex();
 
 private:
     std::string *program_file_name, *rules_file_name;
     InputReader *inputReader;
     Rules *rules;
+
+    void read_rules();
+
+    NFA *buildNFA();
 };

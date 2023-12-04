@@ -8,21 +8,21 @@ NFAGenerator::~NFAGenerator() {
     regexToNFAMap.clear();
 }
 
-NFA *NFAGenerator::buildNFA(const std::vector<std::pair<std::string, std::string>>& regexMap,
-                            const std::vector<std::pair<std::string, std::string>>& regexDefMap,
+NFA *NFAGenerator::buildNFA(const std::vector<Token*>& regexMap,
+                            const std::vector<Token*>& regexDefMap,
                             const std::vector<std::string>& keywords,
                             const std::vector<std::string>& punctuations) {
     std::vector<NFA*> nfas;
     for (auto& regexDef : regexDefMap) {
-        NFA* nfa = regexToNFA(regexDef.second);
-        nfa->setTokenName(regexDef.first);
+        NFA* nfa = regexToNFA(*regexDef->getValue());
+        nfa->setTokenName(*regexDef->getKey());
         nfas.push_back(nfa);
-        regexToNFAMap[regexDef.first] = nfa;
+        regexToNFAMap[*regexDef->getKey()] = nfa;
     }
 
     for (auto& regex : regexMap) {
-        NFA* nfa = regexToNFA(regex.second);
-        nfa->setTokenName(regex.first);
+        NFA* nfa = regexToNFA(*regex->getValue());
+        nfa->setTokenName(*regex->getKey());
         nfas.push_back(nfa);
     }
 
