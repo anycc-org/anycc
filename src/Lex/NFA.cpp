@@ -1,5 +1,8 @@
+#include "Lex/NFAState.h"
+#include "Lex/TransitionDiagram.h"
 #include <Lex/NFA.h>
 #include <iostream>
+#include <new>
 #include <stack>
 
 NFA::NFA() {
@@ -129,9 +132,6 @@ NFA* NFA::unionRangeNFAs(NFA* rangeStartNFA, NFA* rangeEndNFA) {
     return rangeNFA;
 }
 
-NFA* NFA::removeEpsilonTransitions(NFA* nfa, bool inplace) {
-    return nullptr;
-}
 
 /**
  * Prints the NFA.

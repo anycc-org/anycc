@@ -50,11 +50,9 @@ int main() {
     NFA* digitNFA = nfaGenerator.regexToNFA("a|b");
     digitNFA->printNFA();
     TransitionDiagram* table = new TransitionDiagram(digitNFA->getStartState());
-    std::vector<const NFAState*> states = table->lookup(4, 'e');
-    for(auto s : states) {
-        std::cout << s->getStateId() << " ";
-    }
-    std::cout << "\n";
+    table->print();
+    TransitionDiagram* epsilon_free_table = table->removeEpsilonTransitions();
+    epsilon_free_table->print();
 //    NFA* wordNFA = NFA::wordToNFA("{");
 //    wordNFA->printNFA();
 
