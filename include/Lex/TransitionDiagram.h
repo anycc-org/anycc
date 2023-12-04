@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <map>
 #include <unordered_set>
 #include <vector>
 #include <unordered_map>
@@ -15,6 +16,7 @@ public:
     std::vector<const NFAState*> getStates();
     const NFAState* getStartState();
     const NFAState* getEndState();
+    std::vector<const NFAState*> getDeadStates();
     std::vector<const NFAState*> lookup(const NFAState* state, char input); 
     std::vector<const NFAState*> lookup(int state_id, char input); 
     std::unordered_map<char, std::vector<const NFAState*>> lookup(const NFAState* state);
@@ -57,11 +59,14 @@ private:
     std::unordered_map<int, const NFAState*> state_id_map;
     std::unordered_set<char> inputs;
     std::unordered_set<const NFAState*> states;
+    std::unordered_set<const NFAState*> dead_states;
     const NFAState* startState;
     const NFAState* endtState;
     void fillTable(const NFAState* state);
     const NFAState* getStateId(int state_id);
     TransitionDiagram* removeEpsilonTransitionsInplace(TransitionDiagram* transdig);
     TransitionDiagram* subsetConstructionInplace(TransitionDiagram* transdig);
+    static const NFAState* mergeStates(std::map<std::vector<const NFAState*>,  std::map<char, std::vector<const NFAState*>>>& new_table, const NFAState* start_state, std::vector<char> inputs);
+    bool static isDeadState(const NFAState* state);
 
 };

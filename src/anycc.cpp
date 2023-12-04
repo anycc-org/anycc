@@ -50,9 +50,12 @@ int main() {
     NFA* digitNFA = nfaGenerator.regexToNFA("a|b");
     digitNFA->printNFA();
     TransitionDiagram* table = new TransitionDiagram(digitNFA->getStartState());
-    table->print();
     TransitionDiagram* epsilon_free_table = table->removeEpsilonTransitions();
     epsilon_free_table->print();
+    TransitionDiagram* dfa = table->subsetConstruction();
+    dfa->print();
+    
+
 //    NFA* wordNFA = NFA::wordToNFA("{");
 //    wordNFA->printNFA();
 
