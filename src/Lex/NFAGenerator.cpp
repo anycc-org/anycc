@@ -8,21 +8,21 @@ NFAGenerator::~NFAGenerator() {
     regexToNFAMap.clear();
 }
 
-NFA *NFAGenerator::buildNFA(const std::vector<std::pair<std::string, std::string>>& regexMap,
-                            const std::vector<std::pair<std::string, std::string>>& regexDefMap,
+NFA *NFAGenerator::buildNFA(const std::vector<Token*>& regexMap,
+                            const std::vector<Token*>& regexDefMap,
                             const std::vector<std::string>& keywords,
                             const std::vector<std::string>& punctuations) {
     std::vector<NFA*> nfas;
     for (auto& regexDef : regexDefMap) {
-        NFA* nfa = regexToNFA(regexDef.second);
-        nfa->setTokenName(regexDef.first);
+        NFA* nfa = regexToNFA(*regexDef->getValue());
+        nfa->setTokenName(*regexDef->getKey());
         nfas.push_back(nfa);
-        regexToNFAMap[regexDef.first] = nfa;
+        regexToNFAMap[*regexDef->getKey()] = nfa;
     }
 
     for (auto& regex : regexMap) {
-        NFA* nfa = regexToNFA(regex.second);
-        nfa->setTokenName(regex.first);
+        NFA* nfa = regexToNFA(*regex->getValue());
+        nfa->setTokenName(*regex->getKey());
         nfas.push_back(nfa);
     }
 
@@ -55,11 +55,21 @@ NFA* NFAGenerator::regexToNFA(const std::string& regex) {
         if (c == '\\') { // escape-backslash for reserved symbols
             if (i + 1 < n && regex[i + 1] == 'L') { // epsilon
                 nfaStack.push(NFA::basicCharToNFA('e'));
+                i++;
             }
-            else { // eg. \+ \* \= \( \)
-                nfaStack.push(NFA::basicCharToNFA(regex[i + 1]));
+            else { // eg. \+ \* \= \( \) or \=\=
+                // handle \=\= case
+                std::string word = std::string(1, regex[i + 1]);
+                i++;
+                while (i + 1 < n && regex[i + 1] != ' ' && !isOperator(regex[i + 1]) && regex[i + 1] != '(' && regex[i + 1] != ')') {
+                    if (regex[i + 1] == '\\') {
+                        i++;
+                        continue;
+                    }
+                    word += regex[++i];
+                }
+                nfaStack.push(NFA::wordToNFA(word));
             }
-            i++;
         }
         else if (isOperator(c)) { // Operator {*, +, ' ', |, -}
             while (!operatorStack.empty() && precedence(operatorStack.top()) >= precedence(c)) {
@@ -184,7 +194,6 @@ int NFAGenerator::precedence(char op) const {
     } else if (op == '|') { // Union
         return 1;
     } else {
-        std::cerr << "Invalid operator: " << op << std::endl;
         return -1;
     }
 }

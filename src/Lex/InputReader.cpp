@@ -15,7 +15,7 @@ InputReader::~InputReader() {
 
 void InputReader::buildRules(std::ifstream *file) {
     parseFile(file);
-    Utilities::fixSpaces(rules, non_terminal_symbols);
+    Utilities::fixConcat(rules, non_terminal_symbols);
     rules->setRegularDefinitionsTokensVector(Utilities::convertMapToVector(rules->getRegularDefinitionsMap()));
     rules->setRegularExpressionsTokensVector(Utilities::convertMapToVector(rules->getRegularExpressionsMap()));
 }
