@@ -83,4 +83,5 @@ private:
     static const NFAState* mergeStates(std::map<std::vector<const NFAState*>, std::map<char, std::vector<const NFAState*>>>& new_table, const NFAState* start_state, std::vector<const NFAState*>& new_end_states, std::vector<char> inputs);
     bool static isDeadState(const NFAState* state);
     bool static isDeadStateNew(std::vector<const NFAState*> states);
+    void clear();
 };

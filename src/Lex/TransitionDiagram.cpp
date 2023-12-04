@@ -167,12 +167,7 @@ TransitionDiagram* TransitionDiagram::subsetConstructionInplace(TransitionDiagra
     }
     std::vector<const NFAState*> new_end_states;
     const NFAState* new_start_state = TransitionDiagram::mergeStates(new_table, start_state, new_end_states, transdig->getInputs());
-    transdig->inputs.clear();
-    transdig->states.clear();
-    transdig->table.clear();
-    transdig->state_id_map.clear();
-    transdig->end_states.clear();
-    transdig->dead_states.clear();
+    transdig->clear();
     transdig->fillTable(new_start_state, new_end_states);
     return transdig;
 }
@@ -297,4 +292,13 @@ bool TransitionDiagram::isDeadStateNew(std::vector<const NFAState*> states) {
         if(state->isEndState()) return true;
     }
     return false;
+}
+
+void TransitionDiagram::clear() {
+    this->inputs.clear();
+    this->states.clear();
+    this->table.clear();
+    this->state_id_map.clear();
+    this->end_states.clear();
+    this->dead_states.clear();
 }
