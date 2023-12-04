@@ -3,9 +3,43 @@
 #include <utility>
 #include <stack>
 
-int NFAState::id = 1;
-
 NFAState::NFAState() : stateId(id++) {}
+
+NFAState::~NFAState() {
+    // handle circular references while deleting NFAStates
+    std::unordered_map<int, bool> visited;
+    std::stack<NFAState*> stack;
+    std::stack<NFAState*> deleteStack;
+    stack.push(this);
+
+    while (!stack.empty()) {
+        NFAState* currentState = stack.top();
+        stack.pop();
+        deleteStack.push(currentState);
+
+        // Check if the state has already been visited
+        if (visited.find(currentState->getStateId()) != visited.end()) {
+            continue;
+        }
+
+        visited[currentState->getStateId()] = true;
+
+        for (auto& transition : currentState->getTransitions()) {
+            for (NFAState* state : transition.second) {
+                if (visited.find(state->getStateId()) == visited.end()) {
+                    stack.push(state);
+                }
+            }
+        }
+    }
+    while (deleteStack.size() > 1) {
+        NFAState* curr = deleteStack.top(); deleteStack.pop();
+        curr->transitions.clear();
+    }
+    visited.clear();
+    deleteStack.pop();
+    transitions.clear();
+}
 
 NFAState::NFAState(const NFAState &other, std::unordered_map<int, NFAState *> &copiedStates) {
     stateId = other.stateId;
@@ -27,6 +61,8 @@ NFAState::NFAState(const NFAState &other, std::unordered_map<int, NFAState *> &c
     }
 }
 
+int NFAState::id = 1;
+
 void NFAState::addTransition(char c, NFAState* state) {
     transitions[c].push_back(state);
 }
@@ -46,6 +82,10 @@ bool NFAState::isEndState() const {
     return transitions.empty();
 }
 
+std::string NFAState::getTokenName() const { return tokenName; }
+
+void NFAState::setTokenName(const std::string& name) { tokenName = name; }
+
 void NFAState::printState() const {
     // visualize the NFA using dfs
     std::unordered_map<int, bool> visited;
@@ -56,10 +96,9 @@ void NFAState::printState() const {
         NFAState* currentState = stack.top();
         stack.pop();
         visited[currentState->getStateId()] = true;
-        std::cout << currentState->getStateId();
 
         for (auto& transition : currentState->getTransitions()) {
-            std::cout << "  on(" << transition.first << ") -> ";
+            std::cout << currentState->getStateId() << "  on(" << transition.first << ") -> ";
             for (NFAState* state : transition.second) {
                 std::cout << state->getStateId() << " ";
                 if (visited.find(state->getStateId()) == visited.end()) {

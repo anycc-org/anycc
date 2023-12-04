@@ -1,38 +1,41 @@
 #include <Lex/NFAGenerator.h>
 #include <stack>
 #include <iostream>
-#include <map>
 
 NFAGenerator::NFAGenerator() = default;
 
-NFAGenerator::~NFAGenerator() = default;
+NFAGenerator::~NFAGenerator() {
+    regexToNFAMap.clear();
+}
 
-NFA *NFAGenerator::buildNFA(const std::unordered_map<std::string, std::string> &regexMap,
-                            const std::vector<std::pair<std::string, std::string>> &regexDefMap,
-                            const std::vector<std::string> &keywords,
-                            const std::vector<std::string> &operators,
-                            const std::vector<std::string> &punctuations) {
+NFA *NFAGenerator::buildNFA(const std::vector<std::pair<std::string, std::string>>& regexMap,
+                            const std::vector<std::pair<std::string, std::string>>& regexDefMap,
+                            const std::vector<std::string>& keywords,
+                            const std::vector<std::string>& punctuations) {
     std::vector<NFA*> nfas;
     for (auto& regexDef : regexDefMap) {
         NFA* nfa = regexToNFA(regexDef.second);
+        nfa->setTokenName(regexDef.first);
         nfas.push_back(nfa);
         regexToNFAMap[regexDef.first] = nfa;
     }
 
     for (auto& regex : regexMap) {
-        nfas.push_back(regexToNFA(regex.second));
+        NFA* nfa = regexToNFA(regex.second);
+        nfa->setTokenName(regex.first);
+        nfas.push_back(nfa);
     }
 
     for (auto& keyword : keywords) {
-        nfas.push_back(NFA::wordToNFA(keyword));
-    }
-
-    for (auto& op : operators) {
-        nfas.push_back(NFA::wordToNFA(op));
+        NFA* nfa = NFA::wordToNFA(keyword);
+        nfa->setTokenName(keyword);
+        nfas.push_back(nfa);
     }
 
     for (auto& punc : punctuations) {
-        nfas.push_back(NFA::wordToNFA(punc));
+        NFA* nfa = NFA::wordToNFA(punc);
+        nfa->setTokenName(punc);
+        nfas.push_back(nfa);
     }
 
     return combineNFAs(nfas);
@@ -93,13 +96,8 @@ NFA* NFAGenerator::regexToNFA(const std::string& regex) {
                 nfaStack.push(new NFA(*regexToNFAMap[word]));
             }
             else {
-                if (word.size() == 1) {
-                    nfaStack.push(NFA::basicCharToNFA(c));
-                }
-                else {
-                    // form an NFA by concatenating the characters of that word
-                    nfaStack.push(NFA::wordToNFA(word));
-                }
+                // form an NFA by concatenating the characters of that word
+                nfaStack.push(NFA::wordToNFA(word));
             }
         }
     }
@@ -112,7 +110,6 @@ NFA* NFAGenerator::regexToNFA(const std::string& regex) {
     }
 
     // Top of the stack contains the final NFA
-    std::cout << "nfa stack size: " << nfaStack.size() << std::endl;
     return nfaStack.top();
 }
 
@@ -155,23 +152,29 @@ void NFAGenerator::processOperator(char op, std::stack<NFA*>& nfaStack) {
         nfaStack.pop();
         nfaStack.push(NFA::unionRangeNFAs(lhs, rhs));
     }
+    else {
+        std::cerr << "Invalid operator: " << op << std::endl;
+    }
 }
 
-NFA* NFAGenerator::combineNFAs(const std::vector<NFA*>& nfas) {
+NFA* NFAGenerator::combineNFAs(std::vector<NFA*>& nfas) {
     NFA* combinedNFA = new NFA();
     NFAState *combinedStart = combinedNFA->getStartState();
-    NFAState *combinedEnd = combinedNFA->getEndState();
 
     for (const NFA* nfa : nfas) {
         combinedStart->addTransition('e', nfa->getStartState());
-        nfa->getEndState()->addTransition('e', combinedEnd);
+        combinedNFA->addEndState(nfa->getEndState());
     }
 
+    nfas.clear();
     return combinedNFA;
 }
 
+/**
+ * Higher value means higher precedence
+ * @return precedence of the operator
+ */
 int NFAGenerator::precedence(char op) const {
-    // Higher value means higher precedence
     if (op == '-') { // assumed higher: range operator
         return 4;
     } else if (op == '*' || op == '+') { // Kleene closure
@@ -181,10 +184,14 @@ int NFAGenerator::precedence(char op) const {
     } else if (op == '|') { // Union
         return 1;
     } else {
+        std::cerr << "Invalid operator: " << op << std::endl;
         return -1;
     }
 }
 
+/**
+ * @return true if it's a supported operator
+ */
 bool NFAGenerator::isOperator(char op) const {
     return op == ' '|| op == '|' || op == '*' || op == '+' || op == '-';
 }
