@@ -119,8 +119,16 @@ NFA* NFAGenerator::regexToNFA(const std::string& regex) {
         processOperator(op, nfaStack);
     }
 
+    if (nfaStack.size() != 1) {
+        std::cerr << "Invalid regex: " << regex << std::endl;
+        exit(1);
+    }
+
     // Top of the stack contains the final NFA
-    return nfaStack.top();
+    NFA* resultNFA = nfaStack.top();
+    nfaStack.pop();
+    resultNFA->addEndState(resultNFA->getEndState());
+    return resultNFA;
 }
 
 void NFAGenerator::processOperator(char op, std::stack<NFA*>& nfaStack) {
