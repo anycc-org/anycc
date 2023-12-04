@@ -59,7 +59,7 @@ Utilities::fixSpacesGivenType(const std::unordered_map<std::string, std::pair<st
 
         addSpaceAfterAndBeforeBraces(expression);
 
-        rules->addRule(type, name, expression);
+        rules->addRule(type, *expression, *name);
     }
 }
 
@@ -70,17 +70,17 @@ Utilities::detectConcatThenAddSpaces(std::string *expression, const std::vector<
     int startIdx = substringInfoVec[i].start;
     int endIdx = substringInfoVec[i].end;
 
-    if (startIdx != 0 && isOpenBrace(expression, startIdx + offset - 1) &&
-        isCloseBrace(expression, startIdx + offset - 1) &&
-        isOr(expression, startIdx + offset - 1) &&
+    if (startIdx != 0 && !isOpenBrace(expression, startIdx + offset - 1) &&
+        !isCloseBrace(expression, startIdx + offset - 1) &&
+        !isOr(expression, startIdx + offset - 1) &&
         (i == 0 || substringInfoVec[i - 1].end + offset != startIdx + offset)) {
         expression->insert(startIdx + offset, std::string(1, (char) Operator::CONCAT));
         offset++;
     }
 
-    if (isOpenBrace(expression, endIdx + offset) &&
-        isCloseBrace(expression, endIdx + offset) &&
-        isOr(expression, endIdx + offset)) {
+    if (!isOpenBrace(expression, endIdx + offset) &&
+        !isCloseBrace(expression, endIdx + offset) &&
+        !isOr(expression, endIdx + offset)) {
         expression->insert(endIdx + offset, concat_operator);
         offset++;
     }
@@ -91,20 +91,20 @@ void Utilities::addSpaceAfterAndBeforeBraces(std::string *expression) {
     std::string concat_operator = std::string(1, (char) Operator::CONCAT);
     for (int i = 0; i < expression->length() - 1; i++) {
         if (isCloseBrace(expression, i) &&
-            isConcat(expression, i) &&
-            isOr(expression, i) &&
-            isKleeneClosure(expression, i) &&
-            isPositiveClosure(expression, i)) {
+            !isConcat(expression, i + 1) &&
+            !isOr(expression, i + 1) &&
+            !isKleeneClosure(expression, i + 1) &&
+            !isPositiveClosure(expression, i + 1)) {
             expression->insert(i + 1, concat_operator);
             i++;
         } else if (i + 2 < expression->length() && isCloseBrace(expression, i) &&
                    (isKleeneClosure(expression, i + 1) || isPositiveClosure(expression, i + 1))
-                   && isConcat(expression, i + 2) && isOr(expression, i + 2)) {
+                   && !isConcat(expression, i + 2) && !isOr(expression, i + 2)) {
             expression->insert(i + 2, concat_operator);
             i++;
         } else if (i != 0 && isOpenBrace(expression, i) &&
-                   isConcat(expression, i - 1) &&
-                   isOr(expression, i - 1)) {
+                   !isConcat(expression, i - 1) &&
+                   !isOr(expression, i - 1)) {
             expression->insert(i, concat_operator);
             i++;
         }
@@ -116,17 +116,17 @@ bool Utilities::isOpenBrace(const std::string *expression, int i) {
 }
 
 bool Utilities::isPositiveClosure(const std::string *expression, int i) {
-    return (*expression)[i + 1] != (char) Operator::PLUS;
+    return (*expression)[i] == (char) Operator::PLUS;
 }
 
 bool Utilities::isKleeneClosure(const std::string *expression, int i) {
-    return (*expression)[i + 1] != (char) Operator::STAR;
+    return (*expression)[i] == (char) Operator::STAR;
 }
 
-bool Utilities::isOr(const std::string *expression, int i) { return (*expression)[i + 1] != (char) Operator::OR; }
+bool Utilities::isOr(const std::string *expression, int i) { return (*expression)[i] == (char) Operator::OR; }
 
 bool Utilities::isConcat(const std::string *expression, int i) {
-    return (*expression)[i + 1] != (char) Operator::CONCAT;
+    return (*expression)[i] == (char) Operator::CONCAT;
 }
 
 bool Utilities::isCloseBrace(const std::string *expression, int i) {

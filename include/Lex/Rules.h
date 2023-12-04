@@ -12,7 +12,7 @@ public:
 
     ~Rules();
 
-    void addRule(RuleType type, std::string *name, std::string *expression);
+    void addRule(RuleType type, std::string expression, std::string name="");
 
     void printRules();
 
@@ -42,11 +42,11 @@ private:
     int expression_id;
     int definition_id;
 
-    void addRegularExpression(std::string *name, std::string *expression);
+    void addRegularExpression(std::string &name, std::string &expression);
 
-    void addRegularDefinition(std::string *name, std::string *definition);
+    void addRegularDefinition(std::string &name, std::string &definition);
 
-    void addKeyword(std::string *keyword);
+    void addKeyword(std::string &keyword);
 
-    void addPunctuation(std::string *punctuation);
+    void addPunctuation(std::string &punctuation);
 };

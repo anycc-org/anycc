@@ -19,7 +19,7 @@ Rules::~Rules() {
     Utilities::deleteVectorOfTokens(&regular_expressions_tokens_vector);
 }
 
-void Rules::addRule(RuleType type, std::string *name, std::string *expression) {
+void Rules::addRule(RuleType type, std::string expression, std::string name) {
     switch (type) {
         case RuleType::REGULAR_EXPRESSION:
             addRegularExpression(name, expression);
@@ -96,27 +96,27 @@ void Rules::setRegularDefinitionsTokensVector(std::vector<Token *> regular_defin
     regular_definitions_tokens_vector = std::move(regular_definitions_vector);
 }
 
-void Rules::addPunctuation(std::string *punctuation) {
-    this->punctuations.push_back(*punctuation);
+void Rules::addPunctuation(std::string &punctuation) {
+    this->punctuations.push_back(punctuation);
 }
 
-void Rules::addRegularDefinition(std::string *name, std::string *definition) {
-    if (regular_definitions_map.find(*name) != regular_definitions_map.end()) {
-        regular_definitions_map[*name] = {*definition, regular_definitions_map[*name].second};
+void Rules::addRegularDefinition(std::string &name, std::string &definition) {
+    if (regular_definitions_map.find(name) != regular_definitions_map.end()) {
+        regular_definitions_map[name] = {definition, regular_definitions_map[name].second};
         return;
     }
-    regular_definitions_map[*name] = {*definition, definition_id++};
+    regular_definitions_map[name] = {definition, definition_id++};
 }
 
-void Rules::addRegularExpression(std::string *name, std::string *expression) {
-    if (regular_expressions_map.find(*name) != regular_expressions_map.end()) {
-        regular_expressions_map[*name] = {*expression, regular_expressions_map[*name].second};
+void Rules::addRegularExpression(std::string &name, std::string &expression) {
+    if (regular_expressions_map.find(name) != regular_expressions_map.end()) {
+        regular_expressions_map[name] = {expression, regular_expressions_map[name].second};
         return;
     }
 
-    regular_expressions_map[*name] = {*expression, expression_id++};
+    regular_expressions_map[name] = {expression, expression_id++};
 }
 
-void Rules::addKeyword(std::string *keyword) {
-    this->keywords.push_back(*keyword);
+void Rules::addKeyword(std::string &keyword) {
+    this->keywords.push_back(keyword);
 }

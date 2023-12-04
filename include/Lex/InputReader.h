@@ -31,17 +31,17 @@ private:
 
     static RuleType checkType(std::string *basicString);
 
-    void buildRule(RuleType type, std::string *pString);
+    void buildRule(std::string &pString, RuleType type);
 
-    void addKeywords(std::string *string, std::string *delimiter);
+    void addKeywords(std::string &string, std::string &delimiter);
 
-    void addPunctuations(std::string *pString);
+    void addPunctuations(std::string pString);
 
-    void addRegularDefinitionOrExpression(const std::string *pString, RuleType type);
+    void addRegularDefinitionOrExpression(std::string &pString, RuleType type);
 
-    void addKeyword(const std::string *pString);
+    void addKeyword(std::string &pString);
 
-    void addPunctuation(const std::string *pString);
+    void addPunctuation(std::string &pString);
 
     void buildRules(std::ifstream *file);
 };
