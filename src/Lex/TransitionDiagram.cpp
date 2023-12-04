@@ -129,7 +129,7 @@ TransitionDiagram* TransitionDiagram::removeEpsilonTransitionsInplace(Transition
 }
 
 TransitionDiagram* TransitionDiagram::subsetConstructionInplace(TransitionDiagram* transdig) {
-
+    return nullptr;
 }
 
 
