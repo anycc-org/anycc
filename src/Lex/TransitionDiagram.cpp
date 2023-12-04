@@ -72,7 +72,7 @@ std::unordered_map<char, std::vector<const NFAState*>> TransitionDiagram::lookup
 }
 
 
-std::vector<const NFAState*> TransitionDiagram::getEpsilonClosure(const NFAState* state) {
+std::vector<const NFAState*> TransitionDiagram::getRecursiveEpsilonClosure(const NFAState* state) {
     std::stack<const NFAState*> stack;
     std::unordered_set<const NFAState*> visited;
     stack.push(state);
@@ -110,29 +110,32 @@ NFA* TransitionDiagram::createNFAFromTable() {
     return nullptr;
 }
 
-
 TransitionDiagram* TransitionDiagram::removeEpsilonTransitions(bool inplace) {
     if(inplace) return removeEpsilonTransitionsInplace(this);
     return removeEpsilonTransitionsInplace(new TransitionDiagram(this->getStartState()));
 }
-
 
 TransitionDiagram* TransitionDiagram::subsetConstruction(bool inplace) {
     if(inplace) return subsetConstructionInplace(this);
     return subsetConstructionInplace(new TransitionDiagram(this->getStartState()));
 }
 
+TransitionDiagram* TransitionDiagram::minimize(bool inplace) {
+    if(inplace) return minimizeInplace(this);
+    return minimizeInplace(new TransitionDiagram(this->getStartState()));
+}
+
 TransitionDiagram* TransitionDiagram::removeEpsilonTransitionsInplace(TransitionDiagram* transdig) {
     std::vector<char> inputs = transdig->getInputs();
     std::vector<const NFAState*> states = transdig->getStates();
     for(auto state : states) {
-        std::vector<const NFAState*> closure_states = transdig->getEpsilonClosure(state);
+        std::vector<const NFAState*> closure_states = transdig->getRecursiveEpsilonClosure(state);
         for(auto c : inputs) {
             std::unordered_set<const NFAState*> result_states;
             if(c != 'e') {
                 std::vector<const NFAState*> next_states = transdig->getAllNextStates(closure_states, c);
                 for(auto tmp_state : next_states) {
-                    std::vector<const NFAState*> closure_next_state = transdig->getEpsilonClosure(tmp_state);
+                    std::vector<const NFAState*> closure_next_state = transdig->getRecursiveEpsilonClosure(tmp_state);
                     for(auto next_state : closure_next_state) {
                         result_states.insert(next_state);
                     }
@@ -155,7 +158,6 @@ TransitionDiagram* TransitionDiagram::subsetConstructionInplace(TransitionDiagra
     start_vector.push_back(transdig->getStartState());
     queue.push(std::vector<const NFAState*>(start_vector));
     std::map<std::vector<const NFAState*>,  std::map<char, std::vector<const NFAState*>>> new_table;
-    
     while(!queue.empty()) {
         std::vector<const NFAState*> current_states = queue.front();
         queue.pop();
@@ -185,6 +187,11 @@ TransitionDiagram* TransitionDiagram::subsetConstructionInplace(TransitionDiagra
     return transdig;
 }
 
+TransitionDiagram* TransitionDiagram::minimizeInplace(TransitionDiagram* transdig) {
+    std::vector<std::vector<std::unordered_set<const NFAState*>>> all_sets;
+    all_sets.push_back(std::vector<std::unordered_set<const NFAState*>>());
+    return transdig;
+}
 
 void TransitionDiagram::print() const {
     for(auto kv : this->table) {
@@ -201,8 +208,6 @@ void TransitionDiagram::print() const {
         std::cout << "===============================================\n";
     }
 }
-
-
 
 void TransitionDiagram::fillTable(const NFAState* state) {
     this->startState = state;
@@ -290,9 +295,3 @@ bool TransitionDiagram::isDeadState(const NFAState* state) {
     }
     return dead;
 }
-
-
-
-
-
-
