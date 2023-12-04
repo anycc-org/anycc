@@ -14,6 +14,9 @@ public:
 
     NFAState* getStartState() const;
     NFAState* getEndState() const;
+    std::string getTokenName() const;
+    void setTokenName(const std::string& name);
+    void addEndState(NFAState* state);
     static NFA* basicCharToNFA(char c);
     static NFA* wordToNFA(const std::string& word);
     static NFA* unionNAFs(NFA* nfa1, NFA* nfa2);
@@ -24,6 +27,8 @@ public:
     void printNFA() const;
 
 private:
+    std::string tokenName;
     NFAState* startState;
     NFAState* endState;
+    std::vector<NFAState*> endStates;
 };
