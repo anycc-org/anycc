@@ -14,25 +14,10 @@ InputReader::~InputReader() {
 }
 
 void InputReader::buildRules(std::ifstream *file) {
-    parseFile(file);
-    Utilities::fixSpaces(rules, non_terminal_symbols);
+    readFile(file);
+    Utilities::fixConcat(rules, non_terminal_symbols);
     rules->setRegularDefinitionsTokensVector(Utilities::convertMapToVector(rules->getRegularDefinitionsMap()));
     rules->setRegularExpressionsTokensVector(Utilities::convertMapToVector(rules->getRegularExpressionsMap()));
-}
-
-void InputReader::parseFile(std::ifstream *file) {
-    std::string line;
-    if (file->is_open()) {
-        while (getline(*file, line)) {
-            std::cout << line << "\n";
-            RuleType line_type = checkType(&line);
-            buildRule(line, line_type);
-        }
-        file->close();
-        delete file;
-    } else {
-        std::cout << "Unable to open file";
-    }
 }
 
 RuleType InputReader::checkType(std::string *basicString) {
