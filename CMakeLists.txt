@@ -25,7 +25,11 @@ add_executable(anycc
         src/Lex/Token.cpp
         src/Lex/TransTable.cpp
         src/anycc.cpp
-        include/Lex/Utilities.h
         src/Lex/Utilities.cpp
         include/Lex/Operator.h
+        src/Lex/TransitionDiagram.cpp
+        src/Lex/Analyzer.cpp
+        include/Lex/Analyzer.h
+        include/Lex/Analyzer.h
+        include/Lex/FileReader.h
 )
