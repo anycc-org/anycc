@@ -117,9 +117,9 @@ void Analyzer::panicModeErrorRecovery(Word &word) {
             }
         }
         if (recoveryState.rightPointer == recoveryState.leftPointer) {
-            std::cout << '\"' << word.lexeme.substr(recoveryState.leftPointer) << '\"'
-                      << " is bad token at line number:" << word.line_number + 1
-                      << '\n';
+            if (recoveryState.rightPointer < size)
+                std::cout << '\"' << word.lexeme.substr(recoveryState.leftPointer) << '\"'
+                          << " is bad token at line number:" << word.line_number + 1 << '\n';
             return;
         } else {
             auto lexeme = word.lexeme.substr(recoveryState.leftPointer, recoveryState.rightPointer + 1);
@@ -131,6 +131,9 @@ void Analyzer::panicModeErrorRecovery(Word &word) {
 
             recoveryState = {};
             state = this->start_state;
+
+            if (rightPointer >= size)
+                return;
         }
     }
 }
