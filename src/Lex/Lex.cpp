@@ -5,6 +5,8 @@
 Lex::~Lex() {
     delete rules;
     delete inputReader;
+    delete rules_file_name;
+    delete program_file_name;
 }
 
 Lex::Lex(std::string *rules_file_name, std::string *program_file_name) {
