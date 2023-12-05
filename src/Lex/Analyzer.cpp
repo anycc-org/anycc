@@ -143,6 +143,6 @@ void Analyzer::addToken(const NFAState *state, Word &word) {
     tokens.push(token);
 
     if (token_name == "id")
-        symbol_table.insertToken(word.lexeme, token_name, token_id, word.line_number);
+        symbol_table.insertEntry(word.lexeme, token_name, token_id, word.line_number);
 }
 
