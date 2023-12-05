@@ -20,6 +20,11 @@ void InputReader::buildRules(std::ifstream *file) {
     rules->setRegularExpressionsTokensVector(Utilities::convertMapToVector(rules->getRegularExpressionsMap()));
 }
 
+void InputReader::parseLine(std::string &line, int line_number) {
+    RuleType line_type = checkType(&line);
+    buildRule(line, line_type);
+}
+
 RuleType InputReader::checkType(std::string *basicString) {
     std::regex regular_expression_regex("[\\w\\d\\s]+:.+");
     std::regex regular_definition_regex("[\\w\\d\\s]+=.+");
@@ -105,4 +110,3 @@ void InputReader::addPunctuations(std::string pString) {
         }
     }
 }
-

@@ -22,10 +22,7 @@ class InputReader : public FileReader {
 public:
     explicit InputReader(std::string *rules_file_name, Rules *rules);
 
-    void parseLine(std::string &line) override {
-        RuleType line_type = checkType(&line);
-        buildRule(line, line_type);
-    }
+    void parseLine(std::string &line, int line_number) override;
 
     ~InputReader();
 
