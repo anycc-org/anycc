@@ -117,7 +117,8 @@ void Analyzer::panicModeErrorRecovery(Word &word) {
             }
         }
         if (recoveryState.rightPointer == recoveryState.leftPointer) {
-            std::cout << '\"' << word.lexeme << '\"' << " is bad token at line number:" << word.line_number + 1
+            std::cout << '\"' << word.lexeme.substr(recoveryState.leftPointer) << '\"'
+                      << " is bad token at line number:" << word.line_number + 1
                       << '\n';
             return;
         } else {
