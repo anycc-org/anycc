@@ -89,13 +89,13 @@ void Analyzer::panicModeErrorRecovery(Word &word) {
     std::size_t size = word.lexeme.length();
 
     while (true) {
-        if (rightPointer < size) {
+        while (rightPointer < size) {
             char c = word.lexeme[rightPointer];
             auto next_states = transition_diagram->lookup(state, c);
             if (next_states.empty() || dead_states.find(next_states.at(0)) != dead_states.end()) {
                 if (recoveryState.rightPointer == recoveryState.leftPointer) {
-                    std::cout << " " << word.lexeme.substr(recoveryState.leftPointer) << " "
-                              << "is bad token at line number:"
+                    std::cout << '\"' << word.lexeme.substr(recoveryState.leftPointer) << '\"'
+                              << " is bad token at line number:"
                               << word.line_number + 1 << '\n';
                     return;
                 }
@@ -115,22 +115,21 @@ void Analyzer::panicModeErrorRecovery(Word &word) {
                     recoveryState = {next_state, leftPointer, rightPointer};
                 rightPointer++;
             }
+        }
+        if (recoveryState.rightPointer == recoveryState.leftPointer) {
+            std::cout << '\"' << word.lexeme << '\"' << " is bad token at line number:" << word.line_number + 1
+                      << '\n';
+            return;
         } else {
-            if (recoveryState.rightPointer == recoveryState.leftPointer) {
-                std::cout << " " << word.lexeme << " " << "is bad token at line number:" << word.line_number + 1
-                          << '\n';
-                return;
-            } else {
-                auto lexeme = word.lexeme.substr(recoveryState.leftPointer, recoveryState.rightPointer + 1);
-                Word new_word = {lexeme, word.line_number};
-                addToken(recoveryState.state, word);
+            auto lexeme = word.lexeme.substr(recoveryState.leftPointer, recoveryState.rightPointer + 1);
+            Word new_word = {lexeme, word.line_number};
+            addToken(recoveryState.state, word);
 
-                leftPointer = recoveryState.rightPointer + 1;
-                rightPointer = recoveryState.rightPointer + 1;
+            leftPointer = recoveryState.rightPointer + 1;
+            rightPointer = recoveryState.rightPointer + 1;
 
-                recoveryState = {};
-                state = this->start_state;
-            }
+            recoveryState = {};
+            state = this->start_state;
         }
     }
 }
