@@ -1,5 +1,5 @@
-#include "Lex/Utilities.h"
-#include "Lex/Operator.h"
+#include "Utilities.h"
+#include "Operator.h"
 
 std::vector<SubstringInfo>
 Utilities::findAllLongestSubstringIndices(std::string *input, std::set<std::string> *substrings) {
@@ -35,18 +35,18 @@ Utilities::findAllLongestSubstringIndices(std::string *input, std::set<std::stri
     return substringInfoVec;
 }
 
-void Utilities::fixSpaces(Rules *rules, std::set<std::string> *non_terminal_symbols) {
+void Utilities::fixConcat(Rules *rules, std::set<std::string> *non_terminal_symbols) {
     auto regular_expressions = rules->getRegularExpressionsMap();
 
-    fixSpacesGivenType(regular_expressions, rules, non_terminal_symbols, RuleType::REGULAR_EXPRESSION);
+    fixConcatGivenType(regular_expressions, rules, non_terminal_symbols, RuleType::REGULAR_EXPRESSION);
 
     auto regular_definitions = rules->getRegularDefinitionsMap();
 
-    fixSpacesGivenType(regular_definitions, rules, non_terminal_symbols, RuleType::REGULAR_DEFINITION);
+    fixConcatGivenType(regular_definitions, rules, non_terminal_symbols, RuleType::REGULAR_DEFINITION);
 }
 
 void
-Utilities::fixSpacesGivenType(const std::unordered_map<std::string, std::pair<std::string, int>> &regular_rules,
+Utilities::fixConcatGivenType(const std::unordered_map<std::string, std::pair<std::string, int>> &regular_rules,
                               Rules *rules, std::set<std::string> *non_terminal_symbols, RuleType type) {
     for (auto &re: regular_rules) {
         auto *expression = new std::string(re.second.first);
@@ -78,7 +78,7 @@ Utilities::detectConcatThenAddSpaces(std::string *expression, const std::vector<
         offset++;
     }
 
-    if (!isOpenBrace(expression, endIdx + offset) &&
+    if (endIdx + offset < expression->length() && !isOpenBrace(expression, endIdx + offset) &&
         !isCloseBrace(expression, endIdx + offset) &&
         !isOr(expression, endIdx + offset)) {
         expression->insert(endIdx + offset, concat_operator);
