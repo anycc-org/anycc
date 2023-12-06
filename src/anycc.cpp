@@ -1,3 +1,5 @@
+#include "Lex/TransitionDiagramMinimizer.h"
+#include "Lex/DeterministicTransitionDiagramCreator.h"
 #include "Lex/NFAState.h"
 #include <iostream>
 #include <unordered_map>
@@ -47,7 +49,7 @@ int main() {
 //    NFA* mulopNFA = nfaGenerator.regexToNFA("\\*|/");
 //    NFA* relopNFA = nfaGenerator.regexToNFA(R"(\= \=|! \=|>|> \=|<|< \=)");
 
-    NFA* digitNFA = nfaGenerator.regexToNFA("a|b");
+    NFA* digitNFA = nfaGenerator.regexToNFA("ab");
     digitNFA->printNFA();
     std::cout << digitNFA->getEndState()->getStateId() << "\n";
     for(auto s : digitNFA->getEndStates()) {
@@ -55,11 +57,14 @@ int main() {
     }
     std::cout << "\n";
     TransitionDiagram* table = new TransitionDiagram(digitNFA->getStartState(), std::vector<const NFAState*>{digitNFA->getEndState()});
-    TransitionDiagram* epsilon_free_table = table->removeEpsilonTransitions();
-    epsilon_free_table->print();
-    TransitionDiagram* dfa = table->subsetConstruction();
-    dfa->print();
-    
+
+    table = table->removeEpsilonTransitions();
+
+    DeterministicTransitionDiagramCreator dfaCreator;
+    table = dfaCreator.subsetConstruction(table);
+    TransitionDiagramMinimizer minimizer;
+    table = minimizer.minimize(table);
+    table->print();
 
 //    NFA* wordNFA = NFA::wordToNFA("{");
 //    wordNFA->printNFA();

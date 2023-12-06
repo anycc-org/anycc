@@ -83,7 +83,7 @@ bool NFAState::isEndState() const {
 }
 
 std::string NFAState::getTokenName() const { return tokenName; }
-
+    
 void NFAState::setTokenName(const std::string& name) { tokenName = name; }
 
 void NFAState::printState() const {

@@ -1,5 +1,5 @@
 CFLAGS += -I./include
-CFLAGS += -std=c++17
+CFLAGS += -std=c++11
 
 build:
 	g++ src/anycc.cpp src/Lex/*.cpp -o main $(CFLAGS) 
