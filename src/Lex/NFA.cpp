@@ -17,6 +17,9 @@ NFA::NFA(const NFA& other) noexcept { // copy constructor
     endState = new NFAState(*(other.endState), copiedStates);
     endState->setTokenName(other.endState->getTokenName());
     startState = new NFAState(*(other.startState), copiedStates);
+    for (auto& state: other.endStates) {
+        endStates.push_back(copiedStates[state->getStateId()]);
+    }
     copiedStates.clear();
 }
 
