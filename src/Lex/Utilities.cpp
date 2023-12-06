@@ -78,7 +78,11 @@ Utilities::detectConcatThenAddSpaces(std::string *expression, const std::vector<
         offset++;
     }
 
+<<<<<<< HEAD
     if (endIdx + offset < expression->length() && !isOpenBrace(expression, endIdx + offset) &&
+=======
+    if (endIdx + offset < expression->length() - 1 && !isOpenBrace(expression, endIdx + offset) &&
+>>>>>>> 3949508d0799b7475cf378c1c6fcf698c40348d0
         !isCloseBrace(expression, endIdx + offset) &&
         !isOr(expression, endIdx + offset)) {
         expression->insert(endIdx + offset, concat_operator);
