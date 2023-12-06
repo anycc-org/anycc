@@ -20,7 +20,16 @@ void InputReader::buildRules(std::ifstream *file) {
     rules->setRegularExpressionsTokensVector(Utilities::convertMapToVector(rules->getRegularExpressionsMap()));
 }
 
-void InputReader::parseLine(std::string &line, int line_number) {
+void InputReader::readTemplate(std::ifstream *file) {
+    std::string line;
+    int line_number = 0;
+    while (getline(*file, line)) {
+        line_number++;
+        parseLine(line);
+    }
+}
+
+void InputReader::parseLine(std::string &line) {
     RuleType line_type = checkType(&line);
     buildRule(line, line_type);
 }
@@ -72,7 +81,6 @@ void InputReader::addRegularDefinitionOrExpression(std::string &pString, RuleTyp
     name.erase(std::remove(name.begin(), name.end(), ' '), name.end());
 
     std::string expression = pString.substr(pString.find(c) + 1);
-    expression.erase(std::remove(expression.begin(), expression.end(), ' '), expression.end());
 
     non_terminal_symbols->insert(name);
     rules->addRule(type, expression, name);
