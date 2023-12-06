@@ -1,8 +1,5 @@
-#include "Lex/NFAState.h"
-#include "Lex/TransitionDiagram.h"
 #include <Lex/NFA.h>
 #include <iostream>
-#include <new>
 #include <stack>
 
 NFA::NFA() {
@@ -28,6 +25,7 @@ NFA::~NFA() { delete startState; }
 NFAState* NFA::getStartState() const { return startState; }
 
 NFAState* NFA::getEndState() const { return endState; }
+std::vector<const NFAState*> NFA::getEndStates() { return endStates; }
 
 std::string NFA::getTokenName() const { return endState->getTokenName(); }
 
@@ -140,7 +138,6 @@ NFA* NFA::unionRangeNFAs(NFA* rangeStartNFA, NFA* rangeEndNFA) {
     return rangeNFA;
 }
 
-
 /**
  * Prints the NFA.
  */
@@ -148,9 +145,9 @@ void NFA::printNFA() const {
     std::cout << "Start state: " << startState->getStateId() << std::endl;
     std::cout << "End state: " << endState->getStateId() << "\n\n";
     startState->printState();
-    std::cout << "Token: " << tokenName << std::endl;
-}
-
-std::vector<const NFAState*> NFA::getEndStates() const {
-    return this->endStates;
+    std::cout << "\nTokens: ";
+    for (auto state : endStates) {
+        std::cout << state->getTokenName() << ", ";
+    }
+    std::cout << std::endl;
 }

@@ -3,7 +3,7 @@
 #include <unordered_map>
 #include <set>
 #include <string>
-#include "NFAState.h"
+#include <Lex/NFAState.h>
 
 class NFA {
 public:
@@ -14,6 +14,7 @@ public:
 
     NFAState* getStartState() const;
     NFAState* getEndState() const;
+    std::vector<const NFAState*> getEndStates();
     std::string getTokenName() const;
     void setTokenName(const std::string& name);
     void addEndState(NFAState* state);
@@ -25,7 +26,6 @@ public:
     static NFA* positiveClosureNFA(NFA* nfa);
     static NFA* unionRangeNFAs(NFA* rangeStartNFA, NFA* rangeEndNFA);
     void printNFA() const;
-    std::vector<const NFAState*> getEndStates() const;
 
 private:
     std::string tokenName;

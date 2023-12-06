@@ -9,21 +9,21 @@ TransitionDiagram* DeterministicTransitionDiagramCreator::subsetConstruction(Tra
 
 TransitionDiagram* DeterministicTransitionDiagramCreator::subsetConstructionInplace(TransitionDiagram* transdig) {
     const NFAState* start_state = transdig->getStartState();
-    std::queue<std::vector<const NFAState*>> queue;
-    std::set<std::vector<const NFAState*>> visited;
-    std::vector<const NFAState*> start_vector;
-    start_vector.push_back(transdig->getStartState());
-    queue.push(std::vector<const NFAState*>(start_vector));
-    std::map<std::vector<const NFAState*>,  std::map<char, std::vector<const NFAState*>>> new_table;
+    std::queue<std::set<const NFAState*>> queue;
+    std::set<std::set<const NFAState*>> visited;
+    std::set<const NFAState*> start_states;
+    start_states.insert(transdig->getStartState());
+    queue.push(start_states);
+    std::map<std::set<const NFAState*>,  std::map<char, std::set<const NFAState*>>> new_table;
     while(!queue.empty()) {
-        std::vector<const NFAState*> current_states = queue.front();
+        std::set<const NFAState*> current_states = queue.front();
         queue.pop();
         if(visited.find(current_states) != visited.end()) continue;
         visited.insert(current_states);
-        new_table[current_states] = std::map<char, std::vector<const NFAState*>>();
+        new_table[current_states] = std::map<char, std::set<const NFAState*>>();
         for(auto c : transdig->getInputs()) {
-            if(c != 'e') {
-                std::vector<const NFAState*> next_states = transdig->getAllNextStates(current_states, c);
+            if(c != '\0') {
+                std::set<const NFAState*> next_states = transdig->getAllNextStates(current_states, c);
                 if(next_states.size() > 0) {
                     if(visited.find(next_states) == visited.end()) {
                         queue.push(next_states);
@@ -31,7 +31,7 @@ TransitionDiagram* DeterministicTransitionDiagramCreator::subsetConstructionInpl
                     }
                 }
                 else {
-                    new_table[current_states][c] = std::vector<const NFAState*>();
+                    new_table[current_states][c] = std::set<const NFAState*>();
                 }
             }
         }

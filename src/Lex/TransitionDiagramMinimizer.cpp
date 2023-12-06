@@ -15,30 +15,31 @@ TransitionDiagram* TransitionDiagramMinimizer::minimizeInplace(TransitionDiagram
     all_sets[0].push_back(std::unordered_set<const NFAState*>(transdig->getNotEndStates()));
     all_sets[0].push_back(std::unordered_set<const NFAState*>(transdig->getEndStates()));
     std::vector<std::unordered_set<const NFAState*>> prev_sets = all_sets[0];
+    std::cout << "before while\n";
     while(true) {
         auto equi_table = this->constructEquivelanceTable(transdig, prev_sets);
         std::vector<std::unordered_set<const NFAState*>> new_sets;
         for(auto& set : prev_sets) {
-            auto result_new_sets = this->constructNewEqivelanceSets(set, equi_table); 
+            auto result_new_sets = this->constructNewEqivelanceSets(set, equi_table);
             for(auto& new_set : result_new_sets) new_sets.push_back(new_set); 
         }
         all_sets.push_back(new_sets);
         if(new_sets.size() == prev_sets.size()) break;
         prev_sets = new_sets;
     }
-    std::map<std::vector<const NFAState*>,  std::map<char, std::vector<const NFAState*>>> new_table;
+    std::map<std::set<const NFAState*>,  std::map<char, std::set<const NFAState*>>> new_table;
     for(auto& set_current_states : all_sets[all_sets.size() - 1]){
-        std::vector<const NFAState*> current_states(set_current_states.begin(), set_current_states.end());
-        new_table[current_states] = std::map<char, std::vector<const NFAState*>>();
+        std::set<const NFAState*> ordered_set_current_states = std::set<const NFAState*>(set_current_states.begin(), set_current_states.end());
+        new_table[ordered_set_current_states] = std::map<char, std::set<const NFAState*>>();
         for(auto c : transdig->getInputs()) {
-            if(c != 'e') {
-                std::vector<const NFAState*> next_states = transdig->getAllNextStates(current_states, c);
-                next_states = this->extractNewMergedStatesFromOld(next_states[0], all_sets[all_sets.size() - 1]);
+            if(c != '\0') {
+                std::set<const NFAState*> next_states = transdig->getAllNextStates(ordered_set_current_states, c);
+                next_states = this->extractNewMergedStatesFromOld(*next_states.begin(), all_sets[all_sets.size() - 1]);
                 if(next_states.size() > 0) {
-                    new_table[current_states][c] = next_states;
+                    new_table[ordered_set_current_states][c] = next_states;
                 }
                 else {
-                    new_table[current_states][c] = std::vector<const NFAState*>();
+                    new_table[ordered_set_current_states][c] = std::set<const NFAState*>();
                 }
             }
         }
@@ -58,8 +59,13 @@ std::unordered_map<const NFAState*, std::vector<size_t>> TransitionDiagramMinimi
             std::vector<size_t> sets_nums(set.size());
             for(auto c : transdig->getInputs()) {
                 auto states_vec = transdig->lookup(state, c);
-                long long index = this->getSetIndex(states_vec[0], sets);
-                if(index != -1) sets_nums.push_back(index);
+                // std::cout << states_vec.size() << "\n";
+                // std::cout << c << "\n";
+                // std::cout << state->getStateId() << "\n";
+                if(states_vec.size() > 0) {
+                    long long index = this->getSetIndex(states_vec[0], sets);
+                    if(index != -1) sets_nums.push_back(index);
+                }
             }
             equi_table[state] = sets_nums;
         }
@@ -92,9 +98,9 @@ std::vector<std::unordered_set<const NFAState*>> TransitionDiagramMinimizer::con
     return new_sets;
 }
 
-std::vector<const NFAState*> TransitionDiagramMinimizer::extractNewMergedStatesFromOld(const NFAState* state, std::vector<std::unordered_set<const NFAState*>> states) {
+std::set<const NFAState*> TransitionDiagramMinimizer::extractNewMergedStatesFromOld(const NFAState* state, std::vector<std::unordered_set<const NFAState*>> states) {
     for(auto& set : states) {
-        if(set.find(state) != set.end()) return std::vector<const NFAState*>(set.begin(), set.end());
+        if(set.find(state) != set.end()) return std::set<const NFAState*>(set.begin(), set.end());
     }
-    return std::vector<const NFAState*>();
+    return std::set<const NFAState*>();
 }

@@ -25,10 +25,10 @@ public:
     std::vector<const NFAState*> lookup(int state_id, char input); 
     std::unordered_map<char, std::vector<const NFAState*>> lookup(const NFAState* state);
     std::unordered_map<char, std::vector<const NFAState*>> lookup(int state_id); 
-    std::vector<const NFAState*> getRecursiveEpsilonClosure(const NFAState* state);
-    std::vector<const NFAState*> getAllNextStates(std::vector<const NFAState*>& states, char input);
-    const static NFAState* mergeStates(std::map<std::vector<const NFAState*>, std::map<char, std::vector<const NFAState*>>>& new_table, const NFAState* start_state, std::unordered_set<const NFAState*> end_states, std::vector<const NFAState*>& new_end_states, std::vector<char> input);
-    static bool isEndStateNew(std::vector<const NFAState*> states, std::unordered_set<const NFAState*> end_states);
+    std::set<const NFAState*> getRecursiveEpsilonClosure(const NFAState* state);
+    std::set<const NFAState*> getAllNextStates(std::set<const NFAState*> states, char input);
+    const static NFAState* mergeStates(std::map<std::set<const NFAState*>, std::map<char, std::set<const NFAState*>>>& new_table, const NFAState* start_state, std::unordered_set<const NFAState*> end_states, std::vector<const NFAState*>& new_end_states, std::vector<char> input);
+    static bool isEndStateNew(std::set<const NFAState*> states, std::unordered_set<const NFAState*> end_states);
     /**
      * @brief create a new NFA using the transition diagram
      * @warning the responsbility of deleting pointer is the caller's 
@@ -47,9 +47,10 @@ public:
      */
     TransitionDiagram* removeEpsilonTransitions(bool inplace=true);
 
-
     void print() const;
     void clear();
+
+    static void toDotFile(TransitionDiagram* transdig, std::string file_name);
     
 private:
     std::unordered_map<const NFAState*, std::unordered_map<char, std::vector<const NFAState*>>> table;
@@ -65,7 +66,7 @@ private:
     const NFAState* getStateId(int state_id);
     TransitionDiagram* removeEpsilonTransitionsInplace(TransitionDiagram* transdig);
     TransitionDiagram* minimizeInplace(TransitionDiagram* transdig);
-
     bool static isDeadState(const NFAState* state);
+
    
 };
