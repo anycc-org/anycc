@@ -11,7 +11,7 @@ public:
     static std::vector<SubstringInfo>
     findAllLongestSubstringIndices(std::string *input, std::set<std::string> *substrings);
 
-    static void fixSpacesGivenType(const std::unordered_map<std::string, std::pair<std::string, int>>& regular_rules, Rules *rules,
+    static void fixConcatGivenType(const std::unordered_map<std::string, std::pair<std::string, int>>& regular_rules, Rules *rules,
                                    std::set<std::string> *non_terminal_symbols, RuleType type);
 
     static int
@@ -20,7 +20,7 @@ public:
 
     static void addSpaceAfterAndBeforeBraces(std::string *expression);
 
-    static void fixSpaces(Rules *rules, std::set<std::string> *non_terminal_symbols);
+    static void fixConcat(Rules *rules, std::set<std::string> *non_terminal_symbols);
 
     static std::vector<Token*> convertMapToVector(const std::unordered_map<std::string, std::pair<std::string, int>>& map);
 

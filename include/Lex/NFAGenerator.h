@@ -4,13 +4,14 @@
 #include <stack>
 #include <map>
 #include "NFA.h"
+#include "Token.h"
 
 class NFAGenerator {
 public:
     NFAGenerator();
 
-    NFA* buildNFA(const std::vector<std::pair<std::string, std::string>>& regexMap,
-                         const std::vector<std::pair<std::string, std::string>>& regexDefMap,
+    NFA* buildNFA(const std::vector<Token*>& regexMap,
+                         const std::vector<Token*>& regexDefMap,
                          const std::vector<std::string>& keywords,
                          const std::vector<std::string>& punctuations);
     NFA* regexToNFA(const std::string& regex);
