@@ -23,12 +23,6 @@ TransitionDiagram* TransitionDiagramMinimizer::minimizeInplace(TransitionDiagram
             for(auto& new_set : result_new_sets) new_sets.push_back(new_set); 
         }
         all_sets.push_back(new_sets);
-        for(auto& set : new_sets) {
-            for(auto& state : set) {
-                std::cout << state->getStateId() << "\n";
-            }
-            std::cout << "------\n";
-        }
         if(new_sets.size() == prev_sets.size()) break;
         prev_sets = new_sets;
     }
@@ -55,9 +49,6 @@ TransitionDiagram* TransitionDiagramMinimizer::minimizeInplace(TransitionDiagram
     transdig->fillTable(new_start_state, new_end_states);
     return transdig;
 }
-
-
-
 
 std::unordered_map<const NFAState*, std::vector<size_t>> TransitionDiagramMinimizer::constructEquivelanceTable(TransitionDiagram* transdig, std::vector<std::unordered_set<const NFAState*>>& sets) {
     std::unordered_map<const NFAState*, std::vector<size_t>> equi_table;
