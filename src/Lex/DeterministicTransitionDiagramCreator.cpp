@@ -22,8 +22,20 @@ TransitionDiagram* DeterministicTransitionDiagramCreator::subsetConstructionInpl
         visited.insert(current_states);
         new_table[current_states] = std::map<char, std::set<const NFAState*>>();
         for(auto c : transdig->getInputs()) {
-            if(c != '\0') {
+            if(c != '#') {
                 std::set<const NFAState*> next_states = transdig->getAllNextStates(current_states, c);
+                bool self = false;
+                // for(auto s : next_states) {
+                //     for(auto s_temp : visited)
+                //     if(current_states.find(s) != current_states.end()) {
+                //         new_table[current_states][c] = current_states;
+                //         queue.push(current_states);
+                //         next_states = current_states;
+                //         self = true;
+                //         break;
+                //     }
+                // }
+                if(self) continue;
                 if(next_states.size() > 0) {
                     if(visited.find(next_states) == visited.end()) {
                         queue.push(next_states);

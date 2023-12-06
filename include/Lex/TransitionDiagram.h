@@ -66,7 +66,7 @@ private:
     const NFAState* getStateId(int state_id);
     TransitionDiagram* removeEpsilonTransitionsInplace(TransitionDiagram* transdig);
     TransitionDiagram* minimizeInplace(TransitionDiagram* transdig);
-    bool static isDeadState(const NFAState* state);
+    bool static isDeadState(const NFAState* state, std::unordered_set<const NFAState*> end_states);
 
    
 };

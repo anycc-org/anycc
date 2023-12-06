@@ -32,7 +32,7 @@ TransitionDiagram* TransitionDiagramMinimizer::minimizeInplace(TransitionDiagram
         std::set<const NFAState*> ordered_set_current_states = std::set<const NFAState*>(set_current_states.begin(), set_current_states.end());
         new_table[ordered_set_current_states] = std::map<char, std::set<const NFAState*>>();
         for(auto c : transdig->getInputs()) {
-            if(c != '\0') {
+            if(c != '#') {
                 std::set<const NFAState*> next_states = transdig->getAllNextStates(ordered_set_current_states, c);
                 next_states = this->extractNewMergedStatesFromOld(*next_states.begin(), all_sets[all_sets.size() - 1]);
                 if(next_states.size() > 0) {
@@ -58,13 +58,15 @@ std::unordered_map<const NFAState*, std::vector<size_t>> TransitionDiagramMinimi
         for(auto& state : set) {
             std::vector<size_t> sets_nums(set.size());
             for(auto c : transdig->getInputs()) {
-                auto states_vec = transdig->lookup(state, c);
-                // std::cout << states_vec.size() << "\n";
-                // std::cout << c << "\n";
-                // std::cout << state->getStateId() << "\n";
-                if(states_vec.size() > 0) {
+                if(c != '#') {
+                    auto states_vec = transdig->lookup(state, c);
+                    // std::cout << states_vec.size() << "\n";
+                    // std::cout << c << "\n";
+                    // std::cout << state->getStateId() << "\n";
+                    // if(states_vec.size() > 0) {
                     long long index = this->getSetIndex(states_vec[0], sets);
                     if(index != -1) sets_nums.push_back(index);
+                    // }
                 }
             }
             equi_table[state] = sets_nums;

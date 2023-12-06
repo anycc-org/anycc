@@ -73,10 +73,10 @@ NFA* NFA::wordToNFA(const std::string& word) {
  */
 NFA* NFA::unionNAFs(NFA *nfa1, NFA *nfa2) {
     NFA* nfa = new NFA();
-    nfa->startState->addTransition('\0', nfa1->startState);
-    nfa->startState->addTransition('\0', nfa2->startState);
-    nfa1->endState->addTransition('\0', nfa->endState);
-    nfa2->endState->addTransition('\0', nfa->endState);
+    nfa->startState->addTransition('#', nfa1->startState);
+    nfa->startState->addTransition('#', nfa2->startState);
+    nfa1->endState->addTransition('#', nfa->endState);
+    nfa2->endState->addTransition('#', nfa->endState);
     return nfa;
 }
 
@@ -95,10 +95,10 @@ NFA* NFA::concatNAFs(NFA* nfa1, NFA* nfa2) {
  */
 NFA* NFA::kleeneStarNFA(NFA* nfa) {
     NFA* nfaStar = new NFA();
-    nfaStar->startState->addTransition('\0', nfa->startState);
-    nfaStar->startState->addTransition('\0', nfaStar->endState);
-    nfa->endState->addTransition('\0', nfa->startState);
-    nfa->endState->addTransition('\0', nfaStar->endState);
+    nfaStar->startState->addTransition('#', nfa->startState);
+    nfaStar->startState->addTransition('#', nfaStar->endState);
+    nfa->endState->addTransition('#', nfa->startState);
+    nfa->endState->addTransition('#', nfaStar->endState);
     return nfaStar;
 }
 
@@ -107,9 +107,9 @@ NFA* NFA::kleeneStarNFA(NFA* nfa) {
  */
 NFA* NFA::positiveClosureNFA(NFA* nfa) {
     NFA* nfaPlus = new NFA();
-    nfaPlus->startState->addTransition('\0', nfa->startState);
-    nfa->endState->addTransition('\0', nfa->startState);
-    nfa->endState->addTransition('\0', nfaPlus->endState);
+    nfaPlus->startState->addTransition('#', nfa->startState);
+    nfa->endState->addTransition('#', nfa->startState);
+    nfa->endState->addTransition('#', nfaPlus->endState);
     return nfaPlus;
 }
 
@@ -122,18 +122,18 @@ NFA* NFA::unionRangeNFAs(NFA* rangeStartNFA, NFA* rangeEndNFA) {
     char startSymbol = rangeStartNFA->startState->getTransitions().begin()->first;
     char endSymbol = rangeEndNFA->startState->getTransitions().begin()->first;
 
-    rangeNFA->startState->addTransition('\0', rangeStartNFA->startState);
-    rangeStartNFA->endState->addTransition('\0', rangeNFA->endState);
+    rangeNFA->startState->addTransition('#', rangeStartNFA->startState);
+    rangeStartNFA->endState->addTransition('#', rangeNFA->endState);
 
     // loop over all symbols in range
     for (char c = (char)(startSymbol + 1); c < endSymbol; c++) {
         NFA* basicNFA = NFA::basicCharToNFA(c);
-        rangeNFA->startState->addTransition('\0', basicNFA->startState);
-        basicNFA->endState->addTransition('\0', rangeNFA->endState);
+        rangeNFA->startState->addTransition('#', basicNFA->startState);
+        basicNFA->endState->addTransition('#', rangeNFA->endState);
     }
 
-    rangeNFA->startState->addTransition('\0', rangeEndNFA->startState);
-    rangeEndNFA->endState->addTransition('\0', rangeNFA->endState);
+    rangeNFA->startState->addTransition('#', rangeEndNFA->startState);
+    rangeEndNFA->endState->addTransition('#', rangeNFA->endState);
 
     return rangeNFA;
 }
