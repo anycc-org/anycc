@@ -7,7 +7,8 @@ struct SymbolTableEntry {
     std::string token_name;
     std::string token_type;
     int token_id;
-    int line_declaration_number;
+    int line_number;
+    int column_number;
 };
 
 class SymbolTable {
@@ -17,7 +18,7 @@ public:
         return instance;
     }
 
-    void insertEntry(std::string &word, std::string &token_name, int token_id, int line_declaration_number);
+    void insertEntry(std::string &word, std::string &token_name, int token_id, int line_number);
 
     SymbolTableEntry *getEntry(std::string &lexeme);
 

@@ -58,8 +58,9 @@ void Analyzer::parseLine(std::string &line, int line_number) {
     std::string token;
 
     while ((pos = line.find(delimiter)) != std::string::npos) {
+        std::size_t offset = line.length() - pos;
         token = line.substr(0, pos);
-        Word word = {token, line_number};
+        Word word = {token, line_number, offset};
         words.push_back(word);
         line.erase(0, pos + delimiter.length());
     }
@@ -95,8 +96,8 @@ void Analyzer::panicModeErrorRecovery(Word &word) {
             if (next_states.empty() || dead_states.find(next_states.at(0)) != dead_states.end()) {
                 if (recoveryState.rightPointer == recoveryState.leftPointer) {
                     std::cout << '\"' << word.lexeme.substr(recoveryState.leftPointer) << '\"'
-                              << " is bad token at line number:"
-                              << word.line_number + 1 << '\n';
+                              << " is bad token at " << word.line_number + 1 << ":"
+                              << word.offset + recoveryState.rightPointer << '\n';
                     return;
                 }
 
@@ -119,7 +120,8 @@ void Analyzer::panicModeErrorRecovery(Word &word) {
         if (recoveryState.rightPointer == recoveryState.leftPointer) {
             if (recoveryState.rightPointer < size)
                 std::cout << '\"' << word.lexeme.substr(recoveryState.leftPointer) << '\"'
-                          << " is bad token at line number:" << word.line_number + 1 << '\n';
+                          << " is bad token at " << word.line_number + 1 << ":"
+                          << word.offset + recoveryState.rightPointer << '\n';
             return;
         } else {
             auto lexeme = word.lexeme.substr(recoveryState.leftPointer, recoveryState.rightPointer + 1);

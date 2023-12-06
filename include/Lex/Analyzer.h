@@ -16,6 +16,7 @@
 struct Word {
     std::string lexeme;
     int line_number;
+    std::size_t offset;
 };
 
 struct RecoveryStateEntry {
