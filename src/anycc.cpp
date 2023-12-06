@@ -18,7 +18,6 @@ int main() {
 
     lex->buildLex();
 
-
 //    NFA* idNFA = NFAGenerator::regexToNFA("l (l|d)*");
 
 //    NFA *aNFA = NFA::basicCharToNFA('a');
