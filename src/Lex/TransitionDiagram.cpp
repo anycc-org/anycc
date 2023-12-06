@@ -151,7 +151,7 @@ TransitionDiagram* TransitionDiagram::removeEpsilonTransitionsInplace(Transition
         }
     }
     for(auto state : states) {
-        transdig->table[state].erase('0');
+        transdig->table[state].erase('\0');
     }
     transdig->inputs.erase('\0');
     return transdig;
