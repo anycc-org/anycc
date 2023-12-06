@@ -11,7 +11,7 @@
 class TransitionDiagram {
 public:
     TransitionDiagram(const NFAState* start_state, std::vector<const NFAState*> end_states);
-    ~TransitionDiagram() = default;
+    ~TransitionDiagram();
     std::vector<char> getInputs() const;
     const NFAState* getStartState();
     void fillTable(const NFAState* state, std::vector<const NFAState*> end_states);

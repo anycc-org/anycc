@@ -14,6 +14,13 @@ TransitionDiagram::TransitionDiagram(const NFAState* start_state, std::vector<co
     this->fillTable(start_state, end_states);
 }
 
+/**
+ * @brief Destroy the Transition Diagram:: Transition Diagram object
+ * @todo should be implemented to delete newly created NFAStates usnig mergestates static method
+ */
+TransitionDiagram::~TransitionDiagram() {
+}
+
 std::vector<char> TransitionDiagram::getInputs() const {
     return std::vector<char>(this->inputs.begin(), this->inputs.end());
 }
@@ -81,8 +88,6 @@ std::unordered_map<char, std::vector<const NFAState*>> TransitionDiagram::lookup
     return this->lookup(state);
 }
 
-
-
 std::vector<const NFAState*> TransitionDiagram::getRecursiveEpsilonClosure(const NFAState* state) {
     std::stack<const NFAState*> stack;
     std::unordered_set<const NFAState*> visited;
@@ -126,7 +131,6 @@ TransitionDiagram* TransitionDiagram::removeEpsilonTransitions(bool inplace) {
     return removeEpsilonTransitionsInplace(new TransitionDiagram(this->getStartState(), std::vector<const NFAState*>(this->getEndStates().begin(), this->getEndStates().end())));
 }
 
-
 TransitionDiagram* TransitionDiagram::removeEpsilonTransitionsInplace(TransitionDiagram* transdig) {
     std::vector<char> inputs = transdig->getInputs();
     std::vector<const NFAState*> states = std::vector<const NFAState*>(transdig->getStates().begin(), transdig->getStates().end());
@@ -152,7 +156,6 @@ TransitionDiagram* TransitionDiagram::removeEpsilonTransitionsInplace(Transition
     transdig->inputs.erase('e');
     return transdig;
 }
-
 
 void TransitionDiagram::print() const {
     for(auto kv : this->table) {
@@ -219,6 +222,7 @@ const NFAState* TransitionDiagram::mergeStates(std::map<std::vector<const NFASta
     std::map<std::vector<const NFAState*>, NFAState*> merge_map;
     const NFAState* new_start_state = nullptr;
     for(auto kv : new_table) {
+        // Newly Created states should be deleted using the NFAState Destructor 
         NFAState* new_state = new NFAState();
         if(TransitionDiagram::isEndStateNew(kv.first, end_states)) {
             new_end_states.push_back(new_state);
@@ -275,6 +279,7 @@ bool TransitionDiagram::isEndStateNew(std::vector<const NFAState*> states, std::
 }
 
 void TransitionDiagram::clear() {
+    // for(auto& state : this->states) delete state;
     this->inputs.clear();
     this->states.clear();
     this->table.clear();
