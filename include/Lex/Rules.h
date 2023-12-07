@@ -12,7 +12,7 @@ public:
 
     ~Rules();
 
-    void addRule(RuleType type, std::string expression, std::string name="");
+    void addRule(RuleType type, std::string expression, std::string name = "");
 
     void printRules();
 
@@ -28,19 +28,24 @@ public:
 
     std::vector<std::string> &getPunctuations();
 
-    void setRegularExpressionsTokensVector(std::vector<Token*> regular_expressions_vector);
+    std::unordered_map<std::string, int> &getTokensPriority();
+    std::vector<std::string>  getTokens();
 
-    void setRegularDefinitionsTokensVector(std::vector<Token*> regular_definitions_vector);
+    void setRegularExpressionsTokensVector(std::vector<Token *> regular_expressions_vector);
+
+    void setRegularDefinitionsTokensVector(std::vector<Token *> regular_definitions_vector);
 
 private:
+    std::unordered_map<std::string, int> tokens_priority;
     std::unordered_map<std::string, std::pair<std::string, int>> regular_expressions_map;
-    std::vector<Token*> regular_expressions_tokens_vector;
+    std::vector<Token *> regular_expressions_tokens_vector;
     std::unordered_map<std::string, std::pair<std::string, int>> regular_definitions_map;
-    std::vector<Token*> regular_definitions_tokens_vector;
+    std::vector<Token *> regular_definitions_tokens_vector;
     std::vector<std::string> keywords;
     std::vector<std::string> punctuations;
     int expression_id;
     int definition_id;
+    int priority;
 
     void addRegularExpression(std::string &name, std::string &expression);
 

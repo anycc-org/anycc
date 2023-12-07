@@ -1,23 +1,32 @@
 #include "Lex/NFAState.h"
 #include "Lex/TransitionDiagram.h"
 #include <Lex/TransitionDiagramMinimizer.h>
+#include "Lex/Epsilon.h"
 
 
 TransitionDiagram* TransitionDiagramMinimizer::minimize(TransitionDiagram* transdig, bool inplace) {
     if(inplace) return minimizeInplace(transdig);
-    return minimizeInplace(new TransitionDiagram(transdig->getStartState(), std::vector<const NFAState*>(transdig->getEndStates().begin(), transdig->getEndStates().end())));
+    return minimizeInplace(new TransitionDiagram(transdig->getStartState(), std::vector<const NFAState*>(transdig->getEndStates().begin(), transdig->getEndStates().end()), transdig->getTokens(), transdig->getTokensPriority()));
 }
 
 TransitionDiagram* TransitionDiagramMinimizer::minimizeInplace(TransitionDiagram* transdig) {
     const NFAState* start_state = transdig->getStartState();
     std::vector<std::vector<std::set<const NFAState*>>> all_sets;
     all_sets.push_back(std::vector<std::set<const NFAState*>>());
-    all_sets[0].push_back(std::set<const NFAState*>(std::set<const NFAState*>(transdig->getNotEndStates().begin(), transdig->getNotEndStates().end())));
-    all_sets[0].push_back(std::set<const NFAState*>(std::set<const NFAState*>(transdig->getEndStates().begin(), transdig->getEndStates().end())));
+    all_sets[0].push_back(std::set<const NFAState*>(std::set<const NFAState*>(transdig->getNotEndAndDeadStates().begin(), transdig->getNotEndAndDeadStates().end())));
+    for(auto token : transdig->getTokens()) {
+        std::set<const NFAState*> set;
+        for(auto kv : transdig->getEndStatesTokensMap()) {
+            if(kv.second == token) {
+                set.insert(kv.first);
+            }
+        }
+        all_sets[0].push_back(set);
+    }
+    all_sets[0].push_back(std::set<const NFAState*>(std::set<const NFAState*>(transdig->getDeadStates().begin(), transdig->getDeadStates().end())));
     std::vector<std::set<const NFAState*>> prev_sets = all_sets[0];
     while(true) {
         auto equi_table = this->constructEquivelanceTable(transdig, prev_sets);
-        std::cout << prev_sets.size() << " oreved\n";
         std::vector<std::set<const NFAState*>> new_sets;
         for(auto set : prev_sets) {
             auto result_new_sets = this->constructNewEqivelanceSets(set, equi_table);
@@ -32,7 +41,7 @@ TransitionDiagram* TransitionDiagramMinimizer::minimizeInplace(TransitionDiagram
         std::set<const NFAState*> ordered_set_current_states = std::set<const NFAState*>(set_current_states.begin(), set_current_states.end());
         new_table[ordered_set_current_states] = std::map<char, std::set<const NFAState*>>();
         for(auto c : transdig->getInputs()) {
-            if(c != '#') {
+            if(c != EPSILON) {
                 std::set<const NFAState*> result_next_states;
                 std::set<const NFAState*> next_states = transdig->getAllNextStates(ordered_set_current_states, c);
                 for(auto s : next_states) {
@@ -46,9 +55,11 @@ TransitionDiagram* TransitionDiagramMinimizer::minimizeInplace(TransitionDiagram
         }
     }
     std::vector<const NFAState*> new_end_states;
-    const NFAState* new_start_state = TransitionDiagram::mergeStates(new_table, start_state, transdig->getEndStates(), new_end_states, transdig->getInputs());
+    std::unordered_map<const NFAState*, std::string> new_end_states_tokens_map;
+
+    const NFAState* new_start_state = TransitionDiagram::mergeStates(transdig, new_table, new_end_states, new_end_states_tokens_map);
     transdig->clear();
-    transdig->fillTable(new_start_state, new_end_states);
+    transdig->fillTable(new_start_state, new_end_states, transdig->getTokens(),  new_end_states_tokens_map, false);
     return transdig;
 }
 
@@ -59,11 +70,10 @@ std::unordered_map<const NFAState*, std::vector<size_t>> TransitionDiagramMinimi
         for(auto state : set) {
             std::vector<size_t> sets_nums;
             for(auto c : transdig->getInputs()) {
-                if(c != '#') {
+                if(c != EPSILON) {
                     auto states_vec = transdig->lookup(state, c);
                     long long index = this->getSetIndex(states_vec[0], sets);
                     if(index != -1) sets_nums.push_back(index);
-                    else std::cout << "index -1\n";
                 }
             }
             equi_table[state] = sets_nums;

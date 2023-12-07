@@ -1,6 +1,7 @@
 #include <Lex/NFAGenerator.h>
 #include <stack>
 #include <iostream>
+#include "Lex/Epsilon.h"
 
 NFAGenerator::NFAGenerator() = default;
 
@@ -16,7 +17,7 @@ NFA *NFAGenerator::buildNFA(const std::vector<Token*>& regexMap,
     for (auto& regexDef : regexDefMap) {
         NFA* nfa = regexToNFA(*regexDef->getValue());
         nfa->setTokenName(*regexDef->getKey());
-        nfas.push_back(nfa);
+        // nfas.push_back(nfa);
         regexToNFAMap[*regexDef->getKey()] = nfa;
     }
 
@@ -54,7 +55,7 @@ NFA* NFAGenerator::regexToNFA(const std::string& regex) {
         char c = regex[i];
         if (c == '\\') { // escape-backslash for reserved symbols
             if (i + 1 < n && regex[i + 1] == 'L') { // epsilon
-                nfaStack.push(NFA::basicCharToNFA('#'));
+                nfaStack.push(NFA::basicCharToNFA(EPSILON));
                 i++;
             }
             else { // eg. \+ \* \= \( \) or \=\=
@@ -192,7 +193,7 @@ NFA* NFAGenerator::combineNFAs(std::vector<NFA*>& nfas) {
     NFAState *combinedStart = combinedNFA->getStartState();
 
     for (const NFA* nfa : nfas) {
-        combinedStart->addTransition('#', nfa->getStartState());
+        combinedStart->addTransition(EPSILON, nfa->getStartState());
         combinedNFA->addEndState(nfa->getEndState());
     }
 

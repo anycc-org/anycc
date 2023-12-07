@@ -9,9 +9,11 @@
 #include <unordered_set>
 #include <vector>
 #include <fstream>
+#include "Lex/Epsilon.h"
 
-TransitionDiagram::TransitionDiagram(const NFAState* start_state, std::vector<const NFAState*> end_states) {
-    this->fillTable(start_state, end_states);
+TransitionDiagram::TransitionDiagram(const NFAState* start_state, std::vector<const NFAState*> end_states, std::vector<std::string> tokens, std::unordered_map<std::string, int> tokensPriority) {
+    this->fillTable(start_state, end_states, tokens, std::unordered_map<const NFAState*, std::string>(), true);
+    this->tokensPriority = tokensPriority;
 }
 
 /**
@@ -66,6 +68,16 @@ std::unordered_set<const NFAState*> TransitionDiagram::getNotEndAndDeadStates() 
     return res_set;
 }
 
+std::vector<std::string>  TransitionDiagram::getTokens() {
+    return this->tokens;
+}
+std::unordered_map<const NFAState*, std::string> TransitionDiagram::getEndStatesTokensMap() {
+    return this->end_states_tokens_map;
+}
+std::unordered_map<std::string, int> TransitionDiagram::getTokensPriority() {
+    return this->tokensPriority;
+}
+
 std::vector<const NFAState*> TransitionDiagram::lookup(const NFAState* state, char input) {
     if(table.find(state) == table.end()) return std::vector<const NFAState*>();
     if(table[state].find(input) == table[state].end()) return std::vector<const NFAState*>();
@@ -97,7 +109,7 @@ std::set<const NFAState*> TransitionDiagram::getRecursiveEpsilonClosure(const NF
         const NFAState* current_state = stack.top();
         stack.pop();
         visited.insert(current_state);
-        std::vector<const NFAState*> next_states = this->lookup(current_state, '#');
+        std::vector<const NFAState*> next_states = this->lookup(current_state, EPSILON);
         for(auto next_state : next_states) {
             if(visited.find(next_state) == visited.end()) {
                 stack.push(next_state);
@@ -128,25 +140,20 @@ NFA* TransitionDiagram::createNFAFromTable() {
 
 TransitionDiagram* TransitionDiagram::removeEpsilonTransitions(bool inplace) {
     if(inplace) return removeEpsilonTransitionsInplace(this);
-    return removeEpsilonTransitionsInplace(new TransitionDiagram(this->getStartState(), std::vector<const NFAState*>(this->getEndStates().begin(), this->getEndStates().end())));
+    return removeEpsilonTransitionsInplace(new TransitionDiagram(this->getStartState(), std::vector<const NFAState*>(this->getEndStates().begin(), this->getEndStates().end()), this->tokens, this->getTokensPriority()));
 }
 
 TransitionDiagram* TransitionDiagram::removeEpsilonTransitionsInplace(TransitionDiagram* transdig) {
     std::vector<char> inputs = transdig->getInputs();
     std::vector<const NFAState*> states = std::vector<const NFAState*>(transdig->getStates().begin(), transdig->getStates().end());
     for(auto state : states) {
-        std::cout << "state :" << state->getStateId() << "\n";
         std::set<const NFAState*> closure_states = transdig->getRecursiveEpsilonClosure(state);
         for(auto c : inputs) {
             std::unordered_set<const NFAState*> result_states;
-            if(c != '#') {
+            if(c != EPSILON) {
                 std::set<const NFAState*> next_states = transdig->getAllNextStates(closure_states, c);
                 for(auto tmp_state : next_states) {
                     std::set<const NFAState*> closure_next_state = transdig->getRecursiveEpsilonClosure(tmp_state);
-                    for(auto tmp_state2 : closure_next_state) {
-                        std::cout << tmp_state2->getStateId() << " ";
-                    }
-                    std::cout << "==\n";
                     for(auto next_state : closure_next_state) {
                         result_states.insert(next_state);
                     }
@@ -156,9 +163,9 @@ TransitionDiagram* TransitionDiagram::removeEpsilonTransitionsInplace(Transition
         }
     }
     for(auto state : states) {
-        transdig->table[state].erase('#');
+        transdig->table[state].erase(EPSILON);
     }
-    // transdig->inputs.erase('#');
+    // transdig->inputs.erase(EPSILON);
     return transdig;
 }
 
@@ -221,9 +228,9 @@ void TransitionDiagram::toDotFile(std::string file_name) {
     file.close();
 }
 
-void TransitionDiagram::fillTable(const NFAState* state, std::vector<const NFAState*> end_states) {
+void TransitionDiagram::fillTable(const NFAState* state, std::vector<const NFAState*> end_states, std::vector<std::string> tokens, std::unordered_map<const NFAState*, std::string> states_tokens_map, bool new_fill) {
     this->startState = state;
-    std::cout << "start : " << this->startState->getStateId() << "\n";
+    this->tokens = tokens;
     this->end_states = std::unordered_set<const NFAState*>(end_states.begin(), end_states.end());
     std::queue<const NFAState*> queue;
     std::unordered_set<const NFAState*> visited;
@@ -258,6 +265,16 @@ void TransitionDiagram::fillTable(const NFAState* state, std::vector<const NFASt
     for(auto c : inputs_set) {
         this->inputs.push_back(c);
     }
+    if(new_fill) {
+        for(auto st : visited) {
+            if(st->isEndState()) {
+                this->end_states_tokens_map[st] = st->getTokenName(); 
+            }
+        }
+    }
+    else {
+        this->end_states_tokens_map = states_tokens_map;
+    }
 }
 
 const NFAState* TransitionDiagram::getStateId(int state_id) {
@@ -270,19 +287,25 @@ const NFAState* TransitionDiagram::getStateId(int state_id) {
  * @warning new objects created here
  * @todo figure out a way to prevent potential memory leaks 
  */
-const NFAState* TransitionDiagram::mergeStates(std::map<std::set<const NFAState*>,  std::map<char, std::set<const NFAState*>>>& new_table, const NFAState* start_state, std::unordered_set<const NFAState*> end_states, std::vector<const NFAState*>& new_end_states, std::vector<char> inputs) {
+const NFAState* TransitionDiagram::mergeStates(TransitionDiagram* transdig,std::map<std::set<const NFAState*>, std::map<char, std::set<const NFAState*>>>& new_table, std::vector<const NFAState*>& new_end_states, std::unordered_map<const NFAState*, std::string>& new_end_states_tokens_map) {
     std::map<std::set<const NFAState*>, NFAState*> merge_map;
     const NFAState* new_start_state = nullptr;
-    std::cout << new_table.size() << " merged\n";
     for(auto kv : new_table) {
         // Newly Created states should be deleted using the NFAState Destructor 
         NFAState* new_state = new NFAState();
-        if(TransitionDiagram::isEndStateNew(kv.first, end_states)) {
+        if(TransitionDiagram::isEndStateNew(kv.first, transdig->getEndStates())) {
+            std::vector<std::string> tokens;
+            for(auto kv2 : kv.first) {
+                if(transdig->getEndStatesTokensMap().find(kv2) != transdig->getEndStatesTokensMap().end()) {
+                    tokens.push_back(transdig->getEndStatesTokensMap()[kv2]);
+                }
+            }
             new_end_states.push_back(new_state);
+            new_end_states_tokens_map[new_state] = transdig->getMaxPriorityToken(tokens);
         }
         merge_map[kv.first] = new_state;
         for(auto state : kv.first) {
-            if(start_state == state) {
+            if(transdig->getStartState() == state) {
                 new_start_state = merge_map[kv.first];
             }
         }
@@ -297,8 +320,8 @@ const NFAState* TransitionDiagram::mergeStates(std::map<std::set<const NFAState*
             else {
                 if(dead_state == nullptr) {
                     dead_state = new NFAState();
-                    for(auto c : inputs) {
-                        if(c != '#') {
+                    for(auto c : transdig->getInputs()) {
+                        if(c != EPSILON) {
                             dead_state->addTransition(c, dead_state);
                         }
                     }
@@ -333,4 +356,17 @@ bool TransitionDiagram::isEndStateNew(std::set<const NFAState*> states, std::uno
         if(end_states.find(state) != end_states.end()) return true;
     }
     return false;
+}
+
+std::string TransitionDiagram::getMaxPriorityToken(std::vector<std::string> tokens) {
+    int min_prio = 100000;
+    std::string min_token;
+    for(auto tk : tokens) {
+        int prio = this->tokensPriority[tk];
+        if(prio < min_prio) {
+            min_prio = prio;
+            min_token = tk;
+        }
+    }
+    return min_token;
 }

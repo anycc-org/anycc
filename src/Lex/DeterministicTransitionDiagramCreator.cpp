@@ -2,10 +2,11 @@
 #include "Lex/TransitionDiagram.h"
 #include <Lex/DeterministicTransitionDiagramCreator.h>
 #include <queue>
+#include "Lex/Epsilon.h"
 
 TransitionDiagram* DeterministicTransitionDiagramCreator::subsetConstruction(TransitionDiagram* transdig, bool inplace) {
     if(inplace) return subsetConstructionInplace(transdig);
-    return subsetConstructionInplace(new TransitionDiagram(transdig->getStartState(), std::vector<const NFAState*>(transdig->getEndStates().begin(), transdig->getEndStates().end())));
+    return subsetConstructionInplace(new TransitionDiagram(transdig->getStartState(), std::vector<const NFAState*>(transdig->getEndStates().begin(), transdig->getEndStates().end()), transdig->getTokens(), transdig->getTokensPriority()));
 }
 
 TransitionDiagram* DeterministicTransitionDiagramCreator::subsetConstructionInplace(TransitionDiagram* transdig) {
@@ -22,7 +23,7 @@ TransitionDiagram* DeterministicTransitionDiagramCreator::subsetConstructionInpl
         visited.insert(current_states);
         new_table[current_states] = std::map<char, std::set<const NFAState*>>();
         for(auto c : transdig->getInputs()) {
-            if(c != '#') {
+            if(c != EPSILON) {
                 std::set<const NFAState*> result_next_states;
                 std::set<const NFAState*> next_states = transdig->getAllNextStates(current_states, c);
                 for(auto s : next_states) {
@@ -39,8 +40,9 @@ TransitionDiagram* DeterministicTransitionDiagramCreator::subsetConstructionInpl
         }
     }
     std::vector<const NFAState*> new_end_states;
-    const NFAState* new_start_state = transdig->mergeStates(new_table, start_state, transdig->getEndStates(), new_end_states, transdig->getInputs());
+    std::unordered_map<const NFAState*, std::string> new_end_states_tokens_map;
+    const NFAState* new_start_state = transdig->mergeStates(transdig, new_table, new_end_states, new_end_states_tokens_map);
     transdig->clear();
-    transdig->fillTable(new_start_state, new_end_states);
+    transdig->fillTable(new_start_state, new_end_states, transdig->getTokens(), new_end_states_tokens_map, false);
     return transdig;
 }

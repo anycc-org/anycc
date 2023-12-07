@@ -18,7 +18,7 @@ Lex::Lex(std::string *rules_file_name, std::string *program_file_name) {
 void Lex::buildLex() {
     read_rules();
     NFA *nfa = buildNFA();
-    TransitionDiagram* table = new TransitionDiagram(nfa->getStartState(), nfa->getEndStates());
+    TransitionDiagram* table = new TransitionDiagram(nfa->getStartState(), nfa->getEndStates(), rules->getTokens(), rules->getTokensPriority());
     // table->print();
     std::cout << table->getStates().size() << "\n";
     std::cout << table->getEndStates().size() << "\n";
@@ -40,6 +40,17 @@ void Lex::buildLex() {
     std::cout << table->getStates().size() << "\n";
     std::cout << table->getEndStates().size() << "\n";
     std::cout << table->getDeadStates().size() << "\n";
+    for(auto kv : table->getEndStatesTokensMap()) {
+        std::cout << kv.first->getStateId() << ": " << kv.second << "\n";
+    }
+    std::cout << table->getEndStatesTokensMap().size();
+    std::cout << "\n";
+    for(auto s : rules->getTokens()) {
+        std::cout << s << "\n";
+    }
+    std::cout << rules->getTokens().size();
+    std::cout << "\n";
+
 }
 
 void Lex::read_rules() {

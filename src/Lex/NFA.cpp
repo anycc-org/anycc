@@ -2,6 +2,7 @@
 #include <Lex/NFA.h>
 #include <iostream>
 #include <stack>
+#include "Lex/Epsilon.h"
 
 NFA::NFA() {
     startState = new NFAState();
@@ -76,10 +77,10 @@ NFA* NFA::wordToNFA(const std::string& word) {
  */
 NFA* NFA::unionNAFs(NFA *nfa1, NFA *nfa2) {
     NFA* nfa = new NFA();
-    nfa->startState->addTransition('#', nfa1->startState);
-    nfa->startState->addTransition('#', nfa2->startState);
-    nfa1->endState->addTransition('#', nfa->endState);
-    nfa2->endState->addTransition('#', nfa->endState);
+    nfa->startState->addTransition(EPSILON, nfa1->startState);
+    nfa->startState->addTransition(EPSILON, nfa2->startState);
+    nfa1->endState->addTransition(EPSILON, nfa->endState);
+    nfa2->endState->addTransition(EPSILON, nfa->endState);
     return nfa;
 }
 
@@ -98,10 +99,10 @@ NFA* NFA::concatNAFs(NFA* nfa1, NFA* nfa2) {
  */
 NFA* NFA::kleeneStarNFA(NFA* nfa) {
     NFA* nfaStar = new NFA();
-    nfaStar->startState->addTransition('#', nfa->startState);
-    nfaStar->startState->addTransition('#', nfaStar->endState);
-    nfa->endState->addTransition('#', nfa->startState);
-    nfa->endState->addTransition('#', nfaStar->endState);
+    nfaStar->startState->addTransition(EPSILON, nfa->startState);
+    nfaStar->startState->addTransition(EPSILON, nfaStar->endState);
+    nfa->endState->addTransition(EPSILON, nfa->startState);
+    nfa->endState->addTransition(EPSILON, nfaStar->endState);
     return nfaStar;
 }
 
@@ -110,9 +111,9 @@ NFA* NFA::kleeneStarNFA(NFA* nfa) {
  */
 NFA* NFA::positiveClosureNFA(NFA* nfa) {
     NFA* nfaPlus = new NFA();
-    nfaPlus->startState->addTransition('#', nfa->startState);
-    nfa->endState->addTransition('#', nfa->startState);
-    nfa->endState->addTransition('#', nfaPlus->endState);
+    nfaPlus->startState->addTransition(EPSILON, nfa->startState);
+    nfa->endState->addTransition(EPSILON, nfa->startState);
+    nfa->endState->addTransition(EPSILON, nfaPlus->endState);
     return nfaPlus;
 }
 
@@ -125,18 +126,18 @@ NFA* NFA::unionRangeNFAs(NFA* rangeStartNFA, NFA* rangeEndNFA) {
     char startSymbol = rangeStartNFA->startState->getTransitions().begin()->first;
     char endSymbol = rangeEndNFA->startState->getTransitions().begin()->first;
 
-    rangeNFA->startState->addTransition('#', rangeStartNFA->startState);
-    rangeStartNFA->endState->addTransition('#', rangeNFA->endState);
+    rangeNFA->startState->addTransition(EPSILON, rangeStartNFA->startState);
+    rangeStartNFA->endState->addTransition(EPSILON, rangeNFA->endState);
 
     // loop over all symbols in range
     for (char c = (char)(startSymbol + 1); c < endSymbol; c++) {
         NFA* basicNFA = NFA::basicCharToNFA(c);
-        rangeNFA->startState->addTransition('#', basicNFA->startState);
-        basicNFA->endState->addTransition('#', rangeNFA->endState);
+        rangeNFA->startState->addTransition(EPSILON, basicNFA->startState);
+        basicNFA->endState->addTransition(EPSILON, rangeNFA->endState);
     }
 
-    rangeNFA->startState->addTransition('#', rangeEndNFA->startState);
-    rangeEndNFA->endState->addTransition('#', rangeNFA->endState);
+    rangeNFA->startState->addTransition(EPSILON, rangeEndNFA->startState);
+    rangeEndNFA->endState->addTransition(EPSILON, rangeNFA->endState);
 
     return rangeNFA;
 }
