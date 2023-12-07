@@ -24,7 +24,6 @@ NFA *NFAGenerator::buildNFA(const std::vector<Token*>& regexMap,
     for (auto& regexDef : regexDefMap) {
         NFA* nfa = regexToNFA(*regexDef->getValue());
         nfa->setTokenName(*regexDef->getKey());
-        nfas.push_back(nfa);
         regexToNFAMap[*regexDef->getKey()] = nfa;
     }
 
