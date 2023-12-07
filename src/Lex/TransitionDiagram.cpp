@@ -65,6 +65,7 @@ std::unordered_set<const NFAState*> TransitionDiagram::getNotEndAndDeadStates() 
     }
     return res_set;
 }
+
 std::vector<const NFAState*> TransitionDiagram::lookup(const NFAState* state, char input) {
     if(table.find(state) == table.end()) return std::vector<const NFAState*>();
     if(table[state].find(input) == table[state].end()) return std::vector<const NFAState*>();
@@ -118,7 +119,6 @@ std::set<const NFAState*> TransitionDiagram::getAllNextStates(std::set<const NFA
 }
 
 /**
-
  * @todo create NFA from the table
  *  
  */
@@ -135,6 +135,7 @@ TransitionDiagram* TransitionDiagram::removeEpsilonTransitionsInplace(Transition
     std::vector<char> inputs = transdig->getInputs();
     std::vector<const NFAState*> states = std::vector<const NFAState*>(transdig->getStates().begin(), transdig->getStates().end());
     for(auto state : states) {
+        std::cout << "state :" << state->getStateId() << "\n";
         std::set<const NFAState*> closure_states = transdig->getRecursiveEpsilonClosure(state);
         for(auto c : inputs) {
             std::unordered_set<const NFAState*> result_states;
@@ -142,6 +143,10 @@ TransitionDiagram* TransitionDiagram::removeEpsilonTransitionsInplace(Transition
                 std::set<const NFAState*> next_states = transdig->getAllNextStates(closure_states, c);
                 for(auto tmp_state : next_states) {
                     std::set<const NFAState*> closure_next_state = transdig->getRecursiveEpsilonClosure(tmp_state);
+                    for(auto tmp_state2 : closure_next_state) {
+                        std::cout << tmp_state2->getStateId() << " ";
+                    }
+                    std::cout << "==\n";
                     for(auto next_state : closure_next_state) {
                         result_states.insert(next_state);
                     }
@@ -236,6 +241,7 @@ const NFAState* TransitionDiagram::getStateId(int state_id) {
 const NFAState* TransitionDiagram::mergeStates(std::map<std::set<const NFAState*>,  std::map<char, std::set<const NFAState*>>>& new_table, const NFAState* start_state, std::unordered_set<const NFAState*> end_states, std::vector<const NFAState*>& new_end_states, std::vector<char> inputs) {
     std::map<std::set<const NFAState*>, NFAState*> merge_map;
     const NFAState* new_start_state = nullptr;
+    std::cout << new_table.size() << " merged\n";
     for(auto kv : new_table) {
         // Newly Created states should be deleted using the NFAState Destructor 
         NFAState* new_state = new NFAState();

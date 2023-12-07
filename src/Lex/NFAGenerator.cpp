@@ -50,7 +50,7 @@ NFA* NFAGenerator::regexToNFA(const std::string& regex) {
     std::stack<char> operatorStack; // word + (space or '\' or operator)
     int i;
 
-    for (i = 0; i < n; i++) { // {"l (l|d)*", "\+|-", "d+|d+ . s (\L|E s)"
+    for (i = 0; i < n; i++) {
         char c = regex[i];
         if (c == '\\') { // escape-backslash for reserved symbols
             if (i + 1 < n && regex[i + 1] == 'L') { // epsilon
@@ -58,7 +58,6 @@ NFA* NFAGenerator::regexToNFA(const std::string& regex) {
                 i++;
             }
             else { // eg. \+ \* \= \( \) or \=\=
-                // handle \=\= case
                 std::string word = std::string(1, regex[i + 1]);
                 i++;
                 while (i + 1 < n && regex[i + 1] != ' ' && !isOperator(regex[i + 1]) && regex[i + 1] != '(' && regex[i + 1] != ')') {
@@ -104,6 +103,19 @@ NFA* NFAGenerator::regexToNFA(const std::string& regex) {
             if (regexToNFAMap.find(word) != regexToNFAMap.end()) {
                 // take a deep copy from this nfa
                 nfaStack.push(new NFA(*regexToNFAMap[word]));
+            }
+            // handle cases like bbb*|aaa*
+            else if (word.size() > 1 && i + 1 < n && (regex[i + 1] == '*' || regex[i + 1] == '+')) {
+                NFA* subWordNFA = NFA::wordToNFA(word.substr(0, word.size() - 1));
+                NFA* kleenNFA;
+                if (regex[i + 1] == '*') {
+                    kleenNFA = NFA::kleeneStarNFA(NFA::basicCharToNFA(word[word.size() - 1]));
+                }
+                else {
+                    kleenNFA = NFA::positiveClosureNFA(NFA::basicCharToNFA(word[word.size() - 1]));
+                }
+                i++;
+                nfaStack.push(NFA::concatNAFs(subWordNFA, kleenNFA));
             }
             else {
                 // form an NFA by concatenating the characters of that word

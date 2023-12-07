@@ -20,8 +20,8 @@ public:
 
 private:
     TransitionDiagram* minimizeInplace(TransitionDiagram* transdig);
-    std::unordered_map<const NFAState*, std::vector<size_t>> constructEquivelanceTable(TransitionDiagram* transdig, std::vector<std::unordered_set<const NFAState*>>& sets); 
-    long long getSetIndex(const NFAState* state, std::vector<std::unordered_set<const NFAState*>>& sets);
-    std::vector<std::unordered_set<const NFAState*>> constructNewEqivelanceSets(std::unordered_set<const NFAState*>& set, std::unordered_map<const NFAState*, std::vector<size_t>>& table); 
-    std::set<const NFAState*> extractNewMergedStatesFromOld(const NFAState* state, std::vector<std::unordered_set<const NFAState*>> states);
+    std::unordered_map<const NFAState*, std::vector<size_t>> constructEquivelanceTable(TransitionDiagram* transdig, std::vector<std::set<const NFAState*>>& sets); 
+    long long getSetIndex(const NFAState* state, std::vector<std::set<const NFAState*>>& sets);
+    std::vector<std::set<const NFAState*>> constructNewEqivelanceSets(std::set<const NFAState*>& set, std::unordered_map<const NFAState*, std::vector<size_t>>& table); 
+    std::set<const NFAState*> extractNewMergedStatesFromOld(const NFAState* state, std::vector<std::set<const NFAState*>> states);
 };
