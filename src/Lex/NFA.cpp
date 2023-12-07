@@ -13,10 +13,12 @@ NFA::NFA(NFAState *start, NFAState *end) {
 }
 
 NFA::NFA(const NFA& other) noexcept { // copy constructor
-    std::unordered_map<int, NFAState*> copiedStates;
-    endState = new NFAState(*(other.endState), copiedStates);
-    endState->setTokenName(other.endState->getTokenName());
+    std::unordered_map<NFAState*, NFAState*> copiedStates;
     startState = new NFAState(*(other.startState), copiedStates);
+    endState = copiedStates[other.endState];
+    for (auto& state: other.endStates) {
+        endStates.push_back(copiedStates[state]);
+    }
     copiedStates.clear();
 }
 
@@ -51,8 +53,9 @@ NFA* NFA::wordToNFA(const std::string& word) {
     if (word.size() == 1) {
         return basicCharToNFA(word[0]);
     }
-    NFA* wordNFA = new NFA();
-    NFAState* currentState = wordNFA->getStartState();
+
+    NFAState* startState = new NFAState();
+    NFAState* currentState = startState;
 
     for (char c : word) {
         if (c == '\\') { // eg ab\+c -> ab+c
@@ -63,7 +66,7 @@ NFA* NFA::wordToNFA(const std::string& word) {
         currentState = nextState;
     }
 
-    wordNFA->endState = currentState;
+    NFA* wordNFA = new NFA(startState, currentState);
     return wordNFA;
 }
 
