@@ -1,5 +1,5 @@
 #include <iostream>
-#include "Lex.h"
+#include <Lex/Lex.h>
 
 
 int main() {

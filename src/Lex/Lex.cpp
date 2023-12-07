@@ -1,5 +1,5 @@
 #include <Lex/Lex.h>
-#include "NFAGenerator.h"
+#include <Lex/NFAGenerator.h>
 
 
 Lex::~Lex() {

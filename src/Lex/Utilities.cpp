@@ -1,5 +1,5 @@
-#include "Utilities.h"
-#include "Operator.h"
+#include "Lex/Utilities.h"
+#include "Lex/Operator.h"
 
 std::vector<SubstringInfo>
 Utilities::findAllLongestSubstringIndices(std::string *input, std::set<std::string> *substrings) {

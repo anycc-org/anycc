@@ -1,7 +1,7 @@
 #include <iostream>
 #include <utility>
-#include "Rules.h"
-#include "Utilities.h"
+#include "Lex/Rules.h"
+#include "Lex/Utilities.h"
 
 Rules::Rules() {
     regular_expressions_map = std::unordered_map<std::string, std::pair<std::string, int>>();
