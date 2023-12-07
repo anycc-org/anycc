@@ -49,8 +49,8 @@ void Lex::buildLex() {
     analyzer.analyzeProgram();
 
     Token *token;
-    while ((token = analyzer.getNextToken()) == nullptr) {
-        std::cout << token->getKey() << " " << token->getValue() << '\n';
+    while ((token = analyzer.getNextToken()) != nullptr) {
+        std::cout << *(token->getValue()) << '\n';
     }
 }
 

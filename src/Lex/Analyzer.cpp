@@ -56,14 +56,14 @@ void Analyzer::readTemplate(std::ifstream *file) {
     char c;
 
     while (file->get(c)) {
-        if (inputs.find(c) == inputs.end()) {
+        if (c != '\n' && c != ' ' && inputs.find(c) == inputs.end()) {
             acceptTokenAndRecoverErrorIfExists(acceptanceState, buffer);
             std::cout << '\"' << c << '\"' << " is bad token at " << line_number + 1 << ":" << i << '\n';
             i++;
             continue;
         }
 
-        if (file->eof()) {
+        if (c == EOF) {
             acceptTokenAndRecoverErrorIfExists(acceptanceState, buffer);
             break;
         } else if (c == '\n') {
@@ -99,7 +99,7 @@ void Analyzer::readTemplate(std::ifstream *file) {
             buffer += c;
 
             if (isFinalState(state)) {
-                acceptanceState = {state, {buffer, line_number, i - buffer.length()}};
+                acceptanceState = {state, {buffer, line_number, i - (int) buffer.length()}};
             } else if (state->getTokenName() == "dead") {
                 if (acceptanceState.state == nullptr) {
                     std::cout << '\"' << buffer << '\"' << " is bad token at " << line_number + 1 << ":"
@@ -116,6 +116,8 @@ void Analyzer::readTemplate(std::ifstream *file) {
                 if (!buffer.empty()) {
                     state = this->start_state;
                     state = getNextState(c, state);
+                    if (isFinalState(state))
+                        acceptanceState = {state, {buffer, line_number, i - (int) buffer.length()}};
                     i++;
                     continue;
                 }
@@ -123,6 +125,15 @@ void Analyzer::readTemplate(std::ifstream *file) {
                 continue;
             }
             i++;
+        }
+    }
+    if (acceptanceState.state != nullptr) {
+        acceptTokenAndRecoverErrorIfExists(acceptanceState, buffer);
+        if (!buffer.empty()) {
+            state = this->start_state;
+            state = getNextState(c, state);
+            if (isFinalState(state))
+                acceptanceState = {state, {buffer, line_number, i - (int) buffer.length()}};
         }
     }
 }
@@ -177,13 +188,15 @@ void Analyzer::panicModeErrorRecovery(std::string &buffer) {
 }
 
 void Analyzer::addToken(const NFAState *state, Word &word) {
-    auto token_name = state->getTokenName();
+    auto *token_name = new std::string(state->getTokenName());
     auto token_id = state->getStateId();
-    auto *token = new Token(&token_name, &word.lexeme);
+    auto *lexeme = new std::string(word.lexeme);
+
+    auto *token = new Token(token_name, lexeme);
 
     tokens.push(token);
 
-    if (token_name == "id")
-        symbol_table.insertEntry(word.lexeme, token_name, token_id, word.line_number);
+    if (*token_name == "id")
+        symbol_table.insertEntry(*lexeme, *token_name, token_id, word.line_number);
 }
 
