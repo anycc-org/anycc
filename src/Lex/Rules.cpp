@@ -131,3 +131,11 @@ void Rules::addKeyword(std::string &keyword) {
 std::unordered_map<std::string, int> &Rules::getTokensPriority() {
     return tokens_priority;
 }
+std::vector<std::string> Rules::getTokens() {
+    std::vector<std::string> tokens;
+    for(auto kv : this->tokens_priority) {
+        // if(kv.first == "digit" || kv.first == "digit") continue;
+        tokens.push_back(kv.first);
+    }
+    return tokens;
+}

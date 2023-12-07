@@ -29,6 +29,7 @@ public:
     std::vector<std::string> &getPunctuations();
 
     std::unordered_map<std::string, int> &getTokensPriority();
+    std::vector<std::string>  getTokens();
 
     void setRegularExpressionsTokensVector(std::vector<Token *> regular_expressions_vector);
 

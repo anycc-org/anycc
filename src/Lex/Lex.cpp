@@ -3,14 +3,11 @@
 #include <Lex/TransitionDiagram.h>
 #include <Lex/TransitionDiagramMinimizer.h>
 #include <Lex/DeterministicTransitionDiagramCreator.h>
-#include "Analyzer.h"
 
 
 Lex::~Lex() {
     delete rules;
     delete inputReader;
-    delete rules_file_name;
-    delete program_file_name;
 }
 
 Lex::Lex(std::string *rules_file_name, std::string *program_file_name) {
@@ -21,8 +18,7 @@ Lex::Lex(std::string *rules_file_name, std::string *program_file_name) {
 void Lex::buildLex() {
     read_rules();
     NFA *nfa = buildNFA();
-
-    auto *table = new TransitionDiagram(nfa->getStartState(), nfa->getEndStates());
+    TransitionDiagram* table = new TransitionDiagram(nfa->getStartState(), nfa->getEndStates(), rules->getTokens(), rules->getTokensPriority());
     // table->print();
     std::cout << table->getStates().size() << "\n";
     std::cout << table->getEndStates().size() << "\n";
@@ -44,20 +40,22 @@ void Lex::buildLex() {
     std::cout << table->getStates().size() << "\n";
     std::cout << table->getEndStates().size() << "\n";
     std::cout << table->getDeadStates().size() << "\n";
-
-    Analyzer analyzer(*program_file_name, table->getStartState(), table);
-    analyzer.analyzeProgram();
-
-    Token *token;
-    while ((token = analyzer.getNextToken()) != nullptr) {
-        std::cout << *(token->getValue()) << '\n';
+    for(auto kv : table->getEndStatesTokensMap()) {
+        std::cout << kv.first->getStateId() << ": " << kv.second << "\n";
     }
+    std::cout << table->getEndStatesTokensMap().size();
+    std::cout << "\n";
+    for(auto s : rules->getTokens()) {
+        std::cout << s << "\n";
+    }
+    std::cout << rules->getTokens().size();
+    std::cout << "\n";
+
 }
 
 void Lex::read_rules() {
     rules = new Rules();
     inputReader = new InputReader(this->rules_file_name, rules);
-
     rules->printRules();
 }
 

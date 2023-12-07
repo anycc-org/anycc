@@ -7,8 +7,11 @@ class FileReader {
 public:
     void readFile(std::ifstream *file) {
         std::string line;
+        int line_number = 0;
         if (file->is_open()) {
-            readTemplate(file);
+            while (getline(*file, line)) {
+                parseLine(line, line_number++);
+            }
             file->close();
             delete file;
         } else {
@@ -16,5 +19,5 @@ public:
         }
     }
 
-    virtual void readTemplate(std::ifstream *file) = 0;
+    virtual void parseLine(std::string &line, int line_number) = 0;
 };
