@@ -10,8 +10,10 @@ Rules::Rules() {
     regular_definitions_tokens_vector = std::vector<Token *>();
     keywords = std::vector<std::string>();
     punctuations = std::vector<std::string>();
+    tokens_priority = std::unordered_map<std::string, int>();
     expression_id = 0;
     definition_id = 0;
+    priority = 0;
 }
 
 Rules::~Rules() {
@@ -97,6 +99,7 @@ void Rules::setRegularDefinitionsTokensVector(std::vector<Token *> regular_defin
 }
 
 void Rules::addPunctuation(std::string &punctuation) {
+    this->tokens_priority[punctuation] = priority++;
     this->punctuations.push_back(punctuation);
 }
 
@@ -105,6 +108,8 @@ void Rules::addRegularDefinition(std::string &name, std::string &definition) {
         regular_definitions_map[name] = {definition, regular_definitions_map[name].second};
         return;
     }
+
+    this->tokens_priority[name] = priority++;
     regular_definitions_map[name] = {definition, definition_id++};
 }
 
@@ -114,9 +119,15 @@ void Rules::addRegularExpression(std::string &name, std::string &expression) {
         return;
     }
 
+    this->tokens_priority[name] = priority++;
     regular_expressions_map[name] = {expression, expression_id++};
 }
 
 void Rules::addKeyword(std::string &keyword) {
+    this->tokens_priority[keyword] = priority++;
     this->keywords.push_back(keyword);
+}
+
+std::unordered_map<std::string, int> &Rules::getTokensPriority() {
+    return tokens_priority;
 }
