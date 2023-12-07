@@ -103,7 +103,7 @@ void Analyzer::readTemplate(std::ifstream *file) {
             } else if (state->getTokenName() == "dead") {
                 if (acceptanceState.state == nullptr) {
                     std::cout << '\"' << buffer << '\"' << " is bad token at " << line_number + 1 << ":"
-                              << i - buffer.length() << '\n';
+                              << i - buffer.length() + 1 << '\n';
                     buffer.clear();
                     i++;
                     continue;
