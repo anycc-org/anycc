@@ -1,12 +1,3 @@
 letter = a- z | A-Z
-digit = 0 - 9
-{boolean int float}
-{while if else}
-id: letter (letter | digit)*
-digits = digit+
-num: digit+ | digit+ . digits (\L | E digits)
-relop: \=\= | !\= | > | >\= | < | <\=
-assign: \=
-[; , \( \) { }]
-addop: \+ | \-
-mullop: \* | /
+{do double}
+id: letter (letter)*

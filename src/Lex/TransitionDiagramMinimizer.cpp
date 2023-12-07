@@ -27,13 +27,6 @@ TransitionDiagram* TransitionDiagramMinimizer::minimizeInplace(TransitionDiagram
         if(new_sets.size() == prev_sets.size()) break;
         prev_sets = new_sets;
     }
-    for(auto s : all_sets[all_sets.size() - 1]) {
-        std::cout << s.size() << "\n";
-        for(auto s2 : s) {
-            std::cout << s2->getStateId() << " ";
-        }
-        std::cout << "\n";
-    }
     std::map<std::set<const NFAState*>,  std::map<char, std::set<const NFAState*>>> new_table;
     for(auto& set_current_states : all_sets[all_sets.size() - 1]){
         std::set<const NFAState*> ordered_set_current_states = std::set<const NFAState*>(set_current_states.begin(), set_current_states.end());
@@ -62,14 +55,15 @@ TransitionDiagram* TransitionDiagramMinimizer::minimizeInplace(TransitionDiagram
 std::unordered_map<const NFAState*, std::vector<size_t>> TransitionDiagramMinimizer::constructEquivelanceTable(TransitionDiagram* transdig, std::vector<std::set<const NFAState*>>& sets) {
     std::unordered_map<const NFAState*, std::vector<size_t>> equi_table;
     for(size_t i = 0; i < sets.size(); i++) {
-        auto& set = sets[i];
-        for(auto& state : set) {
+        auto set = sets[i];
+        for(auto state : set) {
             std::vector<size_t> sets_nums;
             for(auto c : transdig->getInputs()) {
                 if(c != '#') {
                     auto states_vec = transdig->lookup(state, c);
                     long long index = this->getSetIndex(states_vec[0], sets);
                     if(index != -1) sets_nums.push_back(index);
+                    else std::cout << "index -1\n";
                 }
             }
             equi_table[state] = sets_nums;

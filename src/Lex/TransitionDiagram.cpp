@@ -8,7 +8,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
-
+#include <fstream>
 
 TransitionDiagram::TransitionDiagram(const NFAState* start_state, std::vector<const NFAState*> end_states) {
     this->fillTable(start_state, end_states);
@@ -22,7 +22,7 @@ TransitionDiagram::~TransitionDiagram() {
 }
 
 std::vector<char> TransitionDiagram::getInputs() const {
-    return std::vector<char>(this->inputs.begin(), this->inputs.end());
+    return this->inputs;
 }
 
 std::unordered_set<const NFAState*> TransitionDiagram::getStates() {
@@ -158,7 +158,7 @@ TransitionDiagram* TransitionDiagram::removeEpsilonTransitionsInplace(Transition
     for(auto state : states) {
         transdig->table[state].erase('#');
     }
-    transdig->inputs.erase('#');
+    // transdig->inputs.erase('#');
     return transdig;
 }
 
@@ -190,15 +190,44 @@ void TransitionDiagram::clear() {
 }
 
 
-void TransitionDiagram::toDotFile(TransitionDiagram *transdig, std::string file_name) {
-    
+void TransitionDiagram::toDotFile(std::string file_name) {
+    std::ofstream file(file_name);
+    if (!file.is_open()) {
+        std::cerr << "Error opening file!" << std::endl;
+        return;
+    }
+
+    file << "digraph NFA {" << std::endl;
+    file << "\trankdir=LR;" << std::endl; // Setting direction to Left-to-Right
+
+    for (auto& fromState : table) {
+        if(this->dead_states.find(fromState.first) != this->dead_states.end()) continue;
+        for (const auto& transition : fromState.second) {
+            for (auto& toState : transition.second) {
+                if(this->dead_states.find(toState) != this->dead_states.end()) continue;
+                file << "\t" << fromState.first->getStateId() << " -> " << toState->getStateId() << " [label=\"" << transition.first << "\"];" << std::endl;
+            }
+        }
+    }
+
+    // Mark specific nodes as end states and set their colors
+    file << "\t";
+    for (const auto& state : this->end_states) {
+        file << state->getStateId() << " [style=filled fillcolor=grey color=blue]; ";
+    }
+    file << this->startState->getStateId() << " [style=filled fillcolor=green color=black];";
+    file << std::endl;
+    file << "}" << std::endl;
+    file.close();
 }
 
 void TransitionDiagram::fillTable(const NFAState* state, std::vector<const NFAState*> end_states) {
     this->startState = state;
+    std::cout << "start : " << this->startState->getStateId() << "\n";
     this->end_states = std::unordered_set<const NFAState*>(end_states.begin(), end_states.end());
     std::queue<const NFAState*> queue;
     std::unordered_set<const NFAState*> visited;
+    std::unordered_set<char> inputs_set;
     queue.push(state);
     while(!queue.empty()) {
         const NFAState* current_state = queue.front();
@@ -210,7 +239,7 @@ void TransitionDiagram::fillTable(const NFAState* state, std::vector<const NFASt
         std::unordered_map<char, std::vector<const NFAState*>> table_entry;
         for(auto &kv : transitions) {
             char input = kv.first;
-            this->inputs.insert(input);
+            inputs_set.insert(input);
             if(table_entry.find(input) == table_entry.end()) {
                 table_entry[input] = std::vector<const NFAState*>();
             }
@@ -225,6 +254,9 @@ void TransitionDiagram::fillTable(const NFAState* state, std::vector<const NFASt
         if(TransitionDiagram::isDeadState(current_state, this->end_states)) {
             this->dead_states.insert(current_state);
         }
+    }
+    for(auto c : inputs_set) {
+        this->inputs.push_back(c);
     }
 }
 

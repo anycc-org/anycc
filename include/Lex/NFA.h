@@ -3,7 +3,7 @@
 #include <unordered_map>
 #include <set>
 #include <string>
-#include <Lex/NFAState.h>
+#include "NFAState.h"
 
 class NFA {
 public:
@@ -31,5 +31,5 @@ private:
     std::string tokenName;
     NFAState* startState;
     NFAState* endState;
-    std::vector<const NFAState*> endStates;
+    std::vector<NFAState*> endStates;
 };

@@ -50,17 +50,17 @@ public:
     void print() const;
     void clear();
 
-    static void toDotFile(TransitionDiagram* transdig, std::string file_name);
+    void toDotFile(std::string file_name);
     
 private:
     std::unordered_map<const NFAState*, std::unordered_map<char, std::vector<const NFAState*>>> table;
     std::unordered_map<int, const NFAState*> state_id_map;
-    std::unordered_set<char> inputs;
-    std::unordered_set<const NFAState*> states;
-    std::unordered_set<const NFAState*> dead_states;
-    std::unordered_set<const NFAState*> end_states;
-    std::unordered_map<const NFAState*, std::vector<std::string>> end_states_tokens_map;
+    std::vector<char> inputs;
     const NFAState* startState;
+    std::unordered_set<const NFAState*> states;
+    std::unordered_set<const NFAState*> end_states;
+    std::unordered_set<const NFAState*> dead_states;
+    std::unordered_map<const NFAState*, std::vector<std::string>> end_states_tokens_map;
     std::unordered_set<const NFAState*> newlyCreatedStates();
 
     const NFAState* getStateId(int state_id);
