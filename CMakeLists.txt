@@ -32,4 +32,7 @@ add_executable(anycc
         include/Lex/Analyzer.h
         include/Lex/Analyzer.h
         include/Lex/FileReader.h
+        src/Lex/DeterministicTransitionDiagramCreator.cpp
+        src/Lex/TransitionDiagramMinimizer.cpp
+        include/Lex/TransitionDiagramMinimizer.h
 )

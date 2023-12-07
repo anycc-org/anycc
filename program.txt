@@ -1,6 +1,6 @@
-int sum , count , pass , mnt; while (pass !=
+in ab , ba , aa , bb; wh (aa !=
 10)
 {
-pass = pass + 1 ;
+aa = aa + 1 ;
 }
 

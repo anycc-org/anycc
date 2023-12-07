@@ -1,13 +1,12 @@
 #include "Analyzer.h"
 
-Analyzer::Analyzer(std::string &program_file_name, NFAState *start_state, TransitionDiagram *transition_diagram)
+Analyzer::Analyzer(std::string &program_file_name, const NFAState *start_state, TransitionDiagram *transition_diagram)
         : symbol_table(SymbolTable::getInstance()) {
     this->program_file_name = program_file_name;
     this->start_state = start_state;
     this->transition_diagram = transition_diagram;
-
-    auto dead_states_vector = transition_diagram->getDeadStates();
-    this->dead_states = std::unordered_set<const NFAState *>(dead_states_vector.begin(), dead_states_vector.end());
+    this->dead_states = transition_diagram->getDeadStates();
+    this->final_states = transition_diagram->getEndStates();
     this->tokens = std::queue<Token *>();
 }
 
@@ -58,6 +57,14 @@ void Analyzer::readTemplate(std::ifstream *file) {
             acceptTokenAndRecoverErrorIfExists(acceptanceState, buffer);
             break;
         } else if (c == '\n') {
+            if (acceptanceState.state == nullptr) {
+                buffer = "";
+                state = this->start_state;
+                line_number++;
+                i = 0;
+                continue;
+            }
+
             acceptTokenAndRecoverErrorIfExists(acceptanceState, buffer);
 
             buffer = "";
@@ -65,6 +72,13 @@ void Analyzer::readTemplate(std::ifstream *file) {
             line_number++;
             i = 0;
         } else if (c == ' ') {
+            if (acceptanceState.state == nullptr) {
+                buffer = "";
+                state = this->start_state;
+                i++;
+                continue;
+            }
+
             acceptTokenAndRecoverErrorIfExists(acceptanceState, buffer);
 
             buffer = "";
@@ -74,17 +88,19 @@ void Analyzer::readTemplate(std::ifstream *file) {
             state = getNextState(c, state);
             buffer += c;
 
-            if (state->isEndState()) {
+            if (isFinalState(state)) {
                 acceptanceState = {state, {buffer, line_number, i - buffer.length()}};
             } else if (state->getTokenName() == "error") {
                 if (acceptanceState.state == nullptr) {
-                    std::cout << '\"' << buffer << '\"' << " is bad token at " << line_number + 1 << ":" << i << '\n';
+                    std::cout << '\"' << buffer << '\"' << " is bad token at " << line_number + 1 << ":"
+                              << i - buffer.length() << '\n';
                     buffer.clear();
                     i++;
                     continue;
                 }
 
                 acceptTokenAndRecoverErrorIfExists(acceptanceState, buffer);
+
                 continue;
             }
             i++;
@@ -92,13 +108,12 @@ void Analyzer::readTemplate(std::ifstream *file) {
     }
 }
 
+bool Analyzer::isFinalState(const NFAState *state) { return final_states.find(state) != final_states.end(); }
+
 void Analyzer::acceptTokenAndRecoverErrorIfExists(AcceptanceStateEntry &acceptanceState, std::string &buffer) {
     addToken(acceptanceState.state, acceptanceState.word);
     buffer.erase(0, acceptanceState.word.lexeme.length());
     acceptanceState = {nullptr, {}};
-
-    if (!buffer.empty())
-        panicModeErrorRecovery(buffer);
 }
 
 const NFAState *Analyzer::getNextState(char &c, const NFAState *state) {
@@ -116,25 +131,26 @@ void Analyzer::panicModeErrorRecovery(std::string &buffer) {
     const NFAState *state = this->start_state;
     AcceptanceStateEntry acceptanceState = {nullptr, {}};
     int line_number = 0;
+    std::string temp_buffer;
     std::size_t size = buffer.length();
     int i = 0;
 
     while (i < size) {
         char c = buffer[i];
         state = getNextState(c, state);
-        buffer += c;
+        temp_buffer += c;
 
-        if (state->isEndState()) {
-            acceptanceState = {state, {buffer, line_number, i - buffer.length()}};
+        if (isFinalState(state)) {
+            acceptanceState = {state, {temp_buffer, line_number, i - temp_buffer.length()}};
         } else if (state->getTokenName() == "error") {
             if (acceptanceState.state == nullptr) {
-                std::cout << '\"' << buffer << '\"' << " is bad token at " << line_number + 1 << ":" << i << '\n';
+                std::cout << '\"' << temp_buffer << '\"' << " is bad token at " << line_number + 1 << ":" << i << '\n';
                 buffer.clear();
                 i++;
                 continue;
             }
 
-            acceptTokenAndRecoverErrorIfExists(acceptanceState, buffer);
+            acceptTokenAndRecoverErrorIfExists(acceptanceState, temp_buffer);
             continue;
         }
         i++;

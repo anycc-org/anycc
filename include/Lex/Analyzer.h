@@ -32,7 +32,7 @@ struct RecoveryStateEntry {
 
 class Analyzer : public FileReader {
 public:
-    Analyzer(std::string &program_file_name, NFAState *start_state, TransitionDiagram *transition_diagram);
+    Analyzer(std::string &program_file_name, const NFAState *start_state, TransitionDiagram *transition_diagram);
 
     ~Analyzer();
 
@@ -50,8 +50,9 @@ public:
 private:
     std::string program_file_name;
     std::unordered_set<const NFAState *> dead_states;
+    std::unordered_set<const NFAState *> final_states;
     std::queue<Token *> tokens;
-    NFAState *start_state;
+    const NFAState *start_state;
     TransitionDiagram *transition_diagram;
     SymbolTable &symbol_table;
 
@@ -59,11 +60,11 @@ private:
 
     const NFAState *getNextState(char &c, const NFAState *state);
 
-    const NFAState *simulate(Word &word);
-
     void addToken(const NFAState *state, Word &word);
 
     void panicModeErrorRecovery(std::string &buffer);
 
     void acceptTokenAndRecoverErrorIfExists(AcceptanceStateEntry &acceptanceState, std::string &buffer);
+
+    bool isFinalState(const NFAState *state);
 };
