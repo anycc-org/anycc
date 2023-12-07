@@ -51,6 +51,7 @@ private:
     std::string program_file_name;
     std::unordered_set<const NFAState *> dead_states;
     std::unordered_set<const NFAState *> final_states;
+    std::unordered_set<char> inputs;
     std::queue<Token *> tokens;
     const NFAState *start_state;
     TransitionDiagram *transition_diagram;

@@ -7,6 +7,9 @@ Analyzer::Analyzer(std::string &program_file_name, const NFAState *start_state, 
     this->transition_diagram = transition_diagram;
     this->dead_states = transition_diagram->getDeadStates();
     this->final_states = transition_diagram->getEndStates();
+
+    std::vector<char> inputs_vector = transition_diagram->getInputs();
+    this->inputs = std::unordered_set<char>(inputs_vector.begin(), inputs_vector.end());
     this->tokens = std::queue<Token *>();
 }
 
@@ -53,6 +56,13 @@ void Analyzer::readTemplate(std::ifstream *file) {
     char c;
 
     while (file->get(c)) {
+        if (inputs.find(c) == inputs.end()) {
+            acceptTokenAndRecoverErrorIfExists(acceptanceState, buffer);
+            std::cout << '\"' << c << '\"' << " is bad token at " << line_number + 1 << ":" << i << '\n';
+            i++;
+            continue;
+        }
+
         if (file->eof()) {
             acceptTokenAndRecoverErrorIfExists(acceptanceState, buffer);
             break;
@@ -90,7 +100,7 @@ void Analyzer::readTemplate(std::ifstream *file) {
 
             if (isFinalState(state)) {
                 acceptanceState = {state, {buffer, line_number, i - buffer.length()}};
-            } else if (state->getTokenName() == "error") {
+            } else if (state->getTokenName() == "dead") {
                 if (acceptanceState.state == nullptr) {
                     std::cout << '\"' << buffer << '\"' << " is bad token at " << line_number + 1 << ":"
                               << i - buffer.length() << '\n';
@@ -99,7 +109,16 @@ void Analyzer::readTemplate(std::ifstream *file) {
                     continue;
                 }
 
-                acceptTokenAndRecoverErrorIfExists(acceptanceState, buffer);
+                addToken(acceptanceState.state, acceptanceState.word);
+                buffer.erase(0, acceptanceState.word.lexeme.length());
+                acceptanceState = {nullptr, {}};
+
+                if (!buffer.empty()) {
+                    state = this->start_state;
+                    state = getNextState(c, state);
+                    i++;
+                    continue;
+                }
 
                 continue;
             }
@@ -120,7 +139,7 @@ const NFAState *Analyzer::getNextState(char &c, const NFAState *state) {
     auto next_states = transition_diagram->lookup(state, c);
     if (next_states.empty() || dead_states.find(next_states.at(0)) != dead_states.end()) {
         auto *empty_state = new NFAState();
-        empty_state->setTokenName("error");
+        empty_state->setTokenName("dead");
         return empty_state;
     }
 
