@@ -5,7 +5,6 @@ digit = 0 - 9
 id: letter (letter | digit)*
 digits = digit+
 num: digit+ | digit+ . digits (\L | E digits)
-x: (cdigitc)*(cdigitc)+|(cdigitc)*a-bdigit+d
 relop: \=\= | !\= | > | >\= | < | <\=
 assign: \=
 [; , \( \) { }]
