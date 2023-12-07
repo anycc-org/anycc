@@ -20,5 +20,10 @@ private:
 
     void read_rules();
 
+    /**
+     * @brief Build the NFA from the regular expressions
+     * @warning the responsibility of deleting pointer is the caller's
+     * @return The start state of the NFA
+     */
     NFA *buildNFA();
 };
