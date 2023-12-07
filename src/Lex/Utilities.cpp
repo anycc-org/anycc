@@ -1,5 +1,5 @@
-#include "Utilities.h"
-#include "Operator.h"
+#include "Lex/Utilities.h"
+#include "Lex/Operator.h"
 
 std::vector<SubstringInfo>
 Utilities::findAllLongestSubstringIndices(std::string *input, std::set<std::string> *substrings) {
@@ -78,7 +78,7 @@ Utilities::detectConcatThenAddSpaces(std::string *expression, const std::vector<
         offset++;
     }
 
-    if (endIdx + offset < expression->length() - 1 && !isOpenBrace(expression, endIdx + offset) &&
+    if (endIdx + offset < expression->length() && !isOpenBrace(expression, endIdx + offset) &&
         !isCloseBrace(expression, endIdx + offset) &&
         !isOr(expression, endIdx + offset)) {
         expression->insert(endIdx + offset, concat_operator);

@@ -3,8 +3,8 @@
 #include <string>
 #include <stack>
 #include <map>
-#include "NFA.h"
-#include "Token.h"
+#include <Lex/NFA.h>
+#include <Lex/Token.h>
 
 class NFAGenerator {
 public:

@@ -1,9 +1,9 @@
 #pragma once
 
 #include <vector>
-#include "RuleType.h"
-#include "InputReader.h"
-#include "Operator.h"
+#include <Lex/RuleType.h>
+#include <Lex/InputReader.h>
+#include <Lex/Operator.h>
 
 
 class Utilities {
