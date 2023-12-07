@@ -9,24 +9,33 @@ NFAGenerator::~NFAGenerator() {
     regexToNFAMap.clear();
 }
 
+/**
+ * @brief t converts each regex definition, regex expression, keyword, and punctuation
+ * into corresponding NFAs and then combines them into a single NFA.
+ * @return NFA after combining all NFAs
+ */
 NFA *NFAGenerator::buildNFA(const std::vector<Token*>& regexMap,
                             const std::vector<Token*>& regexDefMap,
                             const std::vector<std::string>& keywords,
                             const std::vector<std::string>& punctuations) {
+    // Create a vector to store individual NFAs
     std::vector<NFA*> nfas;
+
+    // Convert regular definitions to NFAs and add them to the vector
     for (auto& regexDef : regexDefMap) {
         NFA* nfa = regexToNFA(*regexDef->getValue());
         nfa->setTokenName(*regexDef->getKey());
-        // nfas.push_back(nfa);
         regexToNFAMap[*regexDef->getKey()] = nfa;
     }
 
+    // Convert regular expressions to NFAs and add them to the vector
     for (auto& regex : regexMap) {
         NFA* nfa = regexToNFA(*regex->getValue());
         nfa->setTokenName(*regex->getKey());
         nfas.push_back(nfa);
     }
 
+    // Convert keywords and punctuations to NFAs and add them to the vector
     for (auto& keyword : keywords) {
         NFA* nfa = NFA::wordToNFA(keyword);
         nfa->setTokenName(keyword);
@@ -39,16 +48,18 @@ NFA *NFAGenerator::buildNFA(const std::vector<Token*>& regexMap,
         nfas.push_back(nfa);
     }
 
+    // Combine all NFAs in the vector into a single NFA and return it
     return combineNFAs(nfas);
 }
 
 /**
+ * @brief Converts a regex expression to an NFA using a stack-based approach.
  * @return NFA after regex evaluation (postfix)
  */
 NFA* NFAGenerator::regexToNFA(const std::string& regex) {
     size_t n = regex.size();
     std::stack<NFA*> nfaStack;
-    std::stack<char> operatorStack; // word + (space or '\' or operator)
+    std::stack<char> operatorStack;
     int i;
 
     for (i = 0; i < n; i++) {
@@ -144,6 +155,9 @@ NFA* NFAGenerator::regexToNFA(const std::string& regex) {
     return resultNFA;
 }
 
+/**
+ * @brief Processes operators and performs corresponding operations on the NFA stack.
+ */
 void NFAGenerator::processOperator(char op, std::stack<NFA*>& nfaStack) {
     if (op == '*') { // kleene star
         NFA* operand = nfaStack.top();
@@ -188,6 +202,11 @@ void NFAGenerator::processOperator(char op, std::stack<NFA*>& nfaStack) {
     }
 }
 
+/**
+ * @brief Combines multiple NFAs into a single NFA by creating epsilon transitions
+ * from a combined start state to the start states of individual NFAs and
+ * adding their end states to the combined end states.
+ * */
 NFA* NFAGenerator::combineNFAs(std::vector<NFA*>& nfas) {
     NFA* combinedNFA = new NFA();
     NFAState *combinedStart = combinedNFA->getStartState();
