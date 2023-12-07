@@ -5,7 +5,6 @@ Analyzer::Analyzer(std::string &program_file_name, NFAState *start_state, Transi
     this->program_file_name = program_file_name;
     this->start_state = start_state;
     this->transition_diagram = transition_diagram;
-    this->words = std::vector<Word>();
 
     auto dead_states_vector = transition_diagram->getDeadStates();
     this->dead_states = std::unordered_set<const NFAState *>(dead_states_vector.begin(), dead_states_vector.end());
@@ -25,17 +24,6 @@ Analyzer::~Analyzer() {
 
 void Analyzer::analyzeProgram() {
     readProgram();
-    for (auto &word: words) {
-        std::cout << word.lexeme << '\n';
-        auto state = simulate(word);
-        if (state->isEndState()) {
-            addToken(state, word);
-            std::cout << "Token: " << state->getTokenName() << '\n';
-        } else {
-            std::cout << "Error\n";
-            panicModeErrorRecovery(word);
-        }
-    }
 }
 
 Token *Analyzer::getNextToken() {
@@ -52,91 +40,104 @@ void Analyzer::readProgram() {
     readFile(file);
 }
 
-void Analyzer::parseLine(std::string &line, int line_number) {
-    std::string delimiter = " ";
-    size_t pos;
-    std::string token;
+void Analyzer::readTemplate(std::ifstream *file) {
+    // read characters until EOF with buffer string and line number and column number
+    // get next state, save it in a variable if it is accepted state and continue reading
+    // if next state is not end state, continue reading till space or end of line
+    // if next state is dead state or empty, add last accepted state to tokens and recover from error on the remaining buffer
 
-    while ((pos = line.find(delimiter)) != std::string::npos) {
-        std::size_t offset = line.length() - pos;
-        token = line.substr(0, pos);
-        Word word = {token, line_number, offset};
-        words.push_back(word);
-        line.erase(0, pos + delimiter.length());
-    }
-}
+    AcceptanceStateEntry acceptanceState = {nullptr, {}};
+    const NFAState *state = this->start_state;
+    std::string buffer;
+    int line_number = 0;
+    std::size_t i = 0;
+    char c;
 
-const NFAState *Analyzer::simulate(Word &word) {
-    const NFAState *state = start_state;
+    while (file->get(c)) {
+        if (file->eof()) {
+            acceptTokenAndRecoverErrorIfExists(acceptanceState, buffer);
+            break;
+        } else if (c == '\n') {
+            acceptTokenAndRecoverErrorIfExists(acceptanceState, buffer);
 
-    for (char c: word.lexeme) {
-        auto next_states = transition_diagram->lookup(state, c);
-        if (next_states.empty() || dead_states.find(next_states.at(0)) != dead_states.end())
-            return {};
+            buffer = "";
+            state = this->start_state;
+            line_number++;
+            i = 0;
+        } else if (c == ' ') {
+            acceptTokenAndRecoverErrorIfExists(acceptanceState, buffer);
 
-        auto next_state = next_states.at(0);
+            buffer = "";
+            state = this->start_state;
+            i++;
+        } else {
+            state = getNextState(c, state);
+            buffer += c;
 
-        state = next_state;
-    }
-
-    return state;
-}
-
-void Analyzer::panicModeErrorRecovery(Word &word) {
-    RecoveryStateEntry recoveryState = {nullptr, 0, 0};
-    auto *state = this->start_state;
-    int leftPointer = 0;
-    int rightPointer = 0;
-    std::size_t size = word.lexeme.length();
-
-    while (true) {
-        while (rightPointer < size) {
-            char c = word.lexeme[rightPointer];
-            auto next_states = transition_diagram->lookup(state, c);
-            if (next_states.empty() || dead_states.find(next_states.at(0)) != dead_states.end()) {
-                if (recoveryState.rightPointer == recoveryState.leftPointer) {
-                    std::cout << '\"' << word.lexeme.substr(recoveryState.leftPointer) << '\"'
-                              << " is bad token at " << word.line_number + 1 << ":"
-                              << word.offset + recoveryState.rightPointer << '\n';
-                    return;
+            if (state->isEndState()) {
+                acceptanceState = {state, {buffer, line_number, i - buffer.length()}};
+            } else if (state->getTokenName() == "error") {
+                if (acceptanceState.state == nullptr) {
+                    std::cout << '\"' << buffer << '\"' << " is bad token at " << line_number + 1 << ":" << i << '\n';
+                    buffer.clear();
+                    i++;
+                    continue;
                 }
 
-                auto lexeme = word.lexeme.substr(recoveryState.leftPointer, recoveryState.rightPointer + 1);
-                Word new_word = {lexeme, word.line_number};
-                addToken(recoveryState.state, word);
-
-                leftPointer = recoveryState.rightPointer + 1;
-                rightPointer = recoveryState.rightPointer + 1;
-
-                recoveryState = {};
-                state = this->start_state;
-            } else {
-                auto next_state = next_states.at(0);
-                if (next_state->isEndState())
-                    recoveryState = {next_state, leftPointer, rightPointer};
-                rightPointer++;
+                acceptTokenAndRecoverErrorIfExists(acceptanceState, buffer);
+                continue;
             }
+            i++;
         }
-        if (recoveryState.rightPointer == recoveryState.leftPointer) {
-            if (recoveryState.rightPointer < size)
-                std::cout << '\"' << word.lexeme.substr(recoveryState.leftPointer) << '\"'
-                          << " is bad token at " << word.line_number + 1 << ":"
-                          << word.offset + recoveryState.rightPointer << '\n';
-            return;
-        } else {
-            auto lexeme = word.lexeme.substr(recoveryState.leftPointer, recoveryState.rightPointer + 1);
-            Word new_word = {lexeme, word.line_number};
-            addToken(recoveryState.state, word);
+    }
+}
 
-            leftPointer = recoveryState.rightPointer + 1;
-            rightPointer = recoveryState.rightPointer + 1;
+void Analyzer::acceptTokenAndRecoverErrorIfExists(AcceptanceStateEntry &acceptanceState, std::string &buffer) {
+    addToken(acceptanceState.state, acceptanceState.word);
+    buffer.erase(0, acceptanceState.word.lexeme.length());
+    acceptanceState = {nullptr, {}};
 
-            recoveryState = {};
-            state = this->start_state;
+    if (!buffer.empty())
+        panicModeErrorRecovery(buffer);
+}
 
-            if (rightPointer >= size)
-                return;
+const NFAState *Analyzer::getNextState(char &c, const NFAState *state) {
+    auto next_states = transition_diagram->lookup(state, c);
+    if (next_states.empty() || dead_states.find(next_states.at(0)) != dead_states.end()) {
+        auto *empty_state = new NFAState();
+        empty_state->setTokenName("error");
+        return empty_state;
+    }
+
+    return next_states.at(0);
+}
+
+void Analyzer::panicModeErrorRecovery(std::string &buffer) {
+    const NFAState *state = this->start_state;
+    AcceptanceStateEntry acceptanceState = {nullptr, {}};
+    int line_number = 0;
+    std::size_t size = buffer.length();
+    int i = 0;
+
+    while (i < size) {
+        char c = buffer[i];
+        state = getNextState(c, state);
+        buffer += c;
+
+        if (state->isEndState()) {
+            acceptanceState = {state, {buffer, line_number, i - buffer.length()}};
+        } else if (state->getTokenName() == "error") {
+            if (acceptanceState.state == nullptr) {
+                std::cout << '\"' << buffer << '\"' << " is bad token at " << line_number + 1 << ":" << i << '\n';
+                buffer.clear();
+                i++;
+                continue;
+            }
+
+            acceptTokenAndRecoverErrorIfExists(acceptanceState, buffer);
+            continue;
         }
+        i++;
     }
 }
 

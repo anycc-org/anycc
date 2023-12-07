@@ -19,6 +19,11 @@ struct Word {
     std::size_t offset;
 };
 
+struct AcceptanceStateEntry {
+    const NFAState *state{};
+    Word word;
+};
+
 struct RecoveryStateEntry {
     const NFAState *state;
     int leftPointer;
@@ -40,9 +45,10 @@ public:
      */
     Token *getNextToken();
 
+    void readTemplate(std::ifstream *file) override;
+
 private:
     std::string program_file_name;
-    std::vector<Word> words;
     std::unordered_set<const NFAState *> dead_states;
     std::queue<Token *> tokens;
     NFAState *start_state;
@@ -51,11 +57,13 @@ private:
 
     void readProgram();
 
-    void parseLine(std::string &line, int line_number) override;
+    const NFAState *getNextState(char &c, const NFAState *state);
 
     const NFAState *simulate(Word &word);
 
     void addToken(const NFAState *state, Word &word);
 
-    void panicModeErrorRecovery(Word &word);
+    void panicModeErrorRecovery(std::string &buffer);
+
+    void acceptTokenAndRecoverErrorIfExists(AcceptanceStateEntry &acceptanceState, std::string &buffer);
 };
