@@ -2,6 +2,6 @@ compile_commands.json
 main
 .cache
 .vscode
-CMakeLists.txt
+Makefile
 .idea/
 cmake-build-debug/
