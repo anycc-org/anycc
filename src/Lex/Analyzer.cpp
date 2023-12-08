@@ -138,7 +138,6 @@ void Analyzer::maximalMunchWithErrorRecovery(int line_number, size_t i, Acceptan
         state = getNextState(b, state);
         if (isFinalState(state)) {
             acceptanceState = {state, {buffer.substr(0, j), line_number, (int) i - j}};
-            std::cout << acceptanceState.word.column_number << '\n';
         } else if (isDeadState(state) || bypass) {
             acceptToken(acceptanceState, buffer);
             state = start_state;
@@ -160,7 +159,7 @@ bool Analyzer::isFinalState(const NFAState *state) { return final_states.find(st
 void Analyzer::acceptToken(AcceptanceStateEntry &acceptanceState, std::string &buffer) {
     if (acceptanceState.state == nullptr)
         return;
-    std::cout << acceptanceState.word.column_number << "   2222" << '\n';
+
     addToken(acceptanceState.state, acceptanceState.word);
     buffer.erase(0, acceptanceState.word.lexeme.length());
     acceptanceState = {nullptr, {}};
