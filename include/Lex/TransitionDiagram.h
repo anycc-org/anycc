@@ -51,6 +51,8 @@ public:
     void print() const;
     void clear();
     void toDotFile(std::string file_name);
+    void toCSVFile(std::string file_name);
+    void toMDFile(std::string file_name);
     
 private:
     std::unordered_map<const NFAState*, std::unordered_map<char, std::vector<const NFAState*>>> table;
