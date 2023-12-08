@@ -130,16 +130,6 @@ bool Analyzer::isDeadState(const NFAState *state) { return state->getTokenName()
 
 void Analyzer::maximalMunchWithErrorRecovery(int line_number, size_t i, AcceptanceStateEntry &acceptanceState,
                                              const NFAState *&state, std::string &buffer, char &c, bool bypass) {
-    //if (bypass) {
-    //    if (isFinalState(state))
-    //        acceptanceState = {state, {buffer, line_number, (int) i - (int) buffer.length()}};
-    //    else {
-    //        logError(line_number, i - buffer.length(), buffer);
-    //        buffer.clear();
-    //    }
-    //    return;
-    //}
-
     state = start_state;
     int j = 0, prev_j = -1;
     while (j < buffer.length() && prev_j != j) {
@@ -158,11 +148,6 @@ void Analyzer::maximalMunchWithErrorRecovery(int line_number, size_t i, Acceptan
         }
 
     }
-
-    //if (j != 0 && !isFinalState(state)) {
-    //    logError(line_number, i - j, buffer);
-    //    buffer.clear();
-    //}
 }
 
 void Analyzer::logError(int line_number, size_t i, std::string &c) {
