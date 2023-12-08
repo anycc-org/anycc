@@ -16,4 +16,6 @@ jobs:
 
       - name: Build
         run: |
-          make build
+          sudo apt-get -y install cmake
+          cmake .
+          make
