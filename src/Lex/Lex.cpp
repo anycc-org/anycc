@@ -26,10 +26,14 @@ void Lex::buildLex() {
     std::cout << table->getEndStates().size() << "\n";
     std::cout << table->getDeadStates().size() << "\n";
     table->toDotFile("nfa.dot");
+    table->toCSVFile("nfa.csv");
+    table->toMDFile("nfa.md");
     DeterministicTransitionDiagramCreator dfaCreator;
     table = dfaCreator.subsetConstruction(table);
     std::cout << "converted to dfa\n";
     table->toDotFile("dfa.dot");
+    table->toCSVFile("dfa.csv");
+    table->toMDFile("dfa.md");
     // table->print();
     std::cout << table->getStates().size() << "\n";
     std::cout << table->getEndStates().size() << "\n";
@@ -37,6 +41,8 @@ void Lex::buildLex() {
     TransitionDiagramMinimizer minimizer;
     table = minimizer.minimize(table);
     table->toDotFile("min_dfa.dot");
+    table->toCSVFile("min_dfa.csv");
+    table->toMDFile("min_dfa.md");
     std::cout << "minimized dfa\n";
     // table->print();
     std::cout << table->getStates().size() << "\n";
