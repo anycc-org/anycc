@@ -1,31 +1,12 @@
-letter = a-z | A-Z
+letter = a- z | A-Z
 digit = 0 - 9
+id: letter (letter | digit)*
+digits = digit+
 {boolean int float}
-{while if else do double}
-id: letter (letter         | digit)*
-digits = digit                          +
-num: digit          +          | digit+ . digits        (\L | E      digits)
-relop: \=\= | !\= | > | >\= |      < | <        \=
-
-
-
-
-
-
-
+num: digit+ | digit+ . digits (\L | E digits)
+relop: \=\= | !\= | > | >\= | < | <\=
 assign: \=
-
-
-
-
-
-
+{while if else}
 [; , \( \) { }]
-
-
-
-
-
-
-            addop: \+ | \-
-mullop: \* | /
+addop: \+ | \-
+mulop: \* | /
