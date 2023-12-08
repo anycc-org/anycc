@@ -1,12 +1,14 @@
-letter = a- z | A-Z
+letter = a-z | A-Z
 digit = 0 - 9
-{boolean int float}
-{while if else}
+{boolean int float while if else class public private}
+{static void for main String System out println java io import}
 id: letter (letter | digit)*
 digits = digit+
 num: digit+ | digit+ . digits (\L | E digits)
 relop: \=\= | !\= | > | >\= | < | <\=
 assign: \=
-[; , \( \) { }]
+[; & ^ | , \( \) [ ] { }]
 addop: \+ | \-
 mullop: \* | /
+inc: \+\+
+bitwise: >> | <<
