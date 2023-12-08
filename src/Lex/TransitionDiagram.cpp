@@ -204,27 +204,94 @@ void TransitionDiagram::toDotFile(std::string file_name) {
         return;
     }
 
-    file << "digraph NFA {" << std::endl;
+    file << "digraph {" << std::endl;
     file << "\trankdir=LR;" << std::endl; // Setting direction to Left-to-Right
 
     for (auto& fromState : table) {
         if(this->dead_states.find(fromState.first) != this->dead_states.end()) continue;
-        for (const auto& transition : fromState.second) {
+        for (auto& transition : fromState.second) {
             for (auto& toState : transition.second) {
                 if(this->dead_states.find(toState) != this->dead_states.end()) continue;
                 file << "\t" << fromState.first->getStateId() << " -> " << toState->getStateId() << " [label=\"" << transition.first << "\"];" << std::endl;
             }
         }
     }
-
     // Mark specific nodes as end states and set their colors
     file << "\t";
-    for (const auto& state : this->end_states) {
-        file << state->getStateId() << " [style=filled fillcolor=grey color=blue]; ";
+    for (auto& state : this->end_states) {
+        file << state->getStateId() << "[peripheries=2 style=filled fillcolor=yellow color=black]; ";
     }
-    file << this->startState->getStateId() << " [style=filled fillcolor=green color=black];";
+    file << this->startState->getStateId() << " [arrowhead=normal style=filled fillcolor=green color=black];";
     file << std::endl;
     file << "}" << std::endl;
+    file.close();
+}
+
+void TransitionDiagram::toCSVFile(std::string file_name) {
+    std::ofstream file(file_name);
+    if (!file.is_open()) {
+        std::cerr << "Error opening file!" << std::endl;
+        return;
+    }
+
+    // Header row: inputs
+    file << ",";
+    for (const auto& input : table.begin()->second) {
+        file << "\"" << input.first << "\",";
+    }
+    file << std::endl;
+
+    // Data rows: states and transitions
+    for (auto& stateEntry : table) {
+        if(this->dead_states.find(stateEntry.first) != this->dead_states.end()) continue;
+        file << stateEntry.first->getStateId() << ",";
+        for (auto& input : stateEntry.second) {
+            auto& nextStates = input.second;
+            for (const auto& nextState : nextStates) {
+                if(this->dead_states.find(nextState) != this->dead_states.end()) continue;
+                file << nextState->getStateId();
+            }
+            file << ",";
+        }
+        file << std::endl;
+    }
+
+    file.close();
+}
+
+void TransitionDiagram::toMDFile(std::string file_name) {
+    std::ofstream file(file_name);
+    if (!file.is_open()) {
+        std::cerr << "Error opening file!" << std::endl;
+        return;
+    }
+
+    file << "| States |";
+    for (const auto& input : table.begin()->second) {
+        file << " " << input.first << " |";
+    }
+    file << std::endl;
+
+    file << "| --- |";
+    for (size_t i = 0; i < table.begin()->second.size(); ++i) {
+        file << " --- |";
+    }
+    file << std::endl;
+
+    for (const auto& stateEntry : table) {
+        if(this->dead_states.find(stateEntry.first) != this->dead_states.end()) continue;
+        file << "| " << stateEntry.first->getStateId() << " |";
+        for (const auto& input : stateEntry.second) {
+            const auto& nextStates = input.second;
+            for (const auto& nextState : nextStates) {
+                if(this->dead_states.find(nextState) != this->dead_states.end()) continue;
+                file << nextState->getStateId();
+            }
+            file << "|";
+        }
+        file << std::endl;
+    }
+
     file.close();
 }
 
