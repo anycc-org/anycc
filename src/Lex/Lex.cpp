@@ -54,8 +54,7 @@ TransitionDiagram *Lex::buildDFA(NFA *nfa) {
 
     createDiagramWithDifferentTypes(transition_diagram, "dfa");
 
-    TransitionDiagramMinimizer minimizer;
-    transition_diagram = minimizer.minimize(transition_diagram);
+    transition_diagram = TransitionDiagramMinimizer::minimize(transition_diagram);
 
     printTransitionDiagramStatistics(transition_diagram, "Minimized DFA");
 
