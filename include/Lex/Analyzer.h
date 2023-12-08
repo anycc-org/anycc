@@ -6,6 +6,7 @@
 #include <string>
 #include <set>
 #include <queue>
+#include <utility>
 #include "Rules.h"
 #include "RuleType.h"
 #include "Token.h"
@@ -16,18 +17,14 @@
 struct Word {
     std::string lexeme;
     int line_number;
-    std::size_t offset;
+    int column_number;
 };
 
 struct AcceptanceStateEntry {
     const NFAState *state{};
     Word word;
-};
 
-struct RecoveryStateEntry {
-    const NFAState *state;
-    int leftPointer;
-    int rightPointer;
+    AcceptanceStateEntry(const NFAState *state, Word word) : state(state), word(std::move(word)) {}
 };
 
 class Analyzer : public FileReader {
@@ -64,9 +61,16 @@ private:
 
     void addToken(const NFAState *state, Word &word);
 
-    void panicModeErrorRecovery(std::string &buffer);
-
-    void acceptTokenAndRecoverErrorIfExists(AcceptanceStateEntry &acceptanceState, std::string &buffer);
+    void acceptToken(AcceptanceStateEntry &acceptanceState, std::string &buffer);
 
     bool isFinalState(const NFAState *state);
+
+    static void logError(int line_number, size_t i, std::string &c);
+
+    void
+    maximalMunchWithErrorRecovery(int line_number, size_t i, AcceptanceStateEntry &acceptanceState,
+                                  const NFAState *&state,
+                                  std::string &buffer, char &c, bool bypass = false);
+
+    static bool isDeadState(const NFAState *state);
 };
