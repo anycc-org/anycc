@@ -61,12 +61,17 @@ NFA* NFA::wordToNFA(const std::string& word) {
     NFAState* startState = new NFAState();
     NFAState* currentState = startState;
 
-    for (char c : word) {
-        if (c == '\\') { // eg ab\+c -> ab+c
+    for (int i = 0; i < word.size(); i++) {
+        if (word[i] == '\\') { // eg ab\+c -> ab+c
             continue;
         }
         NFAState* nextState = new NFAState();
-        currentState->addTransition(c, nextState);
+        if (word[i] == 'L' && i - 1 >= 0 && word[i - 1] == '\\') {
+            currentState->addTransition(EPSILON, nextState);
+        }
+        else {
+            currentState->addTransition(word[i], nextState);
+        }
         currentState = nextState;
     }
 
