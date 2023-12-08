@@ -42,6 +42,8 @@ public:
      */
     Token *getNextToken();
 
+    void printSymbolTable();
+
     void readTemplate(std::ifstream *file) override;
 
 private:

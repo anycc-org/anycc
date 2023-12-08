@@ -24,7 +24,6 @@ Analyzer::~Analyzer() {
         tokens.pop();
         delete token;
     }
-    symbol_table.printTable();
 }
 
 void Analyzer::analyzeProgram() {
@@ -186,5 +185,9 @@ void Analyzer::addToken(const NFAState *state, Word &word) {
 
     if (*token_name == "id")
         symbol_table.insertEntry(*lexeme, *token_name, token_id, word.line_number + 1, word.column_number);
+}
+
+void Analyzer::printSymbolTable() {
+    symbol_table.printTable();
 }
 
