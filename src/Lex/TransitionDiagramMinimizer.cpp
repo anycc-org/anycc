@@ -15,31 +15,30 @@ TransitionDiagram *TransitionDiagramMinimizer::minimize(TransitionDiagram *trans
 }
 
 TransitionDiagram *TransitionDiagramMinimizer::minimizeInplace(TransitionDiagram *transition_diagram) {
-    const NFAState *start_state = transition_diagram->getStartState();
     std::vector<std::vector<std::set<const NFAState *>>> all_sets;
-    all_sets.push_back(std::vector<std::set<const NFAState *>>());
-    all_sets[0].push_back(std::set<const NFAState *>(
-            std::set<const NFAState *>(transition_diagram->getNotEndAndDeadStates().begin(),
-                                       transition_diagram->getNotEndAndDeadStates().end())));
-    for (auto token: transition_diagram->getTokens()) {
+    all_sets.emplace_back();
+    all_sets[0].emplace_back(
+            transition_diagram->getNotEndAndDeadStates().begin(),
+            transition_diagram->getNotEndAndDeadStates().end());
+    for (const auto &token: transition_diagram->getTokens()) {
         std::set<const NFAState *> set;
-        for (auto kv: transition_diagram->getEndStatesTokensMap()) {
+        for (const auto &kv: transition_diagram->getEndStatesTokensMap()) {
             if (kv.second == token) {
                 set.insert(kv.first);
             }
         }
         all_sets[0].push_back(set);
     }
-    all_sets[0].push_back(std::set<const NFAState *>(
-            std::set<const NFAState *>(transition_diagram->getDeadStates().begin(),
-                                       transition_diagram->getDeadStates().end())));
+    all_sets[0].emplace_back(
+            transition_diagram->getDeadStates().begin(),
+            transition_diagram->getDeadStates().end());
     std::vector<std::set<const NFAState *>> prev_sets = all_sets[0];
     while (true) {
-        auto equi_table = this->constructEquivalenceTable(transition_diagram, prev_sets);
+        auto equivalent_table = TransitionDiagramMinimizer::constructEquivalenceTable(transition_diagram, prev_sets);
         std::vector<std::set<const NFAState *>> new_sets;
         for (auto set: prev_sets) {
-            auto result_new_sets = this->constructNewEquivalenceSets(set, equi_table);
-            for (auto new_set: result_new_sets) new_sets.push_back(new_set);
+            auto result_new_sets = TransitionDiagramMinimizer::constructNewEquivalenceSets(set, equivalent_table);
+            for (const auto &new_set: result_new_sets) new_sets.push_back(new_set);
         }
         all_sets.push_back(new_sets);
         if (new_sets.size() == prev_sets.size()) break;
@@ -56,8 +55,9 @@ TransitionDiagram *TransitionDiagramMinimizer::minimizeInplace(TransitionDiagram
                 std::set<const NFAState *> next_states = transition_diagram->getAllNextStates(
                         ordered_set_current_states, c);
                 for (auto s: next_states) {
-                    std::set<const NFAState *> new_next_states = this->extractNewMergedStatesFromOld(s, all_sets[
-                            all_sets.size() - 1]);
+                    std::set<const NFAState *> new_next_states = TransitionDiagramMinimizer::extractNewMergedStatesFromOld(
+                            s, all_sets[
+                                    all_sets.size() - 1]);
                     for (auto s2: new_next_states) {
                         result_next_states.insert(s2);
                     }
@@ -80,7 +80,7 @@ TransitionDiagram *TransitionDiagramMinimizer::minimizeInplace(TransitionDiagram
 std::unordered_map<const NFAState *, std::vector<size_t>>
 TransitionDiagramMinimizer::constructEquivalenceTable(TransitionDiagram *transition_diagram,
                                                       std::vector<std::set<const NFAState *>> &sets) {
-    std::unordered_map<const NFAState *, std::vector<size_t>> equi_table;
+    std::unordered_map<const NFAState *, std::vector<size_t>> equivalent_table;
     for (size_t i = 0; i < sets.size(); i++) {
         auto set = sets[i];
         for (auto state: set) {
@@ -88,20 +88,20 @@ TransitionDiagramMinimizer::constructEquivalenceTable(TransitionDiagram *transit
             for (auto c: transition_diagram->getInputs()) {
                 if (c != EPSILON) {
                     auto states_vec = transition_diagram->lookup(state, c);
-                    long long index = this->getSetIndex(states_vec[0], sets);
+                    long long index = TransitionDiagramMinimizer::getSetIndex(states_vec[0], sets);
                     if (index != -1) sets_nums.push_back(index);
                 }
             }
-            equi_table[state] = sets_nums;
+            equivalent_table[state] = sets_nums;
         }
     }
-    return equi_table;
+    return equivalent_table;
 }
 
 long long
 TransitionDiagramMinimizer::getSetIndex(const NFAState *state, std::vector<std::set<const NFAState *>> &sets) {
     long long result = -1;
-    for (size_t i = 0; i < sets.size(); i++) {
+    for (long long i = 0; i < sets.size(); i++) {
         if (sets[i].find(state) != sets[i].end()) return i;
     }
     return result;
@@ -120,6 +120,7 @@ TransitionDiagramMinimizer::constructNewEquivalenceSets(std::set<const NFAState 
             sets_map[kv.second].insert(kv.first);
         }
     }
+    new_sets.reserve(sets_map.size());
     for (auto &kv: sets_map) {
         new_sets.push_back(kv.second);
     }
@@ -129,7 +130,7 @@ TransitionDiagramMinimizer::constructNewEquivalenceSets(std::set<const NFAState 
 std::set<const NFAState *> TransitionDiagramMinimizer::extractNewMergedStatesFromOld(const NFAState *state,
                                                                                      std::vector<std::set<const NFAState *>> states) {
     for (auto &set: states) {
-        if (set.find(state) != set.end()) return std::set<const NFAState *>(set.begin(), set.end());
+        if (set.find(state) != set.end()) return {set.begin(), set.end()};
     }
-    return std::set<const NFAState *>();
+    return {};
 }

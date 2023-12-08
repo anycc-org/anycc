@@ -17,20 +17,20 @@ public:
      * @param inplace if true the same pointer passed will be returned, no new object created, otherwise, a new Transition Diagram will be created. 
      * @return TransitionDiagram* Transition Diagram pointer , see warning
     */
-    TransitionDiagram *minimize(TransitionDiagram *transition_diagram, bool inplace = true);
+    static TransitionDiagram *minimize(TransitionDiagram *transition_diagram, bool inplace = true);
 
 
 private:
-    TransitionDiagram *minimizeInplace(TransitionDiagram *transition_diagram);
+    static TransitionDiagram *minimizeInplace(TransitionDiagram *transition_diagram);
 
-    std::unordered_map<const NFAState *, std::vector<size_t>>
+    static std::unordered_map<const NFAState *, std::vector<size_t>>
     constructEquivalenceTable(TransitionDiagram *transition_diagram, std::vector<std::set<const NFAState *>> &sets);
 
-    long long getSetIndex(const NFAState *state, std::vector<std::set<const NFAState *>> &sets);
+    static long long getSetIndex(const NFAState *state, std::vector<std::set<const NFAState *>> &sets);
 
-    std::vector<std::set<const NFAState *>> constructNewEquivalenceSets(std::set<const NFAState *> &set,
-                                                                        std::unordered_map<const NFAState *, std::vector<size_t>> &table);
+    static std::vector<std::set<const NFAState *>> constructNewEquivalenceSets(std::set<const NFAState *> &set,
+                                                                               std::unordered_map<const NFAState *, std::vector<size_t>> &table);
 
-    std::set<const NFAState *>
+    static std::set<const NFAState *>
     extractNewMergedStatesFromOld(const NFAState *state, std::vector<std::set<const NFAState *>> states);
 };
