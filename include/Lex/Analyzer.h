@@ -74,6 +74,12 @@ private:
     const NFAState *getNextState(char &c, const NFAState *state);
 
     /**
+     * @brief Read the program file and tokenize it
+     * @param file The file to be read
+     */
+    void tokenization(std::ifstream *file);
+
+    /**
      * @brief Add the given token to the tokens queue and add it to the symbol table if it's id
      * @param acceptanceState The acceptance state of the token
      * @param buffer The buffer of the token

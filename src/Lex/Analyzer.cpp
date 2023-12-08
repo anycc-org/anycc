@@ -45,6 +45,10 @@ void Analyzer::readProgram() {
 }
 
 void Analyzer::readTemplate(std::ifstream *file) {
+    tokenization(file);
+}
+
+void Analyzer::tokenization(std::ifstream *file) {
     AcceptanceStateEntry acceptanceState = {nullptr, {}};
     const NFAState *state = this->start_state;
     std::string buffer;
@@ -53,6 +57,8 @@ void Analyzer::readTemplate(std::ifstream *file) {
     char c;
 
     while (file->get(c)) {
+        // If the character is not a new line or a space and not in the inputs set
+        // then it is a bad token, and we should log an error and accept the last accepted token
         if (c != '\n' && c != ' ' && inputs.find(c) == inputs.end()) {
             acceptToken(acceptanceState, buffer);
             std::string s(1, c);
@@ -93,6 +99,7 @@ void Analyzer::readTemplate(std::ifstream *file) {
             if (isAcceptanceState(state)) {
                 acceptanceState = {state, {buffer, line_number, (int) i - (int) buffer.length() + 2}};
             } else if (isDeadState(state)) {
+                // If the state is dead then we should log an error if there is no acceptance state
                 if (acceptanceState.state == nullptr) {
                     std::string s(1, buffer[0]);
                     logError(line_number, i - 1, s);
@@ -112,6 +119,7 @@ void Analyzer::readTemplate(std::ifstream *file) {
         }
     }
 
+    // Check if there is a token in the buffer or there is an acceptance state
     if (acceptanceState.state != nullptr) {
         acceptToken(acceptanceState, buffer);
         if (!buffer.empty())
@@ -186,4 +194,3 @@ void Analyzer::addToken(const NFAState *state, Word &word) {
 void Analyzer::printSymbolTable() {
     symbol_table.printTable();
 }
-
