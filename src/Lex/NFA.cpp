@@ -58,14 +58,14 @@ NFA *NFA::wordToNFA(const std::string &word) {
         return basicCharToNFA(word[0]);
     }
 
-    NFAState *startState = new NFAState();
+    auto *startState = new NFAState();
     NFAState *currentState = startState;
 
     for (int i = 0; i < word.size(); i++) {
         if (word[i] == '\\') { // eg ab\+c -> ab+c
             continue;
         }
-        NFAState *nextState = new NFAState();
+        auto *nextState = new NFAState();
         if (word[i] == 'L' && i - 1 >= 0 && word[i - 1] == '\\') {
             currentState->addTransition(EPSILON, nextState);
         } else {
@@ -170,5 +170,5 @@ void NFA::printNFA() const {
 }
 
 std::vector<const NFAState *> NFA::getEndStates() {
-    return std::vector<const NFAState *>(this->endStates.begin(), this->endStates.end());
+    return {this->endStates.begin(), this->endStates.end()};
 }

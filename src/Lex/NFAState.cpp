@@ -52,7 +52,7 @@ NFAState::NFAState(NFAState &other, std::unordered_map<NFAState *, NFAState *> &
         const std::vector<NFAState *> &states = entry.second;
         for (NFAState *state: states) {
             if (copiedStates.find(state) == copiedStates.end()) {
-                NFAState *stateCopy = new NFAState(*state, copiedStates);
+                auto *stateCopy = new NFAState(*state, copiedStates);
                 addTransition(symbol, stateCopy);
             } else {
                 NFAState *stateCopy = copiedStates[state];
