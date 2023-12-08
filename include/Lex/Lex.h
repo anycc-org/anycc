@@ -1,8 +1,8 @@
 #pragma once
 
 #include <iostream>
-#include <Lex/InputReader.h>
-#include <Lex/NFA.h>
+#include "Lex/InputReader.h"
+#include "Lex/NFA.h"
 
 
 class Lex {

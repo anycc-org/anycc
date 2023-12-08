@@ -1,6 +1,6 @@
 #include "Lex/NFAState.h"
 #include <map>
-#include <Lex/Lex.h>
+#include "Lex/Lex.h"
 
 int main() {
     auto *rules_file_name = new std::string("../rules.txt");

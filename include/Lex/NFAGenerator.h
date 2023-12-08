@@ -4,8 +4,8 @@
 #include <string>
 #include <stack>
 #include <map>
-#include <Lex/NFA.h>
-#include <Lex/Token.h>
+#include "Lex/NFA.h"
+#include "Lex/Token.h"
 
 class NFAGenerator {
 public:
