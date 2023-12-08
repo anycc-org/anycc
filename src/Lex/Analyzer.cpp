@@ -141,9 +141,9 @@ void Analyzer::maximalMunchWithErrorRecovery(int line_number, size_t i, Acceptan
     //}
 
     state = start_state;
-    int j = 0;
-    bool changed = true;
-    while (j < buffer.length()) {
+    int j = 0, prev_j = -1;
+    while (j < buffer.length() && prev_j != j) {
+        prev_j = j;
         char b = buffer[j++];
         state = getNextState(b, state);
         if (isFinalState(state))
@@ -151,8 +151,7 @@ void Analyzer::maximalMunchWithErrorRecovery(int line_number, size_t i, Acceptan
         else if (isDeadState(state) || bypass) {
             acceptToken(acceptanceState, buffer);
             state = start_state;
-            if (j != 0)
-                j = 0;
+            j = 0;
             if (bypass) {
                 logError(line_number, i - j - 1, buffer);
             }
@@ -201,6 +200,6 @@ void Analyzer::addToken(const NFAState *state, Word &word) {
     tokens.push(token);
 
     if (*token_name == "id")
-        symbol_table.insertEntry(*lexeme, *token_name, token_id, word.line_number);
+        symbol_table.insertEntry(*lexeme, *token_name, token_id, word.line_number + 1);
 }
 
