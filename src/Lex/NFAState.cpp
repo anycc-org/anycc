@@ -2,6 +2,7 @@
 #include <iostream>
 #include <utility>
 #include <stack>
+#include "Lex/Epsilon.h"
 
 NFAState::NFAState() : stateId(id++) {}
 

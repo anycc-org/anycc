@@ -14,6 +14,7 @@ public:
 
     NFAState* getStartState() const;
     NFAState* getEndState() const;
+    std::vector<const NFAState*> getEndStates();
     std::string getTokenName() const;
     void setTokenName(const std::string& name);
     void addEndState(NFAState* state);

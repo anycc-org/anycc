@@ -1,8 +1,8 @@
 #pragma once
 
 #include <iostream>
-#include "InputReader.h"
-#include "NFA.h"
+#include <Lex/InputReader.h>
+#include <Lex/NFA.h>
 
 
 class Lex {
@@ -20,5 +20,10 @@ private:
 
     void read_rules();
 
+    /**
+     * @brief Build the NFA from the regular expressions
+     * @warning the responsibility of deleting pointer is the caller's
+     * @return The start state of the NFA
+     */
     NFA *buildNFA();
 };

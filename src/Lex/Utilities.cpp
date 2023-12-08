@@ -1,5 +1,36 @@
-#include "Lex/Utilities.h"
-#include "Lex/Operator.h"
+#include "Utilities.h"
+#include "Operator.h"
+#include <regex>
+
+std::string *Utilities::cleanRegex(std::string *input) {
+    // Remove spaces before + or *
+    std::regex spacesBeforePlus("\\s*\\+");
+    *input = std::regex_replace(*input, spacesBeforePlus, "+");
+
+    std::regex spacesBeforeStar("\\s*\\*");
+    *input = std::regex_replace(*input, spacesBeforeStar, "*");
+
+    // Remove spaces before and after -
+    std::regex spacesBeforeMinus("\\s*\\-\\s*");
+    *input = std::regex_replace(*input, spacesBeforeMinus, "-");
+
+    // Remove spaces around |
+    std::regex spacesAroundPipe("\\s*\\|\\s*");
+    *input = std::regex_replace(*input, spacesAroundPipe, "|");
+
+    // Remove multiple spaces
+    std::regex multipleSpaces("\\s{2,}");
+    *input = std::regex_replace(*input, multipleSpaces, " ");
+
+    // Trim spaces at the start and end
+    *input = std::regex_replace(*input, std::regex("^\\s+|\\s+$"), "");
+
+    // remove space before and after braces
+    *input = std::regex_replace(*input, std::regex("\\s*\\(\\s*"), "(");
+    *input = std::regex_replace(*input, std::regex("\\s*\\)\\s*"), ")");
+
+    return input;
+}
 
 std::vector<SubstringInfo>
 Utilities::findAllLongestSubstringIndices(std::string *input, std::set<std::string> *substrings) {
@@ -50,6 +81,7 @@ Utilities::fixConcatGivenType(const std::unordered_map<std::string, std::pair<st
                               Rules *rules, std::set<std::string> *non_terminal_symbols, RuleType type) {
     for (auto &re: regular_rules) {
         auto *expression = new std::string(re.second.first);
+        expression = cleanRegex(expression);
         auto *name = new std::string(re.first);
         int offset = 0;
         std::vector<SubstringInfo> substringInfoVec = findAllLongestSubstringIndices(expression, non_terminal_symbols);
@@ -70,7 +102,8 @@ Utilities::detectConcatThenAddSpaces(std::string *expression, const std::vector<
     int startIdx = substringInfoVec[i].start;
     int endIdx = substringInfoVec[i].end;
 
-    if (startIdx != 0 && !isOpenBrace(expression, startIdx + offset - 1) &&
+    if (startIdx != 0 && !isConcat(expression, startIdx + offset - 1) &&
+        !isOpenBrace(expression, startIdx + offset - 1) &&
         !isCloseBrace(expression, startIdx + offset - 1) &&
         !isOr(expression, startIdx + offset - 1) &&
         (i == 0 || substringInfoVec[i - 1].end + offset != startIdx + offset)) {
@@ -78,7 +111,9 @@ Utilities::detectConcatThenAddSpaces(std::string *expression, const std::vector<
         offset++;
     }
 
-    if (endIdx + offset < expression->length() - 1 && !isOpenBrace(expression, endIdx + offset) &&
+    if (endIdx + offset < expression->length() &&
+        !isConcat(expression, endIdx + offset) &&
+        !isOpenBrace(expression, endIdx + offset) &&
         !isCloseBrace(expression, endIdx + offset) &&
         !isOr(expression, endIdx + offset)) {
         expression->insert(endIdx + offset, concat_operator);

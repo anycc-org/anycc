@@ -1,6 +1,7 @@
 #include <Lex/NFAGenerator.h>
 #include <stack>
 #include <iostream>
+#include "Lex/Epsilon.h"
 
 NFAGenerator::NFAGenerator() = default;
 
@@ -63,25 +64,8 @@ NFA* NFAGenerator::regexToNFA(const std::string& regex) {
 
     for (i = 0; i < n; i++) {
         char c = regex[i];
-        if (c == '\\') { // escape-backslash for reserved symbols
-            if (i + 1 < n && regex[i + 1] == 'L') { // epsilon
-                nfaStack.push(NFA::basicCharToNFA('e'));
-                i++;
-            }
-            else { // eg. \+ \* \= \( \) or \=\=
-                std::string word = std::string(1, regex[i + 1]);
-                i++;
-                while (i + 1 < n && regex[i + 1] != ' ' && !isOperator(regex[i + 1]) && regex[i + 1] != '(' && regex[i + 1] != ')') {
-                    if (regex[i + 1] == '\\') {
-                        i++;
-                        continue;
-                    }
-                    word += regex[++i];
-                }
-                nfaStack.push(NFA::wordToNFA(word));
-            }
-        }
-        else if (isOperator(c)) { // Operator {*, +, ' ', |, -}
+
+        if (isOperator(c)) { // Operator {*, +, ' ', |, -}
             while (!operatorStack.empty() && precedence(operatorStack.top()) >= precedence(c)) {
                 char op = operatorStack.top();
                 operatorStack.pop();
@@ -106,9 +90,21 @@ NFA* NFAGenerator::regexToNFA(const std::string& regex) {
         }
         else { // symbol encountered
             // try to form a complete word
-            std::string word = std::string(1, c);
-            while (i + 1 < n && !isOperator(regex[i + 1]) && regex[i + 1] != '(' && regex[i + 1] != ')') {
-                word += regex[++i];
+            std::string word = "";
+            while (i < n && !isOperator(regex[i]) && regex[i] != '(' && regex[i] != ')') {
+                if (regex[i] == '\\') {
+                    word += regex[i];
+                    if (i + 1 < n) {
+                        word += regex[++i];
+                    }
+                }
+                else {
+                    word += regex[i];
+                }
+                i++;
+            }
+            if (i < n && (isOperator(regex[i]) || regex[i] == '(' || regex[i] == ')')) {
+                i--;
             }
             // check if that word in the regular definition map
             if (regexToNFAMap.find(word) != regexToNFAMap.end()) {
@@ -211,7 +207,7 @@ NFA* NFAGenerator::combineNFAs(std::vector<NFA*>& nfas) {
     NFAState *combinedStart = combinedNFA->getStartState();
 
     for (const NFA* nfa : nfas) {
-        combinedStart->addTransition('e', nfa->getStartState());
+        combinedStart->addTransition(EPSILON, nfa->getStartState());
         combinedNFA->addEndState(nfa->getEndState());
     }
 
