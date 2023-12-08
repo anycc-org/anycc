@@ -13,10 +13,19 @@ public:
 
     ~Lex();
 
+    /**
+     * @brief Build the NFA and DFA and analyze the program to create the output file with the tokens
+     */
     void buildLex();
 
+    /**
+     * @brief Get all tokens and print them and create the output file
+     */
     void getAllTokensAndCreateOutputFile();
 
+    /**
+     * @brief Print the symbol table
+     */
     void printSymbolTable();
 
 private:
@@ -25,6 +34,9 @@ private:
     InputReader *inputReader;
     Rules *rules;
 
+    /**
+     * @brief Read the rules file and build the rules object
+     */
     void read_rules();
 
     /**
@@ -42,7 +54,17 @@ private:
      */
     TransitionDiagram *buildDFA(NFA *nfa);
 
+    /**
+     * @brief Print the statistics of the given transition diagram either (NFA, DFA, minimized DFA)
+     * @param transition_diagram The transition diagram to be printed
+     * @param title The title of the transition diagram
+     */
     static void printTransitionDiagramStatistics(TransitionDiagram *transition_diagram, const std::string &title);
 
+    /**
+     * @brief Create the transition diagram with different types (NFA, DFA, minimized DFA)
+     * @param transition_diagram The transition diagram to be printed
+     * @param title The title of the transition diagram
+     */
     static void createDiagramWithDifferentTypes(TransitionDiagram *transition_diagram, const std::string &title);
 };
