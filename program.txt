@@ -1,5 +1,6 @@
-@int sum , count , pass , mnt; whi!
-le (pass ! !
+1.5E-6
+int sum , count , pass , mnt; whi!=
+le (pass !1.5E !
 10 )
 {
 pass = pass + 1;
@@ -7,5 +8,5 @@ pass = pass + 1;
 boolean float int intx!
 !
 whi!
-
+@int sum , count , pass , mnt; whi! 1.5E-6
 do!
