@@ -62,8 +62,10 @@ void Lex::buildLex() {
     Analyzer analyzer(*program_file_name, table->getStartState(), table);
     analyzer.analyzeProgram();
 
+    std::ofstream tokens_file("tokens.txt");
     Token *token;
     while ((token = analyzer.getNextToken()) != nullptr) {
+        tokens_file << "{" << *(token->getKey()) << " -> " << *(token->getValue()) << "}" << '\n';
         std::cout << "{" << *(token->getKey()) << " -> " << *(token->getValue()) << "}" << '\n';
     }
 }

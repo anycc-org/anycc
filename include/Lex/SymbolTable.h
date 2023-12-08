@@ -18,9 +18,11 @@ public:
         return instance;
     }
 
-    void insertEntry(std::string &word, std::string &token_name, int token_id, int line_number);
+    void insertEntry(std::string &word, std::string &token_name, int token_id, int line_number, int column_number);
 
     SymbolTableEntry *getEntry(std::string &lexeme);
+
+    void printTable();
 
     SymbolTable(const SymbolTable &) = delete;
 
