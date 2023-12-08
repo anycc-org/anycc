@@ -1,3 +1,4 @@
+1.5E-6
 @int sum , count , pass , mnt; whi!
 le (pass ! !
 10 )
@@ -6,6 +7,13 @@ pass = pass + 1;
 }
 boolean float int intx!
 !
-whi!
-
+dou!
+whi!le
 do!
+1.5E while
+1.5E 123
+1.5E
+1.5E@
+do!
+@
+1.5E
