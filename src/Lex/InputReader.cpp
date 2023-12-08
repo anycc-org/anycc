@@ -60,7 +60,7 @@ void InputReader::buildRule(std::string &pString, RuleType type) {
     else if (type == RuleType::PUNCTUATION)
         addPunctuation(pString);
     else
-        std::cout << "Invalid rule: " << pString << '\n';
+        return;
 }
 
 void InputReader::addPunctuation(std::string &pString) {
