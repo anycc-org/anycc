@@ -12,7 +12,6 @@ add_executable(anycc
         src/Lex/Lex.cpp
         src/Lex/Rules.cpp
         src/Lex/DFA.cpp
-        src/Lex/DFAMinimizer.cpp
         src/Lex/LexError.cpp
         src/Lex/NFA.cpp
         src/Lex/NFAGenerator.cpp
@@ -29,10 +28,7 @@ add_executable(anycc
         include/Lex/Operator.h
         src/Lex/TransitionDiagram.cpp
         src/Lex/Analyzer.cpp
-        include/Lex/Analyzer.h
-        include/Lex/Analyzer.h
         include/Lex/FileReader.h
         src/Lex/DeterministicTransitionDiagramCreator.cpp
         src/Lex/TransitionDiagramMinimizer.cpp
-        include/Lex/TransitionDiagramMinimizer.h
 )
