@@ -22,6 +22,8 @@ public:
 
     SymbolTableEntry *getEntry(std::string &lexeme);
 
+    void printTable();
+
     SymbolTable(const SymbolTable &) = delete;
 
     void operator=(const SymbolTable &) = delete;
