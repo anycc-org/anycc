@@ -92,7 +92,7 @@ void Analyzer::readTemplate(std::ifstream *file) {
             buffer += c;
 
             if (isFinalState(state)) {
-                acceptanceState = {state, {buffer, line_number}};
+                acceptanceState = {state, {buffer, line_number, (int) i - (int) buffer.length() + 2}};
             } else if (isDeadState(state)) {
                 if (acceptanceState.state == nullptr) {
                     std::string s(1, buffer[0]);
@@ -136,9 +136,10 @@ void Analyzer::maximalMunchWithErrorRecovery(int line_number, size_t i, Acceptan
         prev_j = j;
         char b = buffer[j++];
         state = getNextState(b, state);
-        if (isFinalState(state))
-            acceptanceState = {state, {buffer.substr(0, j), line_number, (int) i - j + 2}};
-        else if (isDeadState(state) || bypass) {
+        if (isFinalState(state)) {
+            acceptanceState = {state, {buffer.substr(0, j), line_number, (int) i - j}};
+            std::cout << acceptanceState.word.column_number << '\n';
+        } else if (isDeadState(state) || bypass) {
             acceptToken(acceptanceState, buffer);
             state = start_state;
             j = 0;
@@ -159,7 +160,7 @@ bool Analyzer::isFinalState(const NFAState *state) { return final_states.find(st
 void Analyzer::acceptToken(AcceptanceStateEntry &acceptanceState, std::string &buffer) {
     if (acceptanceState.state == nullptr)
         return;
-
+    std::cout << acceptanceState.word.column_number << "   2222" << '\n';
     addToken(acceptanceState.state, acceptanceState.word);
     buffer.erase(0, acceptanceState.word.lexeme.length());
     acceptanceState = {nullptr, {}};
@@ -185,6 +186,6 @@ void Analyzer::addToken(const NFAState *state, Word &word) {
     tokens.push(token);
 
     if (*token_name == "id")
-        symbol_table.insertEntry(*lexeme, *token_name, token_id, word.line_number + 1);
+        symbol_table.insertEntry(*lexeme, *token_name, token_id, word.line_number + 1, word.column_number);
 }
 
