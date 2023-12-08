@@ -1,4 +1,4 @@
-#include <Lex/SymbolTable.h>
+#include "Lex/SymbolTable.h"
 
 void SymbolTable::insertEntry(std::string &word, std::string &token_name, int token_id, int line_number) {
     auto *entry = new SymbolTableEntry();

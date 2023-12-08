@@ -1,4 +1,4 @@
-#include <Lex/Input.h>
+#include "Lex/Input.h"
 
 Input::Input() {
 

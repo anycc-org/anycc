@@ -1,4 +1,4 @@
-#include "Analyzer.h"
+#include "Lex/Analyzer.h"
 
 Analyzer::Analyzer(std::string &program_file_name, const NFAState *start_state, TransitionDiagram *transition_diagram)
         : symbol_table(SymbolTable::getInstance()) {

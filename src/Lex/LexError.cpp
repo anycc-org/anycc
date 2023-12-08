@@ -1,4 +1,4 @@
-#include <Lex/LexError.h>
+#include "Lex/LexError.h"
 
 LexError::LexError() {
     

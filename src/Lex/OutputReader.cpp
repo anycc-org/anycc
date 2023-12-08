@@ -1,4 +1,4 @@
-#include <Lex/OutputReader.h>
+#include "Lex/OutputReader.h"
 
 OutputReader::OutputReader() {
 

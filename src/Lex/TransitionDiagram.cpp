@@ -1,7 +1,6 @@
 #include "Lex/NFA.h"
 #include "Lex/NFAState.h"
-#include <Lex/TransitionDiagram.h>
-#include <cstddef>
+#include "Lex/TransitionDiagram.h"
 #include <map>
 #include <queue>
 #include <stack>

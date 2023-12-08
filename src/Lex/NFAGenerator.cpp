@@ -1,4 +1,4 @@
-#include <Lex/NFAGenerator.h>
+#include "Lex/NFAGenerator.h"
 #include <stack>
 #include <iostream>
 #include "Lex/Epsilon.h"

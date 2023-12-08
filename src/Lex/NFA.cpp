@@ -1,5 +1,5 @@
 #include "Lex/NFAState.h"
-#include <Lex/NFA.h>
+#include "Lex/NFA.h"
 #include <iostream>
 #include <stack>
 #include "Lex/Epsilon.h"

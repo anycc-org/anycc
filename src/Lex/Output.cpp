@@ -1,4 +1,4 @@
-#include <Lex/Output.h>
+#include "Lex/Output.h"
 
 Output::Output() {
 

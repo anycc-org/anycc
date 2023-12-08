@@ -1,4 +1,4 @@
-#include <Lex/RegexGenerator.h>
+#include "Lex/RegexGenerator.h"
 
 RegexGenerator::RegexGenerator() {
 

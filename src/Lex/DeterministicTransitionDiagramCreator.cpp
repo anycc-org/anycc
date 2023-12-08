@@ -1,6 +1,6 @@
 #include "Lex/NFAState.h"
 #include "Lex/TransitionDiagram.h"
-#include <Lex/DeterministicTransitionDiagramCreator.h>
+#include "Lex/DeterministicTransitionDiagramCreator.h"
 #include <queue>
 #include "Lex/Epsilon.h"
 

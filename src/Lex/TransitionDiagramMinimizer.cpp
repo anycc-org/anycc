@@ -1,6 +1,6 @@
 #include "Lex/NFAState.h"
 #include "Lex/TransitionDiagram.h"
-#include <Lex/TransitionDiagramMinimizer.h>
+#include "Lex/TransitionDiagramMinimizer.h"
 #include "Lex/Epsilon.h"
 
 
