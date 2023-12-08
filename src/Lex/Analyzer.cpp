@@ -65,11 +65,19 @@ void Analyzer::readTemplate(std::ifstream *file) {
             continue;
         }
 
-        if (c == EOF) {
-            acceptTokenAndRecoverErrorIfExists(acceptanceState, buffer);
-            break;
-        } else if (c == '\n') {
+        if (c == '\n') {
             if (acceptanceState.state == nullptr) {
+                if (!buffer.empty()) {
+                    state = this->start_state;
+                    state = getNextState(c, state);
+                    if (isFinalState(state))
+                        acceptanceState = {state, {buffer, line_number, i - (int) buffer.length()}};
+                    else if (state->getTokenName() == "dead") {
+                        std::cout << '\"' << buffer << '\"' << " is bad token at " << line_number + 1 << ":"
+                                  << i - buffer.length() + 1 << '\n';
+                        buffer.clear();
+                    }
+                }
                 buffer = "";
                 state = this->start_state;
                 line_number++;
@@ -85,6 +93,17 @@ void Analyzer::readTemplate(std::ifstream *file) {
             i = 0;
         } else if (c == ' ') {
             if (acceptanceState.state == nullptr) {
+                if (!buffer.empty()) {
+                    state = this->start_state;
+                    state = getNextState(c, state);
+                    if (isFinalState(state))
+                        acceptanceState = {state, {buffer, line_number, i - (int) buffer.length()}};
+                    else if (state->getTokenName() == "dead") {
+                        std::cout << '\"' << buffer << '\"' << " is bad token at " << line_number + 1 << ":"
+                                  << i - buffer.length() + 1 << '\n';
+                        buffer.clear();
+                    }
+                }
                 buffer = "";
                 state = this->start_state;
                 i++;
@@ -104,11 +123,20 @@ void Analyzer::readTemplate(std::ifstream *file) {
                 acceptanceState = {state, {buffer, line_number, i - (int) buffer.length()}};
             } else if (state->getTokenName() == "dead") {
                 if (acceptanceState.state == nullptr) {
-                    std::cout << '\"' << buffer << '\"' << " is bad token at " << line_number + 1 << ":"
-                              << i - buffer.length() + 1 << "wodka" << '\n';
-                    buffer.clear();
-                    i++;
+                    std::cout << '\"' << buffer[0] << '\"' << " is bad token at " << line_number + 1 << ":"
+                              << i << "wodka" << '\n';
+                    buffer.erase(0, 1);
                     state = this->start_state;
+                    state = getNextState(c, state);
+                    if (isFinalState(state))
+                        acceptanceState = {state, {buffer, line_number, i - (int) buffer.length()}};
+                    else if (state->getTokenName() == "dead") {
+                        std::cout << '\"' << buffer << '\"' << " is bad token at " << line_number + 1 << ":"
+                                  << i - buffer.length() + 1 << '\n';
+                        buffer.clear();
+                        state = this->start_state;
+                    }
+                    i++;
                     continue;
                 }
 
@@ -125,9 +153,7 @@ void Analyzer::readTemplate(std::ifstream *file) {
                         std::cout << '\"' << buffer << '\"' << " is bad token at " << line_number + 1 << ":"
                                   << i - buffer.length() + 1 << '\n';
                         buffer.clear();
-                        i++;
                         state = this->start_state;
-                        continue;
                     }
                     i++;
                     continue;
@@ -145,6 +171,23 @@ void Analyzer::readTemplate(std::ifstream *file) {
             state = getNextState(c, state);
             if (isFinalState(state))
                 acceptanceState = {state, {buffer, line_number, i - (int) buffer.length()}};
+            else if (state->getTokenName() == "dead") {
+                std::cout << '\"' << buffer << '\"' << " is bad token at " << line_number + 1 << ":"
+                          << i - buffer.length() + 1 << '\n';
+                buffer.clear();
+            }
+        }
+    } else {
+        if (!buffer.empty()) {
+            state = this->start_state;
+            state = getNextState(c, state);
+            if (isFinalState(state))
+                acceptanceState = {state, {buffer, line_number, i - (int) buffer.length()}};
+            else {
+                std::cout << '\"' << buffer << '\"' << " is bad token at " << line_number + 1 << ":"
+                          << i - buffer.length() + 1 << '\n';
+                buffer.clear();
+            }
         }
     }
 }
