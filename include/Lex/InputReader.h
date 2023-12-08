@@ -7,7 +7,7 @@
 #include <set>
 #include "Rules.h"
 #include "RuleType.h"
-#include "Lex/FileReader.h"
+#include "FileReader.h"
 
 struct SubstringInfo {
     int start;
@@ -22,7 +22,9 @@ class InputReader : public FileReader {
 public:
     explicit InputReader(std::string *rules_file_name, Rules *rules);
 
-    void parseLine(std::string &line, int line_number) override;
+    void readTemplate(std::ifstream *file) override;
+
+    void parseLine(std::string &line);
 
     ~InputReader();
 

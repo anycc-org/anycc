@@ -1,6 +1,11 @@
-in ab , ba , aa , bb; wh (aa !=
-10)
+@int sum , count , pass , mnt; whi!
+le (pass ! !
+10 )
 {
-aa = aa + 1 ;
+pass = pass + 1;
 }
+boolean float int intx!
+!
+whi!
 
+do!

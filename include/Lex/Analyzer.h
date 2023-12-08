@@ -49,6 +49,7 @@ public:
 
 private:
     std::string program_file_name;
+    std::unordered_map<const NFAState *, std::string> end_states_tokens_map;
     std::unordered_set<const NFAState *> dead_states;
     std::unordered_set<const NFAState *> final_states;
     std::unordered_set<char> inputs;
