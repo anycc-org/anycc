@@ -87,7 +87,7 @@ NFA *NFAGenerator::regexToNFA(const std::string &regex) {
                 operatorStack.pop();
         } else { // symbol encountered
             // try to form a complete word
-            std::string word = "";
+            std::string word;
             while (i < n && !isOperator(regex[i]) && regex[i] != '(' && regex[i] != ')') {
                 if (regex[i] == '\\') {
                     word += regex[i];
@@ -110,14 +110,14 @@ NFA *NFAGenerator::regexToNFA(const std::string &regex) {
                 // handle cases like bbb*|aaa*
             else if (word.size() > 1 && i + 1 < n && (regex[i + 1] == '*' || regex[i + 1] == '+')) {
                 NFA *subWordNFA = NFA::wordToNFA(word.substr(0, word.size() - 1));
-                NFA *kleenNFA;
+                NFA *kleeneNFA;
                 if (regex[i + 1] == '*') {
-                    kleenNFA = NFA::kleeneStarNFA(NFA::basicCharToNFA(word[word.size() - 1]));
+                    kleeneNFA = NFA::kleeneStarNFA(NFA::basicCharToNFA(word[word.size() - 1]));
                 } else {
-                    kleenNFA = NFA::positiveClosureNFA(NFA::basicCharToNFA(word[word.size() - 1]));
+                    kleeneNFA = NFA::positiveClosureNFA(NFA::basicCharToNFA(word[word.size() - 1]));
                 }
                 i++;
-                nfaStack.push(NFA::concatNAFs(subWordNFA, kleenNFA));
+                nfaStack.push(NFA::concatNAFs(subWordNFA, kleeneNFA));
             } else {
                 // form an NFA by concatenating the characters of that word
                 nfaStack.push(NFA::wordToNFA(word));
@@ -208,7 +208,7 @@ NFA *NFAGenerator::combineNFAs(std::vector<NFA *> &nfas) {
  * Higher value means higher precedence
  * @return precedence of the operator
  */
-int NFAGenerator::precedence(char op) const {
+int NFAGenerator::precedence(char op) {
     if (op == '-') { // assumed higher: range operator
         return 4;
     } else if (op == '*' || op == '+') { // Kleene closure
@@ -225,6 +225,6 @@ int NFAGenerator::precedence(char op) const {
 /**
  * @return true if it's a supported operator
  */
-bool NFAGenerator::isOperator(char op) const {
+bool NFAGenerator::isOperator(char op) {
     return op == ' ' || op == '|' || op == '*' || op == '+' || op == '-';
 }
