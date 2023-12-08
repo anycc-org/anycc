@@ -1,19 +1,12 @@
 1.5E-6
-@int sum , count , pass , mnt; whi!
-le (pass ! !
+int sum , count , pass , mnt; whi!=
+le (pass !1.5E !
 10 )
 {
 pass = pass + 1;
 }
 boolean float int intx!
 !
-dou!
-whi!le
+whi!
+@int sum , count , pass , mnt; whi! 1.5E-6
 do!
-1.5E while
-1.5E 123
-1.5E
-1.5E@
-do!
-@
-1.5E

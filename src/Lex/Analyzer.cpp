@@ -64,8 +64,11 @@ void Analyzer::readTemplate(std::ifstream *file) {
             if (acceptanceState.state != nullptr)
                 acceptToken(acceptanceState, buffer);
 
-            if (!buffer.empty())
-                maximalMunchWithErrorRecovery(line_number, i, acceptanceState, state, buffer, c);
+            if (!buffer.empty()) {
+                maximalMunchWithErrorRecovery(line_number, i, acceptanceState, state, buffer, c, true);
+                if (acceptanceState.state != nullptr)
+                    acceptToken(acceptanceState, buffer);
+            }
 
             buffer = "";
             state = this->start_state;
@@ -75,8 +78,11 @@ void Analyzer::readTemplate(std::ifstream *file) {
             if (acceptanceState.state != nullptr)
                 acceptToken(acceptanceState, buffer);
 
-            if (!buffer.empty())
-                maximalMunchWithErrorRecovery(line_number, i, acceptanceState, state, buffer, c);
+            if (!buffer.empty()) {
+                maximalMunchWithErrorRecovery(line_number, i, acceptanceState, state, buffer, c, true);
+                if (acceptanceState.state != nullptr)
+                    acceptToken(acceptanceState, buffer);
+            }
 
             buffer = "";
             state = this->start_state;
@@ -124,15 +130,39 @@ bool Analyzer::isDeadState(const NFAState *state) { return state->getTokenName()
 
 void Analyzer::maximalMunchWithErrorRecovery(int line_number, size_t i, AcceptanceStateEntry &acceptanceState,
                                              const NFAState *&state, std::string &buffer, char &c, bool bypass) {
+    //if (bypass) {
+    //    if (isFinalState(state))
+    //        acceptanceState = {state, {buffer, line_number, (int) i - (int) buffer.length()}};
+    //    else {
+    //        logError(line_number, i - buffer.length(), buffer);
+    //        buffer.clear();
+    //    }
+    //    return;
+    //}
+
     state = start_state;
-    state = getNextState(c, state);
-    if (isFinalState(state))
-        acceptanceState = {state, {buffer, line_number, (int) i - (int) buffer.length()}};
-    else if (isDeadState(state) || bypass) {
-        logError(line_number, i - buffer.length(), buffer);
-        buffer.clear();
-        state = start_state;
+    int j = 0, prev_j = -1;
+    while (j < buffer.length() && prev_j != j) {
+        prev_j = j;
+        char b = buffer[j++];
+        state = getNextState(b, state);
+        if (isFinalState(state))
+            acceptanceState = {state, {buffer.substr(0, j), line_number, (int) i - j + 2}};
+        else if (isDeadState(state) || bypass) {
+            acceptToken(acceptanceState, buffer);
+            state = start_state;
+            j = 0;
+            if (bypass) {
+                logError(line_number, i - j - 1, buffer);
+            }
+        }
+
     }
+
+    //if (j != 0 && !isFinalState(state)) {
+    //    logError(line_number, i - j, buffer);
+    //    buffer.clear();
+    //}
 }
 
 void Analyzer::logError(int line_number, size_t i, std::string &c) {
@@ -170,6 +200,6 @@ void Analyzer::addToken(const NFAState *state, Word &word) {
     tokens.push(token);
 
     if (*token_name == "id")
-        symbol_table.insertEntry(*lexeme, *token_name, token_id, word.line_number);
+        symbol_table.insertEntry(*lexeme, *token_name, token_id, word.line_number + 1);
 }
 
