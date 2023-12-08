@@ -13,7 +13,7 @@ Rules::Rules() {
     tokens_priority = std::unordered_map<std::string, int>();
     expression_id = 0;
     definition_id = 0;
-    priority = 0;
+    priority = 2;
 }
 
 Rules::~Rules() {
@@ -99,7 +99,7 @@ void Rules::setRegularDefinitionsTokensVector(std::vector<Token *> regular_defin
 }
 
 void Rules::addPunctuation(std::string &punctuation) {
-    this->tokens_priority[punctuation] = priority++;
+    this->tokens_priority[punctuation] = 1;
     this->punctuations.push_back(punctuation);
 }
 
@@ -124,16 +124,17 @@ void Rules::addRegularExpression(std::string &name, std::string &expression) {
 }
 
 void Rules::addKeyword(std::string &keyword) {
-    this->tokens_priority[keyword] = priority++;
+    this->tokens_priority[keyword] = 0;
     this->keywords.push_back(keyword);
 }
 
 std::unordered_map<std::string, int> &Rules::getTokensPriority() {
     return tokens_priority;
 }
+
 std::vector<std::string> Rules::getTokens() {
     std::vector<std::string> tokens;
-    for(auto kv : this->tokens_priority) {
+    for (auto kv: this->tokens_priority) {
         // if(kv.first == "digit" || kv.first == "digit") continue;
         tokens.push_back(kv.first);
     }
