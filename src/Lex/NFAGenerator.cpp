@@ -1,6 +1,7 @@
 #include <Lex/NFAGenerator.h>
 #include <stack>
 #include <iostream>
+#include "Lex/Epsilon.h"
 
 NFAGenerator::NFAGenerator() = default;
 
@@ -8,24 +9,33 @@ NFAGenerator::~NFAGenerator() {
     regexToNFAMap.clear();
 }
 
-NFA *NFAGenerator::buildNFA(const std::vector<std::pair<std::string, std::string>>& regexMap,
-                            const std::vector<std::pair<std::string, std::string>>& regexDefMap,
+/**
+ * @brief t converts each regex definition, regex expression, keyword, and punctuation
+ * into corresponding NFAs and then combines them into a single NFA.
+ * @return NFA after combining all NFAs
+ */
+NFA *NFAGenerator::buildNFA(const std::vector<Token*>& regexMap,
+                            const std::vector<Token*>& regexDefMap,
                             const std::vector<std::string>& keywords,
                             const std::vector<std::string>& punctuations) {
+    // Create a vector to store individual NFAs
     std::vector<NFA*> nfas;
+
+    // Convert regular definitions to NFAs and add them to the vector
     for (auto& regexDef : regexDefMap) {
-        NFA* nfa = regexToNFA(regexDef.second);
-        nfa->setTokenName(regexDef.first);
-        nfas.push_back(nfa);
-        regexToNFAMap[regexDef.first] = nfa;
+        NFA* nfa = regexToNFA(*regexDef->getValue());
+        nfa->setTokenName(*regexDef->getKey());
+        regexToNFAMap[*regexDef->getKey()] = nfa;
     }
 
+    // Convert regular expressions to NFAs and add them to the vector
     for (auto& regex : regexMap) {
-        NFA* nfa = regexToNFA(regex.second);
-        nfa->setTokenName(regex.first);
+        NFA* nfa = regexToNFA(*regex->getValue());
+        nfa->setTokenName(*regex->getKey());
         nfas.push_back(nfa);
     }
 
+    // Convert keywords and punctuations to NFAs and add them to the vector
     for (auto& keyword : keywords) {
         NFA* nfa = NFA::wordToNFA(keyword);
         nfa->setTokenName(keyword);
@@ -38,30 +48,24 @@ NFA *NFAGenerator::buildNFA(const std::vector<std::pair<std::string, std::string
         nfas.push_back(nfa);
     }
 
+    // Combine all NFAs in the vector into a single NFA and return it
     return combineNFAs(nfas);
 }
 
 /**
+ * @brief Converts a regex expression to an NFA using a stack-based approach.
  * @return NFA after regex evaluation (postfix)
  */
 NFA* NFAGenerator::regexToNFA(const std::string& regex) {
     size_t n = regex.size();
     std::stack<NFA*> nfaStack;
-    std::stack<char> operatorStack; // word + (space or '\' or operator)
+    std::stack<char> operatorStack;
     int i;
 
-    for (i = 0; i < n; i++) { // {"l (l|d)*", "\+|-", "d+|d+ . s (\L|E s)"
+    for (i = 0; i < n; i++) {
         char c = regex[i];
-        if (c == '\\') { // escape-backslash for reserved symbols
-            if (i + 1 < n && regex[i + 1] == 'L') { // epsilon
-                nfaStack.push(NFA::basicCharToNFA('e'));
-            }
-            else { // eg. \+ \* \= \( \)
-                nfaStack.push(NFA::basicCharToNFA(regex[i + 1]));
-            }
-            i++;
-        }
-        else if (isOperator(c)) { // Operator {*, +, ' ', |, -}
+
+        if (isOperator(c)) { // Operator {*, +, ' ', |, -}
             while (!operatorStack.empty() && precedence(operatorStack.top()) >= precedence(c)) {
                 char op = operatorStack.top();
                 operatorStack.pop();
@@ -86,14 +90,39 @@ NFA* NFAGenerator::regexToNFA(const std::string& regex) {
         }
         else { // symbol encountered
             // try to form a complete word
-            std::string word = std::string(1, c);
-            while (i + 1 < n && !isOperator(regex[i + 1]) && regex[i + 1] != '(' && regex[i + 1] != ')') {
-                word += regex[++i];
+            std::string word = "";
+            while (i < n && !isOperator(regex[i]) && regex[i] != '(' && regex[i] != ')') {
+                if (regex[i] == '\\') {
+                    word += regex[i];
+                    if (i + 1 < n) {
+                        word += regex[++i];
+                    }
+                }
+                else {
+                    word += regex[i];
+                }
+                i++;
+            }
+            if (i < n && (isOperator(regex[i]) || regex[i] == '(' || regex[i] == ')')) {
+                i--;
             }
             // check if that word in the regular definition map
             if (regexToNFAMap.find(word) != regexToNFAMap.end()) {
                 // take a deep copy from this nfa
                 nfaStack.push(new NFA(*regexToNFAMap[word]));
+            }
+            // handle cases like bbb*|aaa*
+            else if (word.size() > 1 && i + 1 < n && (regex[i + 1] == '*' || regex[i + 1] == '+')) {
+                NFA* subWordNFA = NFA::wordToNFA(word.substr(0, word.size() - 1));
+                NFA* kleenNFA;
+                if (regex[i + 1] == '*') {
+                    kleenNFA = NFA::kleeneStarNFA(NFA::basicCharToNFA(word[word.size() - 1]));
+                }
+                else {
+                    kleenNFA = NFA::positiveClosureNFA(NFA::basicCharToNFA(word[word.size() - 1]));
+                }
+                i++;
+                nfaStack.push(NFA::concatNAFs(subWordNFA, kleenNFA));
             }
             else {
                 // form an NFA by concatenating the characters of that word
@@ -109,10 +138,21 @@ NFA* NFAGenerator::regexToNFA(const std::string& regex) {
         processOperator(op, nfaStack);
     }
 
+    if (nfaStack.size() != 1) {
+        std::cerr << "Invalid regex: " << regex << std::endl;
+        exit(1);
+    }
+
     // Top of the stack contains the final NFA
-    return nfaStack.top();
+    NFA* resultNFA = nfaStack.top();
+    nfaStack.pop();
+    resultNFA->addEndState(resultNFA->getEndState());
+    return resultNFA;
 }
 
+/**
+ * @brief Processes operators and performs corresponding operations on the NFA stack.
+ */
 void NFAGenerator::processOperator(char op, std::stack<NFA*>& nfaStack) {
     if (op == '*') { // kleene star
         NFA* operand = nfaStack.top();
@@ -157,12 +197,17 @@ void NFAGenerator::processOperator(char op, std::stack<NFA*>& nfaStack) {
     }
 }
 
+/**
+ * @brief Combines multiple NFAs into a single NFA by creating epsilon transitions
+ * from a combined start state to the start states of individual NFAs and
+ * adding their end states to the combined end states.
+ * */
 NFA* NFAGenerator::combineNFAs(std::vector<NFA*>& nfas) {
     NFA* combinedNFA = new NFA();
     NFAState *combinedStart = combinedNFA->getStartState();
 
     for (const NFA* nfa : nfas) {
-        combinedStart->addTransition('e', nfa->getStartState());
+        combinedStart->addTransition(EPSILON, nfa->getStartState());
         combinedNFA->addEndState(nfa->getEndState());
     }
 
@@ -184,7 +229,6 @@ int NFAGenerator::precedence(char op) const {
     } else if (op == '|') { // Union
         return 1;
     } else {
-        std::cerr << "Invalid operator: " << op << std::endl;
         return -1;
     }
 }

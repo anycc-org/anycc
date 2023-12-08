@@ -1,10 +1,10 @@
-#include <iostream>
-#include "Lex.h"
-
+#include "Lex/NFAState.h"
+#include <map>
+#include <Lex/Lex.h>
 
 int main() {
     auto *rules_file_name = new std::string("../rules.txt");
     auto *program_file_name = new std::string("../program.txt");
     Lex *lex = new Lex(rules_file_name, program_file_name);
-    lex->read_rules();
+    lex->buildLex();
 }

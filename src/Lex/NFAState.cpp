@@ -2,6 +2,7 @@
 #include <iostream>
 #include <utility>
 #include <stack>
+#include "Lex/Epsilon.h"
 
 NFAState::NFAState() : stateId(id++) {}
 
@@ -41,20 +42,21 @@ NFAState::~NFAState() {
     transitions.clear();
 }
 
-NFAState::NFAState(const NFAState &other, std::unordered_map<int, NFAState *> &copiedStates) {
-    stateId = other.stateId;
-    copiedStates[stateId] = this;
+NFAState::NFAState(NFAState &other, std::unordered_map<NFAState*, NFAState*> &copiedStates) {
+    stateId = id++;
+    tokenName = other.tokenName;
+    copiedStates[&other] = this;
     // Perform a deep copy of the transitions
     for (const auto& entry : other.transitions) { // entry: <char, vector<NFAState*>>
         char symbol = entry.first;
         const std::vector<NFAState*>& states = entry.second;
         for (NFAState* state : states) {
-            if (copiedStates.find(state->stateId) == copiedStates.end()) {
+            if (copiedStates.find(state) == copiedStates.end()) {
                 NFAState* stateCopy = new NFAState(*state, copiedStates);
                 addTransition(symbol, stateCopy);
             }
             else {
-                NFAState* stateCopy = copiedStates[state->stateId];
+                NFAState* stateCopy = copiedStates[state];
                 addTransition(symbol, stateCopy);
             }
         }

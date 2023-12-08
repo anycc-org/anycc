@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <regex>
 #include "RuleType.h"
 #include "InputReader.h"
 #include "Operator.h"
@@ -8,11 +9,14 @@
 
 class Utilities {
 public:
+    static std::string *cleanRegex(std::string *input);
+
     static std::vector<SubstringInfo>
     findAllLongestSubstringIndices(std::string *input, std::set<std::string> *substrings);
 
-    static void fixSpacesGivenType(const std::unordered_map<std::string, std::pair<std::string, int>>& regular_rules, Rules *rules,
-                                   std::set<std::string> *non_terminal_symbols, RuleType type);
+    static void
+    fixConcatGivenType(const std::unordered_map<std::string, std::pair<std::string, int>> &regular_rules, Rules *rules,
+                       std::set<std::string> *non_terminal_symbols, RuleType type);
 
     static int
     detectConcatThenAddSpaces(std::string *expression, const std::vector<SubstringInfo> &substringInfoVec,
@@ -20,11 +24,12 @@ public:
 
     static void addSpaceAfterAndBeforeBraces(std::string *expression);
 
-    static void fixSpaces(Rules *rules, std::set<std::string> *non_terminal_symbols);
+    static void fixConcat(Rules *rules, std::set<std::string> *non_terminal_symbols);
 
-    static std::vector<Token*> convertMapToVector(const std::unordered_map<std::string, std::pair<std::string, int>>& map);
+    static std::vector<Token *>
+    convertMapToVector(const std::unordered_map<std::string, std::pair<std::string, int>> &map);
 
-    static void deleteVectorOfTokens(std::vector<Token*> *vector);
+    static void deleteVectorOfTokens(std::vector<Token *> *vector);
 
     static bool isCloseBrace(const std::string *expression, int i);
 

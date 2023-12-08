@@ -7,6 +7,7 @@
 #include <set>
 #include "Rules.h"
 #include "RuleType.h"
+#include "FileReader.h"
 
 struct SubstringInfo {
     int start;
@@ -17,17 +18,19 @@ inline bool compareSubstringInfo(const SubstringInfo &a, const SubstringInfo &b)
     return a.start < b.start;
 }
 
-class InputReader {
+class InputReader : public FileReader {
 public:
     explicit InputReader(std::string *rules_file_name, Rules *rules);
+
+    void readTemplate(std::ifstream *file) override;
+
+    void parseLine(std::string &line);
 
     ~InputReader();
 
 private:
     std::set<std::string> *non_terminal_symbols;
     Rules *rules;
-
-    void parseFile(std::ifstream *file);
 
     static RuleType checkType(std::string *basicString);
 

@@ -1,5 +1,5 @@
 #include <Lex/InputReader.h>
-#include "Utilities.h"
+#include "Lex/Utilities.h"
 
 InputReader::InputReader(std::string *rules_file_name, Rules *rules) {
     this->rules = rules;
@@ -14,25 +14,24 @@ InputReader::~InputReader() {
 }
 
 void InputReader::buildRules(std::ifstream *file) {
-    parseFile(file);
-    Utilities::fixSpaces(rules, non_terminal_symbols);
+    readFile(file);
+    Utilities::fixConcat(rules, non_terminal_symbols);
     rules->setRegularDefinitionsTokensVector(Utilities::convertMapToVector(rules->getRegularDefinitionsMap()));
     rules->setRegularExpressionsTokensVector(Utilities::convertMapToVector(rules->getRegularExpressionsMap()));
 }
 
-void InputReader::parseFile(std::ifstream *file) {
+void InputReader::readTemplate(std::ifstream *file) {
     std::string line;
-    if (file->is_open()) {
-        while (getline(*file, line)) {
-            std::cout << line << "\n";
-            RuleType line_type = checkType(&line);
-            buildRule(line, line_type);
-        }
-        file->close();
-        delete file;
-    } else {
-        std::cout << "Unable to open file";
+    int line_number = 0;
+    while (getline(*file, line)) {
+        line_number++;
+        parseLine(line);
     }
+}
+
+void InputReader::parseLine(std::string &line) {
+    RuleType line_type = checkType(&line);
+    buildRule(line, line_type);
 }
 
 RuleType InputReader::checkType(std::string *basicString) {
@@ -61,7 +60,7 @@ void InputReader::buildRule(std::string &pString, RuleType type) {
     else if (type == RuleType::PUNCTUATION)
         addPunctuation(pString);
     else
-        std::cout << "Invalid rule: " << pString << '\n';
+        return;
 }
 
 void InputReader::addPunctuation(std::string &pString) {
@@ -82,7 +81,6 @@ void InputReader::addRegularDefinitionOrExpression(std::string &pString, RuleTyp
     name.erase(std::remove(name.begin(), name.end(), ' '), name.end());
 
     std::string expression = pString.substr(pString.find(c) + 1);
-    expression.erase(std::remove(expression.begin(), expression.end(), ' '), expression.end());
 
     non_terminal_symbols->insert(name);
     rules->addRule(type, expression, name);
@@ -120,4 +118,3 @@ void InputReader::addPunctuations(std::string pString) {
         }
     }
 }
-

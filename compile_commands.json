@@ -4,12 +4,279 @@
       "/usr/bin/g++",
       "-c",
       "-I./include",
+      "-std=c++11",
       "-o",
       "main",
-      "src/main.cpp"
+      "src/anycc.cpp"
     ],
     "directory": "/home/kotb/csed/4/1/Compilers/project/anycc",
-    "file": "/home/kotb/csed/4/1/Compilers/project/anycc/src/main.cpp",
+    "file": "/home/kotb/csed/4/1/Compilers/project/anycc/src/anycc.cpp",
+    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/main"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-I./include",
+      "-std=c++11",
+      "-o",
+      "main",
+      "src/Lex/DFA.cpp"
+    ],
+    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc",
+    "file": "/home/kotb/csed/4/1/Compilers/project/anycc/src/Lex/DFA.cpp",
+    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/main"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-I./include",
+      "-std=c++11",
+      "-o",
+      "main",
+      "src/Lex/DFAMinimizer.cpp"
+    ],
+    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc",
+    "file": "/home/kotb/csed/4/1/Compilers/project/anycc/src/Lex/DFAMinimizer.cpp",
+    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/main"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-I./include",
+      "-std=c++11",
+      "-o",
+      "main",
+      "src/Lex/Input.cpp"
+    ],
+    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc",
+    "file": "/home/kotb/csed/4/1/Compilers/project/anycc/src/Lex/Input.cpp",
+    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/main"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-I./include",
+      "-std=c++11",
+      "-o",
+      "main",
+      "src/Lex/InputReader.cpp"
+    ],
+    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc",
+    "file": "/home/kotb/csed/4/1/Compilers/project/anycc/src/Lex/InputReader.cpp",
+    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/main"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-I./include",
+      "-std=c++11",
+      "-o",
+      "main",
+      "src/Lex/Lex.cpp"
+    ],
+    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc",
+    "file": "/home/kotb/csed/4/1/Compilers/project/anycc/src/Lex/Lex.cpp",
+    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/main"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-I./include",
+      "-std=c++11",
+      "-o",
+      "main",
+      "src/Lex/LexError.cpp"
+    ],
+    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc",
+    "file": "/home/kotb/csed/4/1/Compilers/project/anycc/src/Lex/LexError.cpp",
+    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/main"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-I./include",
+      "-std=c++11",
+      "-o",
+      "main",
+      "src/Lex/NFA.cpp"
+    ],
+    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc",
+    "file": "/home/kotb/csed/4/1/Compilers/project/anycc/src/Lex/NFA.cpp",
+    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/main"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-I./include",
+      "-std=c++11",
+      "-o",
+      "main",
+      "src/Lex/NFAGenerator.cpp"
+    ],
+    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc",
+    "file": "/home/kotb/csed/4/1/Compilers/project/anycc/src/Lex/NFAGenerator.cpp",
+    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/main"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-I./include",
+      "-std=c++11",
+      "-o",
+      "main",
+      "src/Lex/NFAState.cpp"
+    ],
+    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc",
+    "file": "/home/kotb/csed/4/1/Compilers/project/anycc/src/Lex/NFAState.cpp",
+    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/main"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-I./include",
+      "-std=c++11",
+      "-o",
+      "main",
+      "src/Lex/Output.cpp"
+    ],
+    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc",
+    "file": "/home/kotb/csed/4/1/Compilers/project/anycc/src/Lex/Output.cpp",
+    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/main"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-I./include",
+      "-std=c++11",
+      "-o",
+      "main",
+      "src/Lex/OutputReader.cpp"
+    ],
+    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc",
+    "file": "/home/kotb/csed/4/1/Compilers/project/anycc/src/Lex/OutputReader.cpp",
+    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/main"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-I./include",
+      "-std=c++11",
+      "-o",
+      "main",
+      "src/Lex/Regex.cpp"
+    ],
+    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc",
+    "file": "/home/kotb/csed/4/1/Compilers/project/anycc/src/Lex/Regex.cpp",
+    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/main"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-I./include",
+      "-std=c++11",
+      "-o",
+      "main",
+      "src/Lex/RegexGenerator.cpp"
+    ],
+    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc",
+    "file": "/home/kotb/csed/4/1/Compilers/project/anycc/src/Lex/RegexGenerator.cpp",
+    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/main"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-I./include",
+      "-std=c++11",
+      "-o",
+      "main",
+      "src/Lex/Rules.cpp"
+    ],
+    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc",
+    "file": "/home/kotb/csed/4/1/Compilers/project/anycc/src/Lex/Rules.cpp",
+    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/main"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-I./include",
+      "-std=c++11",
+      "-o",
+      "main",
+      "src/Lex/SymbolTable.cpp"
+    ],
+    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc",
+    "file": "/home/kotb/csed/4/1/Compilers/project/anycc/src/Lex/SymbolTable.cpp",
+    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/main"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-I./include",
+      "-std=c++11",
+      "-o",
+      "main",
+      "src/Lex/Token.cpp"
+    ],
+    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc",
+    "file": "/home/kotb/csed/4/1/Compilers/project/anycc/src/Lex/Token.cpp",
+    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/main"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-I./include",
+      "-std=c++11",
+      "-o",
+      "main",
+      "src/Lex/TransTable.cpp"
+    ],
+    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc",
+    "file": "/home/kotb/csed/4/1/Compilers/project/anycc/src/Lex/TransTable.cpp",
+    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/main"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-I./include",
+      "-std=c++11",
+      "-o",
+      "main",
+      "src/Lex/TransitionDiagram.cpp"
+    ],
+    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc",
+    "file": "/home/kotb/csed/4/1/Compilers/project/anycc/src/Lex/TransitionDiagram.cpp",
+    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/main"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-I./include",
+      "-std=c++11",
+      "-o",
+      "main",
+      "src/Lex/Utilities.cpp"
+    ],
+    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc",
+    "file": "/home/kotb/csed/4/1/Compilers/project/anycc/src/Lex/Utilities.cpp",
     "output": "/home/kotb/csed/4/1/Compilers/project/anycc/main"
   }
 ]
