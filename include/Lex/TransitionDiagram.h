@@ -20,7 +20,8 @@ public:
 
     const NFAState *getStartState();
 
-    void fillTable(const NFAState *state, std::vector<const NFAState *> end_states, std::vector<std::string> tokens,
+    void fillTable(const NFAState *state, std::vector<const NFAState *> end_states_vector,
+                   std::vector<std::string> tokens_vector,
                    std::unordered_map<const NFAState *, std::string> states_tokens_map, bool new_fill);
 
     std::unordered_set<const NFAState *> getStates();
@@ -51,41 +52,23 @@ public:
 
     std::set<const NFAState *> getRecursiveEpsilonClosure(const NFAState *state);
 
-    std::set<const NFAState *> getAllNextStates(std::set<const NFAState *> states, char input);
+    std::set<const NFAState *> getAllNextStates(const std::set<const NFAState *> &states_set, char input);
 
-    const static NFAState *mergeStates(TransitionDiagram *transdigm,
+    const static NFAState *mergeStates(TransitionDiagram *transition_diagram,
                                        std::map<std::set<const NFAState *>, std::map<char, std::set<const NFAState *>>> &new_table,
                                        std::vector<const NFAState *> &new_end_states,
                                        std::unordered_map<const NFAState *, std::string> &new_end_states_tokens_map);
 
-    static bool isEndStateNew(std::set<const NFAState *> states, std::unordered_set<const NFAState *> end_states);
-
-    /**
-     * @brief create a new NFA using the transition diagram
-     * @warning the responsbility of deleting pointer is the caller's 
-     * @return NFA* pointer to the NFA createdd
-     */
-    NFA *createNFAFromTable();
-
-    /**
-     * @brief removes all epsilon
-      transitions from the Transition Diagram and return a pointer to epslion-free Transition Diagram
-     * @warning incase of inplace was false, the deletion of the returned Transition Diagram Pointer is the responsibilty of 
-     the caller  
-     * @param inplace if true the same pointer passed will be returned, no new object created, otherwise, a new Transition Diagram will be created. 
-     * @return TransitionDiagram* Transition Diagram pointer , see warning
-     */
-    TransitionDiagram *removeEpsilonTransitions(bool inplace = true);
-
-    void print() const;
+    static bool
+    isEndStateNew(const std::set<const NFAState *> &states, std::unordered_set<const NFAState *> end_states);
 
     void clear();
 
-    void toDotFile(std::string file_name);
+    void toDotFile(const std::string &file_name);
 
-    void toCSVFile(std::string file_name);
+    void toCSVFile(const std::string &file_name);
 
-    void toMDFile(std::string file_name);
+    void toMDFile(const std::string &file_name);
 
 private:
     std::unordered_map<const NFAState *, std::unordered_map<char, std::vector<const NFAState *>>> table;
@@ -99,15 +82,11 @@ private:
     std::vector<std::string> tokens;
     std::unordered_map<std::string, int> tokensPriority;
 
-    std::unordered_set<const NFAState *> newlyCreatedStates();
-
     const NFAState *getStateId(int state_id);
 
-    TransitionDiagram *removeEpsilonTransitionsInplace(TransitionDiagram *transdig);
-
-    TransitionDiagram *minimizeInplace(TransitionDiagram *transdig);
+    TransitionDiagram *removeEpsilonTransitionsInplace(TransitionDiagram *transition_diagram);
 
     bool static isDeadState(const NFAState *state, std::unordered_set<const NFAState *> end_states);
 
-    std::string getMaxPriorityToken(std::vector<std::string> tokens);
+    std::string getMaxPriorityToken(const std::vector<std::string> &tokens_vector);
 };
