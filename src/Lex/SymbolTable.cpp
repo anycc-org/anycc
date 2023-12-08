@@ -20,7 +20,7 @@ SymbolTableEntry *SymbolTable::getEntry(std::string &lexeme) {
 }
 
 void SymbolTable::printTable() {
-    std::cout << "\n\n" << "Symbol Table:" << "\n";
+    std::cout << "\n" << "Symbol Table" << "\n\n";
     for (const auto &entry: table) {
         std::cout << entry.first << " : " << entry.second->token_name << " : "
                   << entry.second->line_number << " : " << entry.second->column_number << std::endl;
