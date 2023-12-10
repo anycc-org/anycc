@@ -18,18 +18,3 @@ jobs:
         run: |
           cmake .
           make
-
-    build-on-windows:
-      runs-on: windows-latest
-
-      steps:
-        - name: Checkout Repository
-          uses: actions/checkout@v2
-
-        - name: Install CMake
-          run: choco install cmake
-
-        - name: Build Project
-          run: |
-            cmake .
-            make
