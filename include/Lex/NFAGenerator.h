@@ -4,8 +4,8 @@
 #include <string>
 #include <stack>
 #include <map>
-#include <Lex/NFA.h>
-#include <Lex/Token.h>
+#include "Lex/NFA.h"
+#include "Lex/Token.h"
 
 class NFAGenerator {
 public:
@@ -18,16 +18,16 @@ public:
 
     NFA *regexToNFA(const std::string &regex);
 
-    NFA *combineNFAs(std::vector<NFA *> &nfas);
+    static NFA *combineNFAs(std::vector<NFA *> &nfas);
 
     ~NFAGenerator();
 
-    void processOperator(char op, std::stack<NFA *> &nfaStack);
+    static void processOperator(char op, std::stack<NFA *> &nfaStack);
 
 private:
     std::unordered_map<std::string, NFA *> regexToNFAMap;
 
-    int precedence(char op) const;
+    static int precedence(char op);
 
-    bool isOperator(char op) const;
+    static bool isOperator(char op);
 };

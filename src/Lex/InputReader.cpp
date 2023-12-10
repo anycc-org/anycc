@@ -1,4 +1,4 @@
-#include <Lex/InputReader.h>
+#include "Lex/InputReader.h"
 #include "Lex/Utilities.h"
 
 InputReader::InputReader(std::string *rules_file_name, Rules *rules) {
