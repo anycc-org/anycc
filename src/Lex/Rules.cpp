@@ -134,8 +134,8 @@ std::unordered_map<std::string, int> &Rules::getTokensPriority() {
 
 std::vector<std::string> Rules::getTokens() {
     std::vector<std::string> tokens;
-    for (auto kv: this->tokens_priority) {
-        // if(kv.first == "digit" || kv.first == "digit") continue;
+    tokens.reserve(this->tokens_priority.size());
+    for (const auto &kv: this->tokens_priority) {
         tokens.push_back(kv.first);
     }
     return tokens;
