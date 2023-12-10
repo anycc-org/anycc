@@ -4,6 +4,9 @@
 
 #pragma once
 
+#ifndef FIRSTANDFOLLOWGENERATORUTILITY_H
+#define FIRSTANDFOLLOWGENERATORUTILITY_H
+
 #include "Parser/Production.h"
 #include <set>
 #include <string>
@@ -22,3 +25,5 @@ bool isNT(const std::string& s,std::set<std::string>& nonTerminals);
 
 std::set<std::string> collectNonTerminals(const std::vector<Production>& grammar);
 std::string getLongestUpperCaseSequence(const std::string& str);
+
+#endif // FIRSTANDFOLLOWGENERATORUTILITY_H

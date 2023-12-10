@@ -2,8 +2,8 @@
 // Created by abdel on 30/11/2023.
 //
 #pragma once
-#ifndef GRAMMAR_CHECKER_H
-#define GRAMMAR_CHECKER_H
+#ifndef FIRST_AND_FOLLOW_GENERATOR_H
+#define FIRST_AND_FOLLOW_GENERATOR_H
 
 #include "Parser/Production.h"
 #include <algorithm>
@@ -39,4 +39,4 @@ private:
   void computeFollowSets(std::unordered_map<std::string, std::set<std::string>>& followSets);
 };
 
-#endif // GRAMMAR_CHECKER_H
+#endif // FIRST_AND_FOLLOW_GENERATOR_H
