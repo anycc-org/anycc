@@ -6,7 +6,7 @@ on:
     paths:
       - '.github/workflows/**'
       - 'src/**'
-      - 'include/lex/**'
+      - 'include/Lex/**'
 
 jobs:
   build:
