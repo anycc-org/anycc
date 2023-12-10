@@ -13,35 +13,15 @@ struct SymbolTableEntry {
 
 class SymbolTable {
 public:
-    /**
-     * @brief Get the instance of the singleton class
-     * @return The instance of the singleton class
-     */
     static SymbolTable &getInstance() {
         static SymbolTable instance;
         return instance;
     }
 
-    /**
-     * @brief Insert a new entry to the symbol table
-     * @param word The word to be inserted
-     * @param token_name The token name of the word
-     * @param token_id The token id of the word
-     * @param line_number The line number of the word
-     * @param column_number The column number of the word
-     */
     void insertEntry(std::string &word, std::string &token_name, int token_id, int line_number, int column_number);
 
-    /**
-     * @brief Get the entry of the given lexeme
-     * @param lexeme The lexeme to be searched for
-     * @return The entry of the given lexeme
-     */
     SymbolTableEntry *getEntry(std::string &lexeme);
 
-    /**
-     * @brief Print the symbol table
-     */
     void printTable();
 
     SymbolTable(const SymbolTable &) = delete;

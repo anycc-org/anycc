@@ -1,5 +1,8 @@
+compile_commands.json
+Makefile
 main
 .cache
 .vscode
+CMakeLists.txt
 .idea/
 cmake-build-debug/

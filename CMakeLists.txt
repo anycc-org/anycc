@@ -23,6 +23,4 @@ add_executable(anycc
         include/Lex/FileReader.h
         src/Lex/DeterministicTransitionDiagramCreator.cpp
         src/Lex/TransitionDiagramMinimizer.cpp
-        include/Lex/RuleType.h
-        include/Lex/Token.h
-)
+        )

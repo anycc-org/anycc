@@ -1,15 +1,14 @@
-#include "Lex/Lex.h"
-#include "Lex/NFAGenerator.h"
-#include "Lex/TransitionDiagramMinimizer.h"
-#include "Lex/DeterministicTransitionDiagramCreator.h"
+#include <Lex/Lex.h>
+#include <Lex/NFAGenerator.h>
+#include <Lex/TransitionDiagram.h>
+#include <Lex/TransitionDiagramMinimizer.h>
+#include <Lex/DeterministicTransitionDiagramCreator.h>
+#include "Analyzer.h"
 
 
 Lex::~Lex() {
     delete rules;
     delete inputReader;
-    delete analyzer;
-    delete rules_file_name;
-    delete program_file_name;
 }
 
 Lex::Lex(std::string *rules_file_name, std::string *program_file_name) {
@@ -20,10 +19,55 @@ Lex::Lex(std::string *rules_file_name, std::string *program_file_name) {
 void Lex::buildLex() {
     read_rules();
     NFA *nfa = buildNFA();
-    auto *transition_diagram = buildDFA(nfa);
+    TransitionDiagram *table = new TransitionDiagram(nfa->getStartState(), nfa->getEndStates(), rules->getTokens(),
+                                                     rules->getTokensPriority());
+    // table->print();
+    std::cout << table->getStates().size() << "\n";
+    std::cout << table->getEndStates().size() << "\n";
+    std::cout << table->getDeadStates().size() << "\n";
+    table->toDotFile("nfa.dot");
+    table->toCSVFile("nfa.csv");
+    table->toMDFile("nfa.md");
+    DeterministicTransitionDiagramCreator dfaCreator;
+    table = dfaCreator.subsetConstruction(table);
+    std::cout << "converted to dfa\n";
+    table->toDotFile("dfa.dot");
+    table->toCSVFile("dfa.csv");
+    table->toMDFile("dfa.md");
+    // table->print();
+    std::cout << table->getStates().size() << "\n";
+    std::cout << table->getEndStates().size() << "\n";
+    std::cout << table->getDeadStates().size() << "\n";
+    TransitionDiagramMinimizer minimizer;
+    table = minimizer.minimize(table);
+    table->toDotFile("min_dfa.dot");
+    table->toCSVFile("min_dfa.csv");
+    table->toMDFile("min_dfa.md");
+    std::cout << "minimized dfa\n";
+    // table->print();
+    std::cout << table->getStates().size() << "\n";
+    std::cout << table->getEndStates().size() << "\n";
+    std::cout << table->getDeadStates().size() << "\n";
+    for (auto kv: table->getEndStatesTokensMap()) {
+        std::cout << kv.first->getStateId() << ": " << kv.second << "\n";
+    }
+    std::cout << table->getEndStatesTokensMap().size();
+    std::cout << "\n";
+    for (auto s: rules->getTokens()) {
+        std::cout << s << "\n";
+    }
+    std::cout << rules->getTokens().size();
+    std::cout << "\n";
 
-    analyzer = new Analyzer(*program_file_name, transition_diagram->getStartState(), transition_diagram);
-    analyzer->analyzeProgram();
+    Analyzer analyzer(*program_file_name, table->getStartState(), table);
+    analyzer.analyzeProgram();
+
+    std::ofstream tokens_file("tokens.txt");
+    Token *token;
+    while ((token = analyzer.getNextToken()) != nullptr) {
+        tokens_file << "{" << *(token->getKey()) << " -> " << *(token->getValue()) << "}" << '\n';
+        std::cout << "{" << *(token->getKey()) << " -> " << *(token->getValue()) << "}" << '\n';
+    }
 }
 
 void Lex::read_rules() {
@@ -36,55 +80,4 @@ NFA *Lex::buildNFA() {
     auto *NfaGenerator = new NFAGenerator();
     return NfaGenerator->buildNFA(rules->getRegularExpressions(), rules->getRegularDefinitions(), rules->getKeywords(),
                                   rules->getPunctuations());
-}
-
-TransitionDiagram *Lex::buildDFA(NFA *nfa) {
-    auto *transition_diagram = new TransitionDiagram(nfa->getStartState(), nfa->getEndStates(), rules->getTokens(),
-                                                     rules->getTokensPriority());
-
-    printTransitionDiagramStatistics(transition_diagram, "Converted to NFA");
-
-    createDiagramWithDifferentTypes(transition_diagram, "nfa");
-
-    transition_diagram = DeterministicTransitionDiagramCreator::subsetConstruction(transition_diagram);
-
-    printTransitionDiagramStatistics(transition_diagram, "Converted to DFA");
-
-    createDiagramWithDifferentTypes(transition_diagram, "dfa");
-
-    transition_diagram = TransitionDiagramMinimizer::minimize(transition_diagram);
-
-    printTransitionDiagramStatistics(transition_diagram, "Minimized DFA");
-
-    createDiagramWithDifferentTypes(transition_diagram, "minimized_dfa");
-
-    return transition_diagram;
-}
-
-void Lex::createDiagramWithDifferentTypes(TransitionDiagram *transition_diagram, const std::string &title) {
-    transition_diagram->toDotFile(title + ".dot");
-    transition_diagram->toCSVFile(title + ".csv");
-    transition_diagram->toMDFile(title + ".md");
-}
-
-void Lex::printTransitionDiagramStatistics(TransitionDiagram *transition_diagram, const std::string &title) {
-    std::cout << title << "\n\n";
-    std::cout << "Number of States = " << transition_diagram->getStates().size() << "\n";
-    std::cout << "Number of End States = " << transition_diagram->getEndStates().size() << "\n";
-    std::cout << "Number of Dead States = " << transition_diagram->getDeadStates().size() << "\n\n";
-}
-
-void Lex::getAllTokensAndCreateOutputFile() {
-    std::ofstream tokens_file("tokens.txt");
-    Token *token;
-    while ((token = analyzer->getNextToken()) != nullptr) {
-        tokens_file << "{" << *(token->getKey()) << " -> " << *(token->getValue()) << "}" << '\n';
-        std::cout << "{" << *(token->getKey()) << " -> " << *(token->getValue()) << "}" << '\n';
-    }
-    tokens_file.close();
-    std::cout << '\n';
-}
-
-void Lex::printSymbolTable() {
-    analyzer->printSymbolTable();
 }

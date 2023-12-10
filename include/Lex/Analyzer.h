@@ -42,11 +42,6 @@ public:
      */
     Token *getNextToken();
 
-    /**
-     * @brief Print the symbol table
-     */
-    void printSymbolTable();
-
     void readTemplate(std::ifstream *file) override;
 
 private:
@@ -60,71 +55,22 @@ private:
     TransitionDiagram *transition_diagram;
     SymbolTable &symbol_table;
 
-    /**
-     * @brief Read the program file and analyze it
-     */
     void readProgram();
 
-    /**
-     * @brief Accept the given token
-     * @param acceptanceState The acceptance state of the token
-     * @param buffer The buffer of the token
-     * @warning the responsibility of deleting pointer is the caller's
-     */
     const NFAState *getNextState(char &c, const NFAState *state);
 
-    /**
-     * @brief Read the program file and tokenize it
-     * @param file The file to be read
-     */
-    void tokenization(std::ifstream *file);
-
-    /**
-     * @brief Add the given token to the tokens queue and add it to the symbol table if it's id
-     * @param acceptanceState The acceptance state of the token
-     * @param buffer The buffer of the token
-     */
     void addToken(const NFAState *state, Word &word);
 
-    /**
-     * @brief Accept the given token, call addToken and reset the acceptance state and delete it from buffer
-     * @param acceptanceState The acceptance state of the token
-     * @param buffer The buffer of the token
-     */
     void acceptToken(AcceptanceStateEntry &acceptanceState, std::string &buffer);
 
-    /**
-     * @brief Check if the given state is a acceptance state
-     * @param state The state to be checked
-     * @return True if the given state is a acceptance state, false otherwise
-     */
-    bool isAcceptanceState(const NFAState *state);
+    bool isFinalState(const NFAState *state);
 
-    /**
-     * @brief Log the given error
-     * @param line_number The line number of the error
-     * @param i The index of the error
-     * @param c The character of the error
-     */
     static void logError(int line_number, size_t i, std::string &c);
 
-    /**
-     * @brief Maximal munch algorithm with error recovery
-     * @param line_number The line number of the error
-     * @param i The index of the error
-     * @param acceptanceState The acceptance state of the token
-     * @param state The state of the token
-     * @param buffer The buffer of the token
-     * @param bypass True if the buffer got space, new line or eof then no more characters can be found and any errors should be printed, false otherwise
-     */
     void
     maximalMunchWithErrorRecovery(int line_number, size_t i, AcceptanceStateEntry &acceptanceState,
-                                  const NFAState *&state, std::string &buffer, bool bypass);
+                                  const NFAState *&state,
+                                  std::string &buffer, char &c, bool bypass = false);
 
-    /**
-     * @brief Check if the given state is a dead state
-     * @param state The state to be checked
-     * @return True if the given state is a dead state, false otherwise
-     */
     static bool isDeadState(const NFAState *state);
 };
