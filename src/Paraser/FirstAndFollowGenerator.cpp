@@ -1,9 +1,9 @@
-#include "Production.h"
-#include "GrammarChecker.h"
+#include "Parser/FirstAndFollowGenerator.h"
+#include "Parser/FirstAndFollowGeneratorUtility.h"
+#include "Parser/Production.h"
 #include "constants.h"
-#include "GrammarCheckerUtility.h"
 
-GrammarChecker::GrammarChecker(const unordered_map<string, vector<vector<string>>> &grammar) {
+FirstAndFollowGenerator::FirstAndFollowGenerator(const unordered_map<string, vector<vector<string>>> &grammar) {
     for (const auto &entry: grammar) {
         const string &nonTerminal = entry.first;
         const vector<vector<string>> &productions = entry.second;
@@ -14,7 +14,7 @@ GrammarChecker::GrammarChecker(const unordered_map<string, vector<vector<string>
     nonTerminals = collectNonTerminals(productionVector);
 }
 
-set<string> GrammarChecker::computeFirst(const string &nonTerminal) {
+set<string> FirstAndFollowGenerator::computeFirst(const string &nonTerminal) {
     set<string> firstSet;
 
     for (const Production &rule: productionVector) {
@@ -48,7 +48,7 @@ set<string> GrammarChecker::computeFirst(const string &nonTerminal) {
     return firstSet;
 }
 
-bool GrammarChecker::nonTerminalHasEpsilon(const string &nonTerminal) {
+bool FirstAndFollowGenerator::nonTerminalHasEpsilon(const string &nonTerminal) {
     // Check if the non-terminal has an epsilon production
     for (const Production &rule: productionVector) {
         if (rule.nonTerminal == nonTerminal) {
@@ -62,7 +62,7 @@ bool GrammarChecker::nonTerminalHasEpsilon(const string &nonTerminal) {
     return false;
 }
 
-set<string> GrammarChecker::computeFollow(const string &nonTerminal) {
+set<string> FirstAndFollowGenerator::computeFollow(const string &nonTerminal) {
     // If Follow set is already computed, return it
     if (computedFollowSets.find(nonTerminal) != computedFollowSets.end()) {
         return computedFollowSets[nonTerminal];
@@ -165,20 +165,20 @@ set<string> GrammarChecker::computeFollow(const string &nonTerminal) {
 }
 
 // Function to compute First sets for each non-terminal
-void GrammarChecker::computeFirstSets(unordered_map<string, set<string>> &firstSets) {
+void FirstAndFollowGenerator::computeFirstSets(unordered_map<string, set<string>> &firstSets) {
     for (const string &nonTerminal: nonTerminals) {
         firstSets[nonTerminal] = computeFirst(nonTerminal);
     }
 }
 
 // Function to compute Follow sets for each non-terminal
-void GrammarChecker::computeFollowSets(unordered_map<string, set<string>> &followSets) {
+void FirstAndFollowGenerator::computeFollowSets(unordered_map<string, set<string>> &followSets) {
     for (const string &nonTerminal: nonTerminals) {
         followSets[nonTerminal] = computeFollow(nonTerminal);
     }
 }
 
-bool GrammarChecker::isLL1Grammar() {
+bool FirstAndFollowGenerator::isLL1Grammar() {
 
     computeFirstSets(computedFirstSets);
 

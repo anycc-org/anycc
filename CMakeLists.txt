@@ -7,13 +7,12 @@ include_directories(include)
 include_directories(include/Lex)
 
 add_executable(anycc
-        constants.h
-        GrammarChecker.cpp
-        GrammarChecker.h
-        GrammarCheckerUtility.cpp
-        GrammarCheckerUtility.h
-        main.cpp
-        Production.h
+        include/constants.h
+        src/Paraser/FirstAndFollowGenerator.cpp
+        include/Parser/FirstAndFollowGenerator.h
+        src/Paraser/FirstAndFollowGeneratorUtility.cpp
+        include/Parser/FirstAndFollowGeneratorUtility.h
+        include/Parser/Production.h
         src/Lex/InputReader.cpp
         src/Lex/Lex.cpp
         src/Lex/Rules.cpp

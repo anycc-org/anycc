@@ -5,16 +5,16 @@
 #ifndef GRAMMAR_CHECKER_H
 #define GRAMMAR_CHECKER_H
 
+#include "Parser/Production.h"
+#include <algorithm>
 #include <iostream>
 #include <set>
 #include <unordered_map>
 #include <vector>
-#include <algorithm>
-#include "Production.h"
 using namespace std;
-class GrammarChecker {
+class FirstAndFollowGenerator {
 public:
-    GrammarChecker(const unordered_map<string, vector<vector<string>>>& grammar);
+  FirstAndFollowGenerator(const unordered_map<string, vector<vector<string>>>& grammar);
     const unordered_map<string, set<string>>& getFirstSets() const {
         return computedFirstSets;
     }

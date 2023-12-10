@@ -1,8 +1,8 @@
 //
 // Created by abdel on 01/12/2023.
 //
+#include "Parser/FirstAndFollowGeneratorUtility.h"
 #include <algorithm>
-#include "GrammarCheckerUtility.h"
 vector<SubstringInfo> findAllLongestSubstringIndices(const string& input, const set<string>& substrings) {
     vector<SubstringInfo> substringInfoVec;
 
