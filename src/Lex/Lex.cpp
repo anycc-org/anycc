@@ -1,9 +1,7 @@
 #include "Lex/Lex.h"
 #include "Lex/NFAGenerator.h"
-#include "Lex/TransitionDiagram.h"
 #include "Lex/TransitionDiagramMinimizer.h"
 #include "Lex/DeterministicTransitionDiagramCreator.h"
-#include "Lex/Analyzer.h"
 
 
 Lex::~Lex() {

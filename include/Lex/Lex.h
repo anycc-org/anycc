@@ -4,7 +4,7 @@
 #include "Lex/InputReader.h"
 #include "Lex/NFA.h"
 #include "Lex/TransitionDiagram.h"
-#include "Analyzer.h"
+#include "Lex/Analyzer.h"
 
 
 class Lex {
