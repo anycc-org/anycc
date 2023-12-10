@@ -1,20 +1,18 @@
 #include "Lex/NFAState.h"
 #include <map>
 #include "Lex/Lex.h"
-/* phase one main
-int main() {
-    auto *rules_file_name = new std::string("../rules.txt");
-    auto *program_file_name = new std::string("../program.txt");
-
-    Lex *lex = new Lex(rules_file_name, program_file_name);
-    lex->buildLex();
-
-    lex->getAllTokensAndCreateOutputFile();
-    lex->printSymbolTable();
-}*/
+//phase one main
+//int main() {
+//    auto *rules_file_name = new std::string("../rules.txt");
+//    auto *program_file_name = new std::string("../program.txt");
 //
-// Created by abdel on 30/11/2023.
+//    Lex *lex = new Lex(rules_file_name, program_file_name);
+//    lex->buildLex();
 //
+//    lex->getAllTokensAndCreateOutputFile();
+//    lex->printSymbolTable();
+//}
+
 #include "Parser/FirstAndFollowGenerator.h"
 #include "constants.h"
 #include <iostream>
@@ -23,13 +21,11 @@ int main() {
 #include <vector>
 int main() {
   std::unordered_map<std::string, std::vector<std::vector<std::string>>> grammar = {
-      {"S", {{"a", "B", "D", "Y","h"}}},
-      {"B", {{"c", "C"}}},
-      {"C", {{"b", "C"}, {EPSILON}}},
-      {"D", {{"E", "F"}}},
-      {"E", {{"g"}, {EPSILON}}},
-      {"Y", {{"y"}, {EPSILON}}},
-      {"F", {{"f"}, {EPSILON}}}
+      {"S", {{"T", "E'"}}},
+      {"E'", {{"+", "T", "E'"}, {EPSILON}}},
+      {"T", {{"F", "T'"}}},
+      {"T'", {{"*", "F", "T'"}, {EPSILON}}},
+      {"F", {{"(", "S", ")"}, {"id"}}}
   };
 
   char x='\1';
