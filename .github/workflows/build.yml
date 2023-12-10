@@ -14,8 +14,13 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Build Project
+      - name: Install CMake
         run: |
-          sudo apt-get -y install cmake
-          cmake .
-          make
+          if [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
+            sudo apt-get -y install cmake
+          elif [ "${{ matrix.os }}" == "windows-latest" ]; then
+            choco install cmake
+          fi
+
+      - name: Build Project
+        run: cmake . && make
