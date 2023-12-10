@@ -28,36 +28,34 @@ int main() {
       {"F", {{"(", "S", ")"}, {"id"}}}
   };
 
-  char x='\1';
-  cout << x;
   FirstAndFollowGenerator grammarChecker(grammar);
   grammarChecker.isLL1Grammar();
   // Print firstSets
   const auto& firstSets = grammarChecker.getFirstSets();
-  cout << "First Sets:\n";
+  std::cout << "First Sets:\n";
   for (const auto& entry : firstSets) {
-    const string& nonTerminal = entry.first;
-    const set<string>& firstSet = entry.second;
+    const std::string& nonTerminal = entry.first;
+    const std::set<std::string>& firstSet = entry.second;
 
-    cout << nonTerminal << ": { ";
-    for (string symbol : firstSet) {
-      cout << symbol << ' ';
+    std::cout << nonTerminal << ": { ";
+    for (std::string symbol : firstSet) {
+      std::cout << symbol << ' ';
     }
-    cout << "}\n";
+    std::cout << "}\n";
   }
 
   // Print followSets
   const auto& followSets = grammarChecker.getFollowSets();
-  cout << "\nFollow Sets:\n";
+  std::cout << "\nFollow Sets:\n";
   for (const auto& entry : followSets) {
-    const string& nonTerminal = entry.first;
-    const set<string>& followSet = entry.second;
+    const std::string& nonTerminal = entry.first;
+    const std::set<std::string>& followSet = entry.second;
 
-    cout << nonTerminal << ": { ";
-    for (string symbol : followSet) {
-      cout << symbol << ' ';
+    std::cout << nonTerminal << ": { ";
+    for (std::string symbol : followSet) {
+      std::cout << symbol << ' ';
     }
-    cout << "}\n";
+    std::cout << "}\n";
   }
   return 0;
 }

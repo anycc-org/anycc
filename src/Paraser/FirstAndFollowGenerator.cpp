@@ -3,10 +3,10 @@
 #include "Parser/Production.h"
 #include "constants.h"
 
-FirstAndFollowGenerator::FirstAndFollowGenerator(const unordered_map<string, vector<vector<string>>> &grammar) {
+FirstAndFollowGenerator::FirstAndFollowGenerator(const std::unordered_map<std::string, std::vector<std::vector<std::string>>> &grammar) {
     for (const auto &entry: grammar) {
-        const string &nonTerminal = entry.first;
-        const vector<vector<string>> &productions = entry.second;
+        const std::string &nonTerminal = entry.first;
+        const std::vector<std::vector<std::string>> &productions = entry.second;
 
         productionVector.push_back({nonTerminal, productions});
     }
@@ -14,19 +14,19 @@ FirstAndFollowGenerator::FirstAndFollowGenerator(const unordered_map<string, vec
     nonTerminals = collectNonTerminals(productionVector);
 }
 
-set<string> FirstAndFollowGenerator::computeFirst(const string &nonTerminal) {
-    set<string> firstSet;
+std::set<std::string> FirstAndFollowGenerator::computeFirst(const std::string &nonTerminal) {
+    std::set<std::string> firstSet;
 
     for (const Production &rule: productionVector) {
         if (rule.nonTerminal == nonTerminal) {
             for (const auto &production: rule.productions) {
-                for (const string &symbol: production) {
+                for (const std::string &symbol: production) {
                     if (nonTerminals.count(symbol)) {
                         // Handle non-terminal symbols
-                        const string &symbolStr = symbol;
+                        const std::string &symbolStr = symbol;
 
                         // Compute First set for the non-terminal
-                        const set<string> &nonTerminalFirstSet = computeFirst(symbolStr);
+                        const std::set<std::string> &nonTerminalFirstSet = computeFirst(symbolStr);
                         firstSet.insert(nonTerminalFirstSet.begin(), nonTerminalFirstSet.end());
 
                         // Check if the non-terminal has an epsilon production
@@ -48,7 +48,7 @@ set<string> FirstAndFollowGenerator::computeFirst(const string &nonTerminal) {
     return firstSet;
 }
 
-bool FirstAndFollowGenerator::nonTerminalHasEpsilon(const string &nonTerminal) {
+bool FirstAndFollowGenerator::nonTerminalHasEpsilon(const std::string &nonTerminal) {
     // Check if the non-terminal has an epsilon production
     for (const Production &rule: productionVector) {
         if (rule.nonTerminal == nonTerminal) {
@@ -62,13 +62,13 @@ bool FirstAndFollowGenerator::nonTerminalHasEpsilon(const string &nonTerminal) {
     return false;
 }
 
-set<string> FirstAndFollowGenerator::computeFollow(const string &nonTerminal) {
+std::set<std::string> FirstAndFollowGenerator::computeFollow(const std::string &nonTerminal) {
     // If Follow set is already computed, return it
     if (computedFollowSets.find(nonTerminal) != computedFollowSets.end()) {
         return computedFollowSets[nonTerminal];
     }
 
-    set<string> followSet;
+    std::set<std::string> followSet;
 
     // Mark the Follow set as computed to handle recursive calls
     computedFollowSets[nonTerminal] = followSet;
@@ -87,10 +87,10 @@ set<string> FirstAndFollowGenerator::computeFollow(const string &nonTerminal) {
 
                 // Case: A -> αBβ, where B is non-terminal
                 if (index + 1 < production.size()) {
-                    const string &nextSymbol = production[index + 1];
+                    const std::string &nextSymbol = production[index + 1];
 
                     // Compute First set of the symbols following B in the production
-                    set<string> firstSet;
+                    std::set<std::string> firstSet;
 
                     //2) If A -> pBq is a production, where p, B and q are any grammar symbols,
                     //   then everything in FIRST(q)  except Є is in FOLLOW(B).
@@ -99,7 +99,7 @@ set<string> FirstAndFollowGenerator::computeFollow(const string &nonTerminal) {
                         firstSet.insert(nextSymbol);
                     } else {
                         // If it's a non-terminal, use the precomputed First set
-                        const set<string> &nextFirstSet = computedFirstSets[nextSymbol];
+                        const std::set<std::string> &nextFirstSet = computedFirstSets[nextSymbol];
                         firstSet.insert(nextFirstSet.begin(), nextFirstSet.end());
                     }
                     // Add First set excluding epsilon to Follow set
@@ -113,18 +113,18 @@ set<string> FirstAndFollowGenerator::computeFollow(const string &nonTerminal) {
                         //   then FOLLOW(B) contains { FIRST(q) – Є } U First(d)
                         size_t qIndex = index + 2;
 
-                        set<string> firstQSet;
+                        std::set<std::string> firstQSet;
                         while (qIndex < production.size() && nonTerminals.count(production[qIndex])
                                && (computedFirstSets[production[qIndex]].count(EPSILON) ||
                                    nonTerminalHasEpsilon(production[qIndex]))) {
-                            const string &qSymbol = production[qIndex];
+                            const std::string &qSymbol = production[qIndex];
                             if (!nonTerminals.count(qSymbol)) {
                                 followSet.insert(production[qIndex]);
                                 qIndex++;
                                 break;
                             }
-                            const set<string> &qFirstSet = computedFirstSets[qSymbol];
-                            for (string symbol: qFirstSet) {
+                            const std::set<std::string> &qFirstSet = computedFirstSets[qSymbol];
+                            for (std::string symbol: qFirstSet) {
                                 if (symbol != EPSILON) {
                                     firstQSet.insert(symbol);
                                 }
@@ -142,7 +142,7 @@ set<string> FirstAndFollowGenerator::computeFollow(const string &nonTerminal) {
                             if (qIndex < production.size() &&
                                 (computedFirstSets[production[qIndex]].count(EPSILON)
                                  || nonTerminalHasEpsilon(production[qIndex]))) {
-                                const set<string> &followASet = computeFollow(rule.nonTerminal);
+                                const std::set<std::string> &followASet = computeFollow(rule.nonTerminal);
                                 followSet.insert(followASet.begin(), followASet.end());
                             }
                         }
@@ -151,7 +151,7 @@ set<string> FirstAndFollowGenerator::computeFollow(const string &nonTerminal) {
                     // Case: A -> αB, where B is the last symbol
                     // Add Follow(A) to Follow(B)
                     // If A->pB is a production, then everything in FOLLOW(A) is in FOLLOW(B).
-                    const set<string> &followASet = computeFollow(rule.nonTerminal);
+                    const std::set<std::string> &followASet = computeFollow(rule.nonTerminal);
                     followSet.insert(followASet.begin(), followASet.end());
                 }
             }
@@ -165,15 +165,15 @@ set<string> FirstAndFollowGenerator::computeFollow(const string &nonTerminal) {
 }
 
 // Function to compute First sets for each non-terminal
-void FirstAndFollowGenerator::computeFirstSets(unordered_map<string, set<string>> &firstSets) {
-    for (const string &nonTerminal: nonTerminals) {
+void FirstAndFollowGenerator::computeFirstSets(std::unordered_map<std::string, std::set<std::string>> &firstSets) {
+    for (const std::string &nonTerminal: nonTerminals) {
         firstSets[nonTerminal] = computeFirst(nonTerminal);
     }
 }
 
 // Function to compute Follow sets for each non-terminal
-void FirstAndFollowGenerator::computeFollowSets(unordered_map<string, set<string>> &followSets) {
-    for (const string &nonTerminal: nonTerminals) {
+void FirstAndFollowGenerator::computeFollowSets(std::unordered_map<std::string, std::set<std::string>> &followSets) {
+    for (const std::string &nonTerminal: nonTerminals) {
         followSets[nonTerminal] = computeFollow(nonTerminal);
     }
 }

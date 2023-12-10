@@ -8,11 +8,9 @@
 
 #include <string>
 #include <vector>
-using namespace std;
-
 struct Production {
-    string nonTerminal;
-    vector<vector<string>> productions;
+    std::string nonTerminal;
+    std::vector<std::vector<std::string>> productions;
 };
 
 #endif // PRODUCTION_H

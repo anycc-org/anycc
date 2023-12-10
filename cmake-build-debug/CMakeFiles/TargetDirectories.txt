@@ -1,3 +1,0 @@
-D:/College/term7/Compilers/anycc/cmake-build-debug/CMakeFiles/anycc.dir
-D:/College/term7/Compilers/anycc/cmake-build-debug/CMakeFiles/edit_cache.dir
-D:/College/term7/Compilers/anycc/cmake-build-debug/CMakeFiles/rebuild_cache.dir
