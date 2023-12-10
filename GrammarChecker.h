@@ -15,11 +15,11 @@ using namespace std;
 class GrammarChecker {
 public:
     GrammarChecker(const unordered_map<string, vector<vector<string>>>& grammar);
-    const unordered_map<string, set<char>>& getFirstSets() const {
+    const unordered_map<string, set<string>>& getFirstSets() const {
         return computedFirstSets;
     }
 
-    const unordered_map<string, set<char>>& getFollowSets() const {
+    const unordered_map<string, set<string>>& getFollowSets() const {
         return computedFollowSets;
     }
     bool isLL1Grammar();
@@ -27,13 +27,13 @@ public:
 private:
     vector<Production> productionVector;
     set<string> nonTerminals;
-    unordered_map<string, set<char>> computedFirstSets;
-    unordered_map<string, set<char>> computedFollowSets;
-    set<char> computeFirst(const string& nonTerminal);
-    set<char> computeFollow(const string& nonTerminal);
+    unordered_map<string, set<string>> computedFirstSets;
+    unordered_map<string, set<string>> computedFollowSets;
+    set<string> computeFirst(const string& nonTerminal);
+    set<string> computeFollow(const string& nonTerminal);
     bool nonTerminalHasEpsilon(const string& nonTerminal);
-    void  computeFirstSets(unordered_map<string, set<char>>& firstSets) ;
-    void computeFollowSets(unordered_map<string, set<char>>& followSets);
+    void  computeFirstSets(unordered_map<string, set<string>>& firstSets) ;
+    void computeFollowSets(unordered_map<string, set<string>>& followSets);
 };
 
 #endif // GRAMMAR_CHECKER_H

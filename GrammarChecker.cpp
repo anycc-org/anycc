@@ -14,8 +14,8 @@ GrammarChecker::GrammarChecker(const unordered_map<string, vector<vector<string>
     nonTerminals = collectNonTerminals(productionVector);
 }
 
-set<char> GrammarChecker::computeFirst(const string &nonTerminal) {
-    set<char> firstSet;
+set<string> GrammarChecker::computeFirst(const string &nonTerminal) {
+    set<string> firstSet;
 
     for (const Production &rule: productionVector) {
         if (rule.nonTerminal == nonTerminal) {
@@ -26,7 +26,7 @@ set<char> GrammarChecker::computeFirst(const string &nonTerminal) {
                         const string &symbolStr = symbol;
 
                         // Compute First set for the non-terminal
-                        const set<char> &nonTerminalFirstSet = computeFirst(symbolStr);
+                        const set<string> &nonTerminalFirstSet = computeFirst(symbolStr);
                         firstSet.insert(nonTerminalFirstSet.begin(), nonTerminalFirstSet.end());
 
                         // Check if the non-terminal has an epsilon production
@@ -36,7 +36,7 @@ set<char> GrammarChecker::computeFirst(const string &nonTerminal) {
                         }
                     } else {
                         // Handle terminal symbols
-                        firstSet.insert(symbol[0]);
+                        firstSet.insert(symbol);
                         // Break the loop for terminal symbols
                         break;
                     }
@@ -62,13 +62,13 @@ bool GrammarChecker::nonTerminalHasEpsilon(const string &nonTerminal) {
     return false;
 }
 
-set<char> GrammarChecker::computeFollow(const string &nonTerminal) {
+set<string> GrammarChecker::computeFollow(const string &nonTerminal) {
     // If Follow set is already computed, return it
     if (computedFollowSets.find(nonTerminal) != computedFollowSets.end()) {
         return computedFollowSets[nonTerminal];
     }
 
-    set<char> followSet;
+    set<string> followSet;
 
     // Mark the Follow set as computed to handle recursive calls
     computedFollowSets[nonTerminal] = followSet;
@@ -76,7 +76,7 @@ set<char> GrammarChecker::computeFollow(const string &nonTerminal) {
     // The start symbol has $ (end of input) in its Follow set
     //1) FOLLOW(S) = { $ }   // where S is the starting Non-Terminal
     if (nonTerminal == START_SYMBOL) {
-        followSet.insert('$');
+        followSet.insert("$");
     }
 
     for (const Production &rule: productionVector) {
@@ -90,42 +90,42 @@ set<char> GrammarChecker::computeFollow(const string &nonTerminal) {
                     const string &nextSymbol = production[index + 1];
 
                     // Compute First set of the symbols following B in the production
-                    set<char> firstSet;
+                    set<string> firstSet;
 
                     //2) If A -> pBq is a production, where p, B and q are any grammar symbols,
                     //   then everything in FIRST(q)  except Є is in FOLLOW(B).
                     // Note: First of a terminal is the terminal itself
                     if (!nonTerminals.count(nextSymbol)) {
-                        firstSet.insert(nextSymbol[0]);
+                        firstSet.insert(nextSymbol);
                     } else {
                         // If it's a non-terminal, use the precomputed First set
-                        const set<char> &nextFirstSet = computedFirstSets[nextSymbol];
+                        const set<string> &nextFirstSet = computedFirstSets[nextSymbol];
                         firstSet.insert(nextFirstSet.begin(), nextFirstSet.end());
                     }
                     // Add First set excluding epsilon to Follow set
                     followSet.insert(firstSet.begin(), firstSet.end());
-                    followSet.erase(EPSILON[0]);
+                    followSet.erase(EPSILON);
 
 
                     // If B can derive epsilon, add Follow(A) to Follow(B)
-                    if (firstSet.count(EPSILON[0]) || nonTerminalHasEpsilon(nextSymbol)) {
+                    if (firstSet.count(EPSILON) || nonTerminalHasEpsilon(nextSymbol)) {
                         //5) If A->pBqd is a production and FIRST(q) contains Є,
                         //   then FOLLOW(B) contains { FIRST(q) – Є } U First(d)
                         size_t qIndex = index + 2;
 
-                        set<char> firstQSet;
+                        set<string> firstQSet;
                         while (qIndex < production.size() && nonTerminals.count(production[qIndex])
-                               && (computedFirstSets[production[qIndex]].count(EPSILON[0]) ||
+                               && (computedFirstSets[production[qIndex]].count(EPSILON) ||
                                    nonTerminalHasEpsilon(production[qIndex]))) {
                             const string &qSymbol = production[qIndex];
                             if (!nonTerminals.count(qSymbol)) {
-                                followSet.insert(production[qIndex][0]);
+                                followSet.insert(production[qIndex]);
                                 qIndex++;
                                 break;
                             }
-                            const set<char> &qFirstSet = computedFirstSets[qSymbol];
-                            for (char symbol: qFirstSet) {
-                                if (symbol != EPSILON[0]) {
+                            const set<string> &qFirstSet = computedFirstSets[qSymbol];
+                            for (string symbol: qFirstSet) {
+                                if (symbol != EPSILON) {
                                     firstQSet.insert(symbol);
                                 }
                             }
@@ -134,15 +134,15 @@ set<char> GrammarChecker::computeFollow(const string &nonTerminal) {
 
                         followSet.insert(firstQSet.begin(), firstQSet.end());
                         if (qIndex < production.size() && !nonTerminals.count(production[qIndex]))
-                            followSet.insert(production[qIndex][0]);
+                            followSet.insert(production[qIndex]);
                         else {
                             //4) If A->pBq is a production and FIRST(q) contains Є,
                             //   then FOLLOW(B) contains { FIRST(q) – Є } U FOLLOW(A)
                             qIndex--;
                             if (qIndex < production.size() &&
-                                (computedFirstSets[production[qIndex]].count(EPSILON[0])
+                                (computedFirstSets[production[qIndex]].count(EPSILON)
                                  || nonTerminalHasEpsilon(production[qIndex]))) {
-                                const set<char> &followASet = computeFollow(rule.nonTerminal);
+                                const set<string> &followASet = computeFollow(rule.nonTerminal);
                                 followSet.insert(followASet.begin(), followASet.end());
                             }
                         }
@@ -151,7 +151,7 @@ set<char> GrammarChecker::computeFollow(const string &nonTerminal) {
                     // Case: A -> αB, where B is the last symbol
                     // Add Follow(A) to Follow(B)
                     // If A->pB is a production, then everything in FOLLOW(A) is in FOLLOW(B).
-                    const set<char> &followASet = computeFollow(rule.nonTerminal);
+                    const set<string> &followASet = computeFollow(rule.nonTerminal);
                     followSet.insert(followASet.begin(), followASet.end());
                 }
             }
@@ -165,14 +165,14 @@ set<char> GrammarChecker::computeFollow(const string &nonTerminal) {
 }
 
 // Function to compute First sets for each non-terminal
-void GrammarChecker::computeFirstSets(unordered_map<string, set<char>> &firstSets) {
+void GrammarChecker::computeFirstSets(unordered_map<string, set<string>> &firstSets) {
     for (const string &nonTerminal: nonTerminals) {
         firstSets[nonTerminal] = computeFirst(nonTerminal);
     }
 }
 
 // Function to compute Follow sets for each non-terminal
-void GrammarChecker::computeFollowSets(unordered_map<string, set<char>> &followSets) {
+void GrammarChecker::computeFollowSets(unordered_map<string, set<string>> &followSets) {
     for (const string &nonTerminal: nonTerminals) {
         followSets[nonTerminal] = computeFollow(nonTerminal);
     }

@@ -27,10 +27,10 @@ int main() {
     cout << "First Sets:\n";
     for (const auto& entry : firstSets) {
         const string& nonTerminal = entry.first;
-        const set<char>& firstSet = entry.second;
+        const set<string>& firstSet = entry.second;
 
         cout << nonTerminal << ": { ";
-        for (char symbol : firstSet) {
+        for (string symbol : firstSet) {
             cout << symbol << ' ';
         }
         cout << "}\n";
@@ -41,10 +41,10 @@ int main() {
     cout << "\nFollow Sets:\n";
     for (const auto& entry : followSets) {
         const string& nonTerminal = entry.first;
-        const set<char>& followSet = entry.second;
+        const set<string>& followSet = entry.second;
 
         cout << nonTerminal << ": { ";
-        for (char symbol : followSet) {
+        for (string symbol : followSet) {
             cout << symbol << ' ';
         }
         cout << "}\n";

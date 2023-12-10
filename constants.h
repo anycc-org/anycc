@@ -7,7 +7,7 @@
 
 #include <string>
 
-#define EPSILON "\1"
+#define EPSILON "Epsilon"
 #define START_SYMBOL "S"
 
 #endif // CONSTANTS_H
