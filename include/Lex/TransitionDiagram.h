@@ -84,8 +84,6 @@ private:
 
     const NFAState *getStateId(int state_id);
 
-    TransitionDiagram *removeEpsilonTransitionsInplace(TransitionDiagram *transition_diagram);
-
     bool static isDeadState(const NFAState *state, std::unordered_set<const NFAState *> end_states);
 
     std::string getMaxPriorityToken(const std::vector<std::string> &tokens_vector);
