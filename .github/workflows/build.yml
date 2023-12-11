@@ -44,6 +44,13 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
+    - name: Install compiler on windows if not exits
+      if: matrix.os == 'windows-latest' && matrix.c_compiler == 'g++'
+      id: install_cc
+      uses: rlalik/setup-cpp-compiler@master
+      with:
+        compiler: g++-11.2.0
+
     - name: Set reusable strings
       # Turn repeated input strings (such as the build output directory) into step outputs.
       # These step outputs can be used throughout the workflow file.
