@@ -8,73 +8,30 @@ on:
       - 'src/**'
       - 'include/Lex/**'
 
-  workflow_dispatch:
-
-
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ${{ matrix.os }}
 
-#    strategy:
-#      # Set fail-fast to false to ensure that feedback is delivered for all matrix combinations.
-#      # Consider changing this to true when your workflow is stable.
-#      fail-fast: false
-#
-#      # Set up a matrix to run the following 3 configurations:
-#      # 1. <Windows, Release, latest MSVC compiler toolchain on the default runner image, default generator>
-#      # 2. <Linux, Release, latest GCC compiler toolchain on the default runner image, default generator>
-#      # 3. <Linux, Release, latest Clang compiler toolchain on the default runner image, default generator>
-#      #
-#      # To add more build types (Release, Debug, RelWithDebInfo, etc.) customize the build_type list.
-#      matrix:
-#        os: [ubuntu-latest, windows-latest]
-#        build_type: [Debug]
-#        cxx_compiler: [g++, clang++]
-#        include:
-#          - os: windows-latest
-#            cxx_compiler: g++
-#          - os: ubuntu-latest
-#            cxx_compiler: g++
-#          - os: ubuntu-latest
-#            cxx_compiler: clang++
-#        exclude:
-#          - os: windows-latest
-#            cxx_compiler: clang++
+    strategy:
+      # Set fail-fast to false to ensure that feedback is delivered for all matrix combinations.
+      # Consider changing this to true when your workflow is stable.
+      fail-fast: false
+
+      # Set up a matrix to run the following 3 configurations:
+      # 1. <Windows, Release, latest MSVC compiler toolchain on the default runner image, default generator>
+      # 2. <Linux, Release, latest GCC compiler toolchain on the default runner image, default generator>
+      # 3. <Linux, Release, latest Clang compiler toolchain on the default runner image, default generator>
+      #
+      # To add more build types (Release, Debug, RelWithDebInfo, etc.) customize the build_type list.
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        build_type: [Release]
 
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Install compiler on windows if not exits
-      if: matrix.os == 'windows-latest' && matrix.c_compiler == 'g++'
-      id: install_cc
-      uses: rlalik/setup-cpp-compiler@master
-      with:
-        compiler: g++-11.2.0
+      - name: Configure Project
+        uses: threeal/cmake-action@v1.3.0
 
-    - name: Debug Information
-      shell: powershell
-      run: |
-        echo "Operating System: ${{ runner.os }}"
-        g++ --version
-
-    - name: Set reusable strings
-      # Turn repeated input strings (such as the build output directory) into step outputs.
-      # These step outputs can be used throughout the workflow file.
-      id: strings
-      shell: bash
-      run: |
-        echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
-
-    - name: Configure CMake
-      # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
-      # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-      run: >
-        cmake -B ${{ steps.strings.outputs.build-output-dir }}
-        -DCMAKE_CXX_COMPILER=g++
-        -DCMAKE_BUILD_TYPE=Debug
-        -S ${{ github.workspace }}
-
-    - name: Build
-      # Build your program with the given configuration.
-      # Note that --config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
-      run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config Debug
+      - name: Build Project
+        runs: cmake --build build
