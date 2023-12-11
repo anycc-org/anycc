@@ -69,14 +69,7 @@ std::unordered_map<std::string, std::vector<std::vector<std::string>>> parseCFGI
 }
 
 int main() {
-//  std::unordered_map<std::string, std::vector<std::vector<std::string>>> grammar = {
-//      {"S", {{"T", "E'"}}},
-//      {"E'", {{"+", "T", "E'"}, {EPSILON}}},
-//      {"T", {{"F", "T'"}}},
-//      {"T'", {{"*", "F", "T'"}, {EPSILON}}},
-//      {"F", {{"(", "S", ")"}, {"id"}}}
-//  };
-  std::unordered_map<std::string, std::vector<std::vector<std::string>>> grammar =parseCFGInput("../rules.txt");
+  std::unordered_map<std::string, std::vector<std::vector<std::string>>> grammar =parseCFGInput("../CFG.txt");
   FirstAndFollowGenerator grammarChecker(grammar);
   grammarChecker.isLL1Grammar();
   // Print firstSets
