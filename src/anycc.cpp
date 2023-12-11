@@ -12,15 +12,15 @@ int main() {
   std::unordered_map<std::string, std::vector<std::vector<std::string>>> grammar =Utilities::parseCFGInput("../CFG.txt");
   FirstAndFollowGenerator grammarChecker(grammar);
   grammarChecker.isLL1Grammar();
-  // Print firstSets
-  const auto& firstSets = grammarChecker.getFirstSets();
+  // Print first_sets
+  const auto& first_sets = grammarChecker.getFirstSets();
   std::cout << "First Sets:\n";
-  for (const auto& entry : firstSets) {
-    const std::string& nonTerminal = entry.first;
-    const std::set<std::string>& firstSet = entry.second;
+  for (const auto& entry : first_sets) {
+    const std::string&non_terminal = entry.first;
+    const std::set<std::string>&first_set = entry.second;
 
-    std::cout << nonTerminal << ": { ";
-    for (std::string symbol : firstSet) {
+    std::cout << non_terminal << ": { ";
+    for (std::string symbol : first_set) {
       std::cout << symbol << ' ';
     }
     std::cout << "}\n";
@@ -30,11 +30,11 @@ int main() {
   const auto& followSets = grammarChecker.getFollowSets();
   std::cout << "\nFollow Sets:\n";
   for (const auto& entry : followSets) {
-    const std::string& nonTerminal = entry.first;
-    const std::set<std::string>& followSet = entry.second;
+    const std::string&non_terminal = entry.first;
+    const std::set<std::string>&follow_set = entry.second;
 
-    std::cout << nonTerminal << ": { ";
-    for (std::string symbol : followSet) {
+    std::cout << non_terminal << ": { ";
+    for (std::string symbol : follow_set) {
       std::cout << symbol << ' ';
     }
     std::cout << "}\n";

@@ -21,7 +21,7 @@ std::set<std::string> FirstAndFollowGenerator::computeFirst(const std::string &n
         if (rule.nonTerminal == nonTerminal) {
             for (const auto &production: rule.productions) {
                 for (const std::string &symbol: production) {
-                    if (nonTerminals.count(symbol)) {
+                    if (nonTerminals.find(symbol)!=nonTerminals.end()) {
                         // Handle non-terminal symbols
                         const std::string &symbolStr = symbol;
 
@@ -95,7 +95,7 @@ std::set<std::string> FirstAndFollowGenerator::computeFollow(const std::string &
                     //2) If A -> pBq is a production, where p, B and q are any grammar symbols,
                     //   then everything in FIRST(q)  except Є is in FOLLOW(B).
                     // Note: First of a terminal is the terminal itself
-                    if (!nonTerminals.count(nextSymbol)) {
+                    if (nonTerminals.find(nextSymbol)==nonTerminals.end()) {
                         firstSet.insert(nextSymbol);
                     } else {
                         // If it's a non-terminal, use the precomputed First set
@@ -108,17 +108,17 @@ std::set<std::string> FirstAndFollowGenerator::computeFollow(const std::string &
 
 
                     // If B can derive epsilon, add Follow(A) to Follow(B)
-                    if (firstSet.count(EPSILON) || nonTerminalHasEpsilon(nextSymbol)) {
+                    if (firstSet.find(EPSILON)!=firstSet.end() || nonTerminalHasEpsilon(nextSymbol)) {
                         //5) If A->pBqd is a production and FIRST(q) contains Є,
                         //   then FOLLOW(B) contains { FIRST(q) – Є } U First(d)
                         size_t qIndex = index + 2;
 
                         std::set<std::string> firstQSet;
-                        while (qIndex < production.size() && nonTerminals.count(production[qIndex])
-                               && (computedFirstSets[production[qIndex]].count(EPSILON) ||
+                        while (qIndex < production.size() && nonTerminals.find(production[qIndex])!=nonTerminals.end()
+                               && (computedFirstSets[production[qIndex]].find(EPSILON) != computedFirstSets[production[qIndex]].end()||
                                    nonTerminalHasEpsilon(production[qIndex]))) {
                             const std::string &qSymbol = production[qIndex];
-                            if (!nonTerminals.count(qSymbol)) {
+                            if (nonTerminals.find(qSymbol)==nonTerminals.end()) {
                                 followSet.insert(production[qIndex]);
                                 qIndex++;
                                 break;
@@ -133,14 +133,14 @@ std::set<std::string> FirstAndFollowGenerator::computeFollow(const std::string &
                         }
 
                         followSet.insert(firstQSet.begin(), firstQSet.end());
-                        if (qIndex < production.size() && !nonTerminals.count(production[qIndex]))
+                        if (qIndex < production.size() && nonTerminals.find(production[qIndex])==nonTerminals.end())
                             followSet.insert(production[qIndex]);
                         else {
                             //4) If A->pBq is a production and FIRST(q) contains Є,
                             //   then FOLLOW(B) contains { FIRST(q) – Є } U FOLLOW(A)
                             qIndex--;
                             if (qIndex < production.size() &&
-                                (computedFirstSets[production[qIndex]].count(EPSILON)
+                                (computedFirstSets[production[qIndex]].find(EPSILON)==computedFirstSets[production[qIndex]].end()
                                  || nonTerminalHasEpsilon(production[qIndex]))) {
                                 const std::set<std::string> &followASet = computeFollow(rule.nonTerminal);
                                 followSet.insert(followASet.begin(), followASet.end());
