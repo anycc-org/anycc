@@ -164,14 +164,12 @@ std::set<std::string> FirstAndFollowGenerator::computeFollow(const std::string &
     return followSet;
 }
 
-// Function to compute First sets for each non-terminal
 void FirstAndFollowGenerator::computeFirstSets(std::unordered_map<std::string, std::set<std::string>> &firstSets) {
     for (const std::string &nonTerminal: nonTerminals) {
         firstSets[nonTerminal] = computeFirst(nonTerminal);
     }
 }
 
-// Function to compute Follow sets for each non-terminal
 void FirstAndFollowGenerator::computeFollowSets(std::unordered_map<std::string, std::set<std::string>> &followSets) {
     for (const std::string &nonTerminal: nonTerminals) {
         followSets[nonTerminal] = computeFollow(nonTerminal);
