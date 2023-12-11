@@ -1,4 +1,4 @@
-#include "Lex/Token.h"
+#include <Lex/Token.h>
 
 Token::Token() = default;
 
