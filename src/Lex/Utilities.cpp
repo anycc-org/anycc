@@ -210,7 +210,7 @@ std::unordered_map<std::string, std::vector<std::vector<std::string>>> Utilities
 
                 // Tokenize the RHS of the production rule using '|'
                 line = line.substr(arrowPos + 3); // Move past "::="
-                std::istringstream ss(line.c_str());
+                std::istringstream ss(line);
                 std::string token;
                 std::vector<std::string> production;
 

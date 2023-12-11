@@ -29,14 +29,14 @@ jobs:
         cxx_compiler: [g++, clang++, cl]
         include:
           - os: windows-latest
-            cxx_compiler: cl
+            cxx_compiler: g++
           - os: ubuntu-latest
             cxx_compiler: g++
           - os: ubuntu-latest
             cxx_compiler: clang++
         exclude:
           - os: windows-latest
-            cxx_compiler: g++
+            cxx_compiler: cl
           - os: windows-latest
             cxx_compiler: clang++
           - os: ubuntu-latest
