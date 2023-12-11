@@ -1,6 +1,4 @@
-//
-// Created by abdel on 30/11/2023.
-//
+
 #pragma once
 #ifndef FIRST_AND_FOLLOW_GENERATOR_H
 #define FIRST_AND_FOLLOW_GENERATOR_H
@@ -24,7 +22,7 @@ public:
     return computedFollowSets;
   }
 
-  bool isLL1Grammar();
+  void compute();
 
 private:
   std::vector<Production> productionVector;

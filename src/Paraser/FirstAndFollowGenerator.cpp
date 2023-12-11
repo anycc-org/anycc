@@ -178,12 +178,10 @@ void FirstAndFollowGenerator::computeFollowSets(std::unordered_map<std::string, 
     }
 }
 
-bool FirstAndFollowGenerator::isLL1Grammar() {
+void FirstAndFollowGenerator::compute() {
 
     computeFirstSets(computedFirstSets);
 
     // Compute Follow sets for each non-terminal
     computeFollowSets(computedFollowSets);
-
-    return true;
 }
