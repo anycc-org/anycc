@@ -8,6 +8,9 @@ on:
       - 'src/**'
       - 'include/Lex/**'
 
+  workflow_dispatch:
+
+
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -26,7 +29,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
         build_type: [Debug]
-        cxx_compiler: [g++, clang++, cl]
+        cxx_compiler: [g++, clang++]
         include:
           - os: windows-latest
             cxx_compiler: g++
@@ -36,11 +39,7 @@ jobs:
             cxx_compiler: clang++
         exclude:
           - os: windows-latest
-            cxx_compiler: cl
-          - os: windows-latest
             cxx_compiler: clang++
-          - os: ubuntu-latest
-            cxx_compiler: cl
 
     steps:
     - uses: actions/checkout@v3
