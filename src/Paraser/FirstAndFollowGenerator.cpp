@@ -70,14 +70,14 @@ std::set<std::string> FirstAndFollowGenerator::computeFollow(const std::string &
 
     std::set<std::string> followSet;
 
-    // Mark the Follow set as computed to handle recursive calls
-    computedFollowSets[nonTerminal] = followSet;
 
     // The start symbol has $ (end of input) in its Follow set
     //1) FOLLOW(S) = { $ }   // where S is the starting Non-Terminal
     if (nonTerminal == START_SYMBOL) {
         followSet.insert("$");
     }
+    // Mark the Follow set as computed to handle recursive calls
+    computedFollowSets[nonTerminal] = followSet;
 
     for (const Production &rule: productionVector) {
         for (const auto &production: rule.productions) {
@@ -121,6 +121,8 @@ std::set<std::string> FirstAndFollowGenerator::computeFollow(const std::string &
                             if (nonTerminals.find(qSymbol)==nonTerminals.end()) {
                                 followSet.insert(production[qIndex]);
                                 qIndex++;
+                                computedFollowSets[nonTerminal] = followSet;
+
                                 break;
                             }
                             const std::set<std::string> &qFirstSet = computedFirstSets[qSymbol];
@@ -147,12 +149,23 @@ std::set<std::string> FirstAndFollowGenerator::computeFollow(const std::string &
                             }
                         }
                     }
+                    computedFollowSets[nonTerminal] = followSet;
+
                 } else {
                     // Case: A -> αB, where B is the last symbol
                     // Add Follow(A) to Follow(B)
                     // If A->pB is a production, then everything in FOLLOW(A) is in FOLLOW(B).
                     const std::set<std::string> &followASet = computeFollow(rule.nonTerminal);
-                    followSet.insert(followASet.begin(), followASet.end());
+
+                    if (!followASet.empty()) {
+                        // If followASet is not empty, add it to followSet and computedFollowSets
+                        followSet.insert(followASet.begin(), followASet.end());
+                        computedFollowSets[nonTerminal] = followSet;
+                    } else {
+                        // If followASet is empty, remove rule.nonTerminal from computedFollowSets
+                        //don't remember you calculated before
+                        computedFollowSets.erase(rule.nonTerminal);
+                    }
                 }
             }
         }
