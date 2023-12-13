@@ -9,4 +9,5 @@
 #define EPSILON "Epsilon"
 #define START_SYMBOL "E"
 
+
 #endif // CONSTANTS_H

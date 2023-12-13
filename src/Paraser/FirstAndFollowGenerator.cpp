@@ -70,6 +70,7 @@ std::set<std::string> FirstAndFollowGenerator::computeFollow(const std::string &
 
     std::set<std::string> followSet;
 
+
     // The start symbol has $ (end of input) in its Follow set
     //1) FOLLOW(S) = { $ }   // where S is the starting Non-Terminal
     if (nonTerminal == START_SYMBOL) {
@@ -121,6 +122,7 @@ std::set<std::string> FirstAndFollowGenerator::computeFollow(const std::string &
                                 followSet.insert(production[qIndex]);
                                 qIndex++;
                                 computedFollowSets[nonTerminal] = followSet;
+
                                 break;
                             }
                             const std::set<std::string> &qFirstSet = computedFirstSets[qSymbol];
@@ -148,11 +150,13 @@ std::set<std::string> FirstAndFollowGenerator::computeFollow(const std::string &
                         }
                     }
                     computedFollowSets[nonTerminal] = followSet;
+
                 } else {
                     // Case: A -> αB, where B is the last symbol
                     // Add Follow(A) to Follow(B)
                     // If A->pB is a production, then everything in FOLLOW(A) is in FOLLOW(B).
                     const std::set<std::string> &followASet = computeFollow(rule.nonTerminal);
+
                     if (!followASet.empty()) {
                         // If followASet is not empty, add it to followSet and computedFollowSets
                         followSet.insert(followASet.begin(), followASet.end());
