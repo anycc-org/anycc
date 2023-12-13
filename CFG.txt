@@ -1,5 +1,7 @@
-S::= T E`
-E`::= + T E` | Epsilon
+E::= T E`
+E`::= + E | Epsilon
 T::= F T`
-T`::= * F T` | Epsilon
-F::= ( S ) | id
+T`::= T | Epsilon
+F`::= * F | Epsilon
+F::= P F`
+P::= ( E ) | a | b | Em
