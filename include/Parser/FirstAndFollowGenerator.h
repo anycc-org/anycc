@@ -29,12 +29,13 @@ private:
   std::set<std::string> nonTerminals;
   std::unordered_map<std::string, std::set<std::string>> computedFirstSets;
   std::unordered_map<std::string, std::set<std::string>> computedFollowSets;
-
   std::set<std::string> computeFirst(const std::string& nonTerminal);
   std::set<std::string> computeFollow(const std::string& nonTerminal);
   bool nonTerminalHasEpsilon(const std::string& nonTerminal);
   void computeFirstSets(std::unordered_map<std::string, std::set<std::string>>& firstSets);
   void computeFollowSets(std::unordered_map<std::string, std::set<std::string>>& followSets);
+  void iterateAndMergeFollowSets();
+
 };
 
 #endif // FIRST_AND_FOLLOW_GENERATOR_H

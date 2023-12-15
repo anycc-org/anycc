@@ -187,8 +187,39 @@ void FirstAndFollowGenerator::computeFollowSets(std::unordered_map<std::string, 
     for (const std::string &nonTerminal: nonTerminals) {
         followSets[nonTerminal] = computeFollow(nonTerminal);
     }
+    iterateAndMergeFollowSets();
 }
+void FirstAndFollowGenerator::iterateAndMergeFollowSets(){
+    bool followSetsChanged = true;
 
+    while (followSetsChanged) {
+        followSetsChanged = false;
+        for (const std::string &nonTerminal : nonTerminals) {
+            for (const Production &rule : productionVector) {
+                for (const auto &production : rule.productions) {
+                    auto pos =
+                        find(production.begin(), production.end(), nonTerminal);
+                    if (pos != production.end()) {
+                        size_t index = distance(production.begin(), pos);
+
+                        // Case: A -> αBβ, where B is non-terminal
+                        if (index + 1 == production.size()) {
+                            const std::set<std::string> &followASet =
+                                computedFollowSets[rule.nonTerminal];
+                            auto initialSize =
+                                computedFollowSets[nonTerminal].size();
+                            computedFollowSets[nonTerminal].insert(
+                                followASet.begin(), followASet.end());
+                            auto newSize =
+                                computedFollowSets[nonTerminal].size();
+                            followSetsChanged |= initialSize != newSize;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 void FirstAndFollowGenerator::compute() {
 
     computeFirstSets(computedFirstSets);
