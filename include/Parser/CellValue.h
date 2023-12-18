@@ -3,21 +3,21 @@
 
 
 #include "Production.h"
-#include "PredictiveTableEnum.h"
+#include "ParsingTableEntryType.h"
 
 class CellValue {
 public:
-    CellValue(const Production &production_value, PredictiveTableEnum predictive_table_enum_value);
+    CellValue(const Production &production_value, ParsingTableEntryType predictive_table_enum_value);
 
     ~CellValue();
 
     const Production &getProduction() const;
 
-    PredictiveTableEnum getPredictiveTableEnum() const;
+    ParsingTableEntryType getPredictiveTableEnum() const;
 
 private:
     Production production;
-    PredictiveTableEnum predictive_table_enum;
+    ParsingTableEntryType predictive_table_enum;
 };
 
 

@@ -30,7 +30,7 @@ void PredictiveTable::insertFirstSets() {
                 insertEpsilonAtFollowSet(non_terminal, first.second,
                                          computed_follow_sets[non_terminal]);
             else
-                insertProduction(non_terminal, first.first, first.second, PredictiveTableEnum::NOT_EMPTY);
+                insertProduction(non_terminal, first.first, first.second, ParsingTableEntryType::NOT_EMPTY);
         }
     }
 }
@@ -42,7 +42,7 @@ bool PredictiveTable::isEpsilon(const std::pair<std::string, const Production> &
 void PredictiveTable::insertEpsilonAtFollowSet(const std::string &non_terminal,
                                                const Production &production, const std::set<std::string> &follow_set) {
     for (const auto &follow: follow_set) {
-        insertProduction(non_terminal, follow, production, PredictiveTableEnum::NOT_EMPTY);
+        insertProduction(non_terminal, follow, production, ParsingTableEntryType::NOT_EMPTY);
     }
 }
 
@@ -52,7 +52,7 @@ PredictiveTable::addSynchAtFollowSetElements(const std::string &non_terminal, co
         Production production;
         if (containsKey(non_terminal, follow))
             continue;
-        insertProduction(non_terminal, follow, production, PredictiveTableEnum::SYNCHRONIZING);
+        insertProduction(non_terminal, follow, production, ParsingTableEntryType::SYNCHRONIZING);
     }
 }
 
@@ -65,38 +65,38 @@ CellValue *PredictiveTable::lookUp(const std::string &non_terminal, const std::s
     auto cell_key = new CellKey(non_terminal, terminal);
     if (!containsKey(non_terminal, terminal)) {
         Production production;
-        return new CellValue(production, PredictiveTableEnum::EMPTY);
+        return new CellValue(production, ParsingTableEntryType::EMPTY);
     }
     auto cell_value = predictive_table[*cell_key];
     return cell_value;
 }
 
-PredictiveTableEnum PredictiveTable::getCellType(const std::string &non_terminal, const std::string &terminal) {
+ParsingTableEntryType PredictiveTable::getCellType(const std::string &non_terminal, const std::string &terminal) {
     auto cell_key = new CellKey(non_terminal, terminal);
     if (containsKey(non_terminal, terminal)) {
         auto cell_value = predictive_table[*cell_key];
-        if (cell_value->getPredictiveTableEnum() == PredictiveTableEnum::SYNCHRONIZING)
-            return PredictiveTableEnum::SYNCHRONIZING;
+        if (cell_value->getPredictiveTableEnum() == ParsingTableEntryType::SYNCHRONIZING)
+            return ParsingTableEntryType::SYNCHRONIZING;
         else
-            return PredictiveTableEnum::NOT_EMPTY;
+            return ParsingTableEntryType::NOT_EMPTY;
     }
-    return PredictiveTableEnum::EMPTY;
+    return ParsingTableEntryType::EMPTY;
 }
 
 bool PredictiveTable::hasProduction(const std::string &non_terminal, const std::string &terminal) {
-    return getCellType(non_terminal, terminal) == PredictiveTableEnum::NOT_EMPTY;
+    return getCellType(non_terminal, terminal) == ParsingTableEntryType::NOT_EMPTY;
 }
 
 bool PredictiveTable::isCellEmpty(const std::string &non_terminal, const std::string &terminal) {
-    return getCellType(non_terminal, terminal) == PredictiveTableEnum::EMPTY;
+    return getCellType(non_terminal, terminal) == ParsingTableEntryType::EMPTY;
 }
 
 bool PredictiveTable::isSynchronizing(const std::string &non_terminal, const std::string &terminal) {
-    return getCellType(non_terminal, terminal) == PredictiveTableEnum::SYNCHRONIZING;
+    return getCellType(non_terminal, terminal) == ParsingTableEntryType::SYNCHRONIZING;
 }
 
 void PredictiveTable::insertProduction(const std::string &non_terminal, const std::string &terminal,
-                                       const Production &production, PredictiveTableEnum predictive_table_enum) {
+                                       const Production &production, ParsingTableEntryType predictive_table_enum) {
     auto cell_key = new CellKey(non_terminal, terminal);
     auto cell_value = new CellValue(production, predictive_table_enum);
     if (containsKey(non_terminal, terminal)) {
@@ -112,13 +112,13 @@ void PredictiveTable::printPredictiveTable() {
         std::cout << element.first.getNonTerminal() << ", " << element.first.getTerminal();
 
         switch (element.second->getPredictiveTableEnum()) {
-            case PredictiveTableEnum::EMPTY:
+            case ParsingTableEntryType::EMPTY:
                 std::cout << " --> EMPTY\n";
                 break;
-            case PredictiveTableEnum::SYNCHRONIZING:
+            case ParsingTableEntryType::SYNCHRONIZING:
                 std::cout << " --> SYNCHRONIZING\n";
                 break;
-            case PredictiveTableEnum::NOT_EMPTY:
+            case ParsingTableEntryType::NOT_EMPTY:
                 std::cout << " --> ";
                 for (const auto &i: element.second->getProduction().productions[0])
                     std::cout << i;

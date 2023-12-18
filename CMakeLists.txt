@@ -37,5 +37,5 @@ add_executable(anycc
         include/Parser/CellKey.h
         src/Parser/CellValue.cpp
         include/Parser/CellValue.h
-        include/Parser/PredictiveTableEnum.h
+        include/Parser/ParsingTableEntryType.h
 )

@@ -40,7 +40,7 @@ public:
      * @param terminal The string which moves non_terminal to the production
      * @return The type of the cell
      */
-    PredictiveTableEnum getCellType(const std::string &non_terminal, const std::string &terminal);
+    ParsingTableEntryType getCellType(const std::string &non_terminal, const std::string &terminal);
 
     /**
      * @brief Checks if the cell is empty
@@ -103,7 +103,7 @@ private:
      * @param predictive_table_enum The type of the cell
      */
     void insertProduction(const std::string &non_terminal, const std::string &terminal, const Production &production,
-                          PredictiveTableEnum predictive_table_enum);
+                          ParsingTableEntryType predictive_table_enum);
 
     /**
      * @brief Checks if the given production is epsilon

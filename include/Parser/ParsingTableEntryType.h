@@ -1,0 +1,10 @@
+#ifndef ANYCC_PARSINGTABLEENTRYTYPE_H
+#define ANYCC_PARSINGTABLEENTRYTYPE_H
+
+enum class ParsingTableEntryType {
+    NOT_EMPTY,
+    SYNCHRONIZING,
+    EMPTY
+};
+
+#endif
