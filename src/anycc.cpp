@@ -46,6 +46,7 @@ int main() {
     PredictiveTable predictiveTable(first_sets, followSets, firstAndFollowGenerator.getNonTerminals());
     predictiveTable.buildPredictiveTable();
     std::cout << "\nPredictive Table:\n";
+    predictiveTable.printPredictiveTable();
 
 
     return 0;
