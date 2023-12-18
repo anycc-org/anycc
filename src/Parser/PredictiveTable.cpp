@@ -11,7 +11,8 @@ PredictiveTable::PredictiveTable(
 }
 
 PredictiveTable::~PredictiveTable() {
-
+    for (const auto &element: predictive_table)
+        delete element.second;
 }
 
 void PredictiveTable::buildPredictiveTable() {
