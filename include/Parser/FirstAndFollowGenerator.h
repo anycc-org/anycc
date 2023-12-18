@@ -30,6 +30,10 @@ public:
         return computedFollowSets;
     }
 
+    const std::set<std::string> &getNonTerminals() const {
+        return nonTerminals;
+    }
+
     void compute();
 
 private:
