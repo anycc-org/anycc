@@ -22,17 +22,17 @@ public:
 
     void buildPredictiveTable();
 
-    CellValue *lookUp(std::string &non_terminal, std::string &terminal);
+    CellValue *lookUp(const std::string &non_terminal, const std::string &terminal);
 
-    PredictiveTableEnum getCellType(std::string &non_terminal, std::string &terminal);
+    PredictiveTableEnum getCellType(const std::string &non_terminal, const std::string &terminal);
 
-    bool hasProduction(std::string &non_terminal, std::string &terminal);
+    bool hasProduction(const std::string &non_terminal, const std::string &terminal);
 
-    bool isCellEmpty(std::string &non_terminal, std::string &terminal);
+    bool isCellEmpty(const std::string &non_terminal, const std::string &terminal);
 
-    bool isSynchronizing(std::string &non_terminal, std::string &terminal);
+    bool isSynchronizing(const std::string &non_terminal, const std::string &terminal);
 
-    void print_predictive_table();
+    void printPredictiveTable();
 
 
 private:
@@ -54,6 +54,8 @@ private:
     bool isEpsilon(const std::pair<std::string, Production> &first) const;
 
     bool containsKey(const std::string &non_terminal, const std::basic_string<char> &follow);
+
+    void printConflict(const std::string &non_terminal, const std::string &terminal, Production &production);
 };
 
 

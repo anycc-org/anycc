@@ -59,7 +59,7 @@ bool PredictiveTable::containsKey(const std::string &non_terminal,
     return predictive_table.find(CellKey(non_terminal, follow)) != predictive_table.end();
 }
 
-CellValue *PredictiveTable::lookUp(std::string &non_terminal, std::string &terminal) {
+CellValue *PredictiveTable::lookUp(const std::string &non_terminal, const std::string &terminal) {
     auto cell_key = new CellKey(non_terminal, terminal);
     if (!containsKey(non_terminal, terminal)) {
         Production production;
@@ -69,7 +69,7 @@ CellValue *PredictiveTable::lookUp(std::string &non_terminal, std::string &termi
     return cell_value;
 }
 
-PredictiveTableEnum PredictiveTable::getCellType(std::string &non_terminal, std::string &terminal) {
+PredictiveTableEnum PredictiveTable::getCellType(const std::string &non_terminal, const std::string &terminal) {
     auto cell_key = new CellKey(non_terminal, terminal);
     if (containsKey(non_terminal, terminal)) {
         auto cell_value = predictive_table[*cell_key];
@@ -81,15 +81,15 @@ PredictiveTableEnum PredictiveTable::getCellType(std::string &non_terminal, std:
     return PredictiveTableEnum::EMPTY;
 }
 
-bool PredictiveTable::hasProduction(std::string &non_terminal, std::string &terminal) {
+bool PredictiveTable::hasProduction(const std::string &non_terminal, const std::string &terminal) {
     return getCellType(non_terminal, terminal) == PredictiveTableEnum::NOT_EMPTY;
 }
 
-bool PredictiveTable::isCellEmpty(std::string &non_terminal, std::string &terminal) {
+bool PredictiveTable::isCellEmpty(const std::string &non_terminal, const std::string &terminal) {
     return getCellType(non_terminal, terminal) == PredictiveTableEnum::EMPTY;
 }
 
-bool PredictiveTable::isSynchronizing(std::string &non_terminal, std::string &terminal) {
+bool PredictiveTable::isSynchronizing(const std::string &non_terminal, const std::string &terminal) {
     return getCellType(non_terminal, terminal) == PredictiveTableEnum::SYNCHRONIZING;
 }
 
@@ -98,27 +98,48 @@ void PredictiveTable::insertProduction(const std::string &non_terminal, const st
     auto cell_key = new CellKey(non_terminal, terminal);
     auto cell_value = new CellValue(production, predictive_table_enum);
     if (containsKey(non_terminal, terminal)) {
-        std::cout << "Grammar isn't LL(1)";
-        exit(0);
+        std::cout << "\nGrammar isn't LL(1)\n";
+        printConflict(non_terminal, terminal, production);
+        return;
     }
     predictive_table[*cell_key] = cell_value;
 }
 
-void PredictiveTable::print_predictive_table() {
+void PredictiveTable::printPredictiveTable() {
     for (const auto &element: predictive_table) {
-        std::cout << element.first.getTerminal() << "\n";
-        std::cout << element.first.getNonTerminal() << "\n";
+        std::cout << element.first.getNonTerminal() << ", " << element.first.getTerminal();
+
         switch (element.second->getPredictiveTableEnum()) {
             case PredictiveTableEnum::EMPTY:
-                std::cout << "EMPTY\n";
-            case PredictiveTableEnum::NOT_EMPTY:
-                std::cout << "NOT_EMPTY\n";
+                std::cout << " --> EMPTY\n";
+                break;
             case PredictiveTableEnum::SYNCHRONIZING:
-                std::cout << "SYNCHRONIZING\n";
+                std::cout << " --> SYNCHRONIZING\n";
+                break;
+            case PredictiveTableEnum::NOT_EMPTY:
+                std::cout << " --> ";
+                for (const auto &i: element.second->getProduction().productions[0])
+                    std::cout << i;
+                std::cout << "\n";
+                break;
+            default:
+                continue;
         }
-        for (const auto &i: element.second->getProduction().productions[0]) {
-            std::cout << i;
-        }
-        std::cout << "\n";
     }
+}
+
+void
+PredictiveTable::printConflict(const std::string &non_terminal, const std::string &terminal, Production &production) {
+    std::cout << "Conflict at: " << non_terminal << ", " << terminal << " --> ";
+    // loop on all productions of the non_terminal and print them
+    for (const auto &i: production.productions[0]) {
+        std::cout << i << " ";
+    }
+    std::cout << "\n";
+    // print the production that is conflicting
+    std::cout << "Preferred production: ";
+    for (const auto &i: predictive_table[CellKey(non_terminal, terminal)]->getProduction().productions[0]) {
+        std::cout << i << " ";
+    }
+    std::cout << "\n";
 }
