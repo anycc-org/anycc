@@ -31,4 +31,11 @@ add_executable(anycc
         src/Lex/TransitionDiagramMinimizer.cpp
         include/Lex/RuleType.h
         include/Lex/Token.h
+        src/Paraser/PredictiveTable.cpp
+        include/Parser/PredictiveTable.h
+        src/Paraser/CellKey.cpp
+        include/Parser/CellKey.h
+        src/Paraser/CellValue.cpp
+        include/Parser/CellValue.h
+        include/Parser/PredictiveTableEnum.h
 )
