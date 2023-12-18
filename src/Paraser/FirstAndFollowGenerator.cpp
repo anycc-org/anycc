@@ -30,7 +30,10 @@ FirstAndFollowGenerator::computeFirst(const std::string &nonTerminal) {
                         // Compute First set for the non-terminal
                         const std::set<std::pair<std::string, Production>, CompareFirst> &nonTerminalFirstSet = computeFirst(
                                 symbolStr);
-                        firstSet.insert(nonTerminalFirstSet.begin(), nonTerminalFirstSet.end());
+                        // insert all the first from nonTerminalFirstSet but with the production in the for loop not the one coming with the variable
+                        for (const auto &pair: nonTerminalFirstSet) {
+                            firstSet.insert({pair.first, {nonTerminal, {production}}});
+                        }
 
                         // Check if the non-terminal has an epsilon production
                         if (!nonTerminalHasEpsilon(symbolStr)) {
