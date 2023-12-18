@@ -6,7 +6,10 @@
 
 #include <string>
 #include <vector>
+
 struct Production {
+    Production() = default;
+
     std::string nonTerminal;
     std::vector<std::vector<std::string>> productions;
 };
