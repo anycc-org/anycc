@@ -7,7 +7,7 @@
 
 class CellValue {
 public:
-    CellValue(Production &production_value, PredictiveTableEnum predictive_table_enum_value);
+    CellValue(const Production &production_value, PredictiveTableEnum predictive_table_enum_value);
 
     ~CellValue();
 

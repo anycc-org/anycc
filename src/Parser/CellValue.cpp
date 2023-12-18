@@ -1,6 +1,6 @@
 #include "Parser/CellValue.h"
 
-CellValue::CellValue(Production &production_value, PredictiveTableEnum predictive_table_enum_value) {
+CellValue::CellValue(const Production &production_value, const PredictiveTableEnum predictive_table_enum_value) {
     this->production = production_value;
     this->predictive_table_enum = predictive_table_enum_value;
 }

@@ -24,7 +24,7 @@ void PredictiveTable::buildPredictiveTable() {
 void PredictiveTable::insertFirstSets() {
     for (const auto &non_terminal: non_terminals) {
         const std::set<std::pair<std::string, Production>, CompareFirst> &first_set = computed_first_sets[non_terminal];
-        for (auto first: first_set) {
+        for (const auto &first: first_set) {
             if (isEpsilon(first))
                 insertEpsilonAtFollowSet(non_terminal, first.second,
                                          computed_follow_sets[non_terminal]);
@@ -34,18 +34,19 @@ void PredictiveTable::insertFirstSets() {
     }
 }
 
-bool PredictiveTable::isEpsilon(const std::pair<std::string, Production> &first) const {
+bool PredictiveTable::isEpsilon(const std::pair<std::string, const Production> &first) {
     return first.first == EPSILON;
 }
 
 void PredictiveTable::insertEpsilonAtFollowSet(const std::string &non_terminal,
-                                               Production &production, std::set<std::string> &follow_set) {
+                                               const Production &production, const std::set<std::string> &follow_set) {
     for (const auto &follow: follow_set) {
         insertProduction(non_terminal, follow, production, PredictiveTableEnum::NOT_EMPTY);
     }
 }
 
-void PredictiveTable::addSynchAtFollowSetElements(const std::string &non_terminal, std::set<std::string> &follow_set) {
+void
+PredictiveTable::addSynchAtFollowSetElements(const std::string &non_terminal, const std::set<std::string> &follow_set) {
     for (const auto &follow: follow_set) {
         Production production;
         if (containsKey(non_terminal, follow))
@@ -94,7 +95,7 @@ bool PredictiveTable::isSynchronizing(const std::string &non_terminal, const std
 }
 
 void PredictiveTable::insertProduction(const std::string &non_terminal, const std::string &terminal,
-                                       Production &production, PredictiveTableEnum predictive_table_enum) {
+                                       const Production &production, PredictiveTableEnum predictive_table_enum) {
     auto cell_key = new CellKey(non_terminal, terminal);
     auto cell_value = new CellValue(production, predictive_table_enum);
     if (containsKey(non_terminal, terminal)) {
@@ -129,17 +130,16 @@ void PredictiveTable::printPredictiveTable() {
 }
 
 void
-PredictiveTable::printConflict(const std::string &non_terminal, const std::string &terminal, Production &production) {
+PredictiveTable::printConflict(const std::string &non_terminal, const std::string &terminal,
+                               const Production &production) {
     std::cout << "Conflict at: " << non_terminal << ", " << terminal << " --> ";
-    // loop on all productions of the non_terminal and print them
-    for (const auto &i: production.productions[0]) {
+
+    for (const auto &i: production.productions[0])
         std::cout << i << " ";
-    }
     std::cout << "\n";
-    // print the production that is conflicting
+
     std::cout << "Preferred production: ";
-    for (const auto &i: predictive_table[CellKey(non_terminal, terminal)]->getProduction().productions[0]) {
+    for (const auto &i: predictive_table[CellKey(non_terminal, terminal)]->getProduction().productions[0])
         std::cout << i << " ";
-    }
     std::cout << "\n";
 }

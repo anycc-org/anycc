@@ -87,13 +87,13 @@ private:
      * @brief - If `Є` is in `FIRST(α)` then: For each terminal `b` in `FOLLOW(A)` do: Add `A -> α` to `M[A, b]`.
               - If `Є` is in `FIRST(α)` and `$` is in `FOLLOW(A)` then: Add `A -> α` to `M[A, $]`.
      */
-    void insertEpsilonAtFollowSet(const std::string &non_terminal, Production &production,
-                                  std::set<std::string> &follow_set);
+    void insertEpsilonAtFollowSet(const std::string &non_terminal, const Production &production,
+                                  const std::set<std::string> &follow_set);
 
     /**
      * @brief For each terminal `a` in `FOLLOW(A)` do: Add `synch` to `M[A, a]`.
      */
-    void addSynchAtFollowSetElements(const std::string &non_terminal, std::set<std::string> &follow_set);
+    void addSynchAtFollowSetElements(const std::string &non_terminal, const std::set<std::string> &follow_set);
 
     /**
      * @brief Insert the given production at the given cell
@@ -102,7 +102,7 @@ private:
      * @param production The production to be inserted
      * @param predictive_table_enum The type of the cell
      */
-    void insertProduction(const std::string &non_terminal, const std::string &terminal, Production &production,
+    void insertProduction(const std::string &non_terminal, const std::string &terminal, const Production &production,
                           PredictiveTableEnum predictive_table_enum);
 
     /**
@@ -110,7 +110,7 @@ private:
      * @param first element from the first set
      * @return True if the given first is epsilon, false otherwise
      */
-    bool isEpsilon(const std::pair<std::string, Production> &first) const;
+    static bool isEpsilon(const std::pair<std::string, const Production> &first);
 
     /**
      * @brief Checks if the predictive table contains the given key
@@ -126,7 +126,7 @@ private:
      * @param terminal The string which moves non_terminal to the production
      * @param production The production made the conflict
      */
-    void printConflict(const std::string &non_terminal, const std::string &terminal, Production &production);
+    void printConflict(const std::string &non_terminal, const std::string &terminal, const Production &production);
 };
 
 
