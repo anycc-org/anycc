@@ -10,31 +10,47 @@
 #include <unordered_map>
 #include <vector>
 
+struct CompareFirst {
+    bool
+    operator()(const std::pair<std::string, Production> &lhs, const std::pair<std::string, Production> &rhs) const {
+        return lhs.first < rhs.first;
+    }
+};
+
 class FirstAndFollowGenerator {
 public:
-  FirstAndFollowGenerator(const std::unordered_map<std::string, std::vector<std::vector<std::string>>>& grammar);
+    FirstAndFollowGenerator(const std::unordered_map<std::string, std::vector<std::vector<std::string>>> &grammar);
 
-  const std::unordered_map<std::string, std::set<std::string>>& getFirstSets() const {
-    return computedFirstSets;
-  }
+    const std::unordered_map<std::string, std::set<std::pair<std::string, Production>, CompareFirst>> &
+    getFirstSets() const {
+        return computedFirstSets;
+    }
 
-  const std::unordered_map<std::string, std::set<std::string>>& getFollowSets() const {
-    return computedFollowSets;
-  }
+    const std::unordered_map<std::string, std::set<std::string>> &getFollowSets() const {
+        return computedFollowSets;
+    }
 
-  void compute();
+    void compute();
 
 private:
-  std::vector<Production> productionVector;
-  std::set<std::string> nonTerminals;
-  std::unordered_map<std::string, std::set<std::string>> computedFirstSets;
-  std::unordered_map<std::string, std::set<std::string>> computedFollowSets;
-  std::set<std::string> computeFirst(const std::string& nonTerminal);
-  std::set<std::string> computeFollow(const std::string& nonTerminal);
-  bool nonTerminalHasEpsilon(const std::string& nonTerminal);
-  void computeFirstSets(std::unordered_map<std::string, std::set<std::string>>& firstSets);
-  void computeFollowSets(std::unordered_map<std::string, std::set<std::string>>& followSets);
-  void iterateAndMergeFollowSets();
+    std::vector<Production> productionVector;
+    std::set<std::string> nonTerminals;
+    std::unordered_map<std::string, std::set<std::pair<std::string, Production>, CompareFirst>> computedFirstSets;
+    std::unordered_map<std::string, std::set<std::string>> computedFirstSetsWithoutProductions;
+    std::unordered_map<std::string, std::set<std::string>> computedFollowSets;
+
+    std::set<std::pair<std::string, Production>, CompareFirst> computeFirst(const std::string &nonTerminal);
+
+    std::set<std::string> computeFollow(const std::string &nonTerminal);
+
+    bool nonTerminalHasEpsilon(const std::string &nonTerminal);
+
+    void computeFirstSets(
+            std::unordered_map<std::string, std::set<std::pair<std::string, Production>, CompareFirst>> &firstSets);
+
+    void computeFollowSets(std::unordered_map<std::string, std::set<std::string>> &followSets);
+
+    void iterateAndMergeFollowSets();
 
 };
 
