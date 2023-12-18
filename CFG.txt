@@ -1,0 +1,8 @@
+E::= T E`
+E`::= + E | Epsilon
+T::= F T`
+X::= F T` y
+T`::= T | Epsilon
+F`::= * F | Epsilon
+F::= P F`
+P::= ( E ) | a | b | Em
