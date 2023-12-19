@@ -81,14 +81,14 @@ ParsingTableEntryType PredictiveTable::getCellType(const std::string &non_termin
         if (cell_value->getPredictiveTableEnum() == ParsingTableEntryType::SYNCHRONIZING) {
             return ParsingTableEntryType::SYNCHRONIZING;
         } else {
-            return ParsingTableEntryType::NOT_EMPTY;
+            return ParsingTableEntryType::VALID_PRODUCTION;
         }
     }
     return ParsingTableEntryType::EMPTY;
 }
 
 bool PredictiveTable::hasProduction(const std::string &non_terminal, const std::string &terminal) {
-    return getCellType(non_terminal, terminal) == ParsingTableEntryType::NOT_EMPTY;
+    return getCellType(non_terminal, terminal) == ParsingTableEntryType::VALID_PRODUCTION;
 }
 
 bool PredictiveTable::isCellEmpty(const std::string &non_terminal, const std::string &terminal) {
@@ -122,7 +122,7 @@ void PredictiveTable::printPredictiveTable() {
             case ParsingTableEntryType::SYNCHRONIZING:
                 std::cout << " --> SYNCHRONIZING\n";
                 break;
-            case ParsingTableEntryType::NOT_EMPTY:
+            case ParsingTableEntryType::VALID_PRODUCTION:
                 std::cout << " --> ";
                 for (const auto &i: element.second->getProduction().productions[0])
                     std::cout << i;
