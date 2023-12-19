@@ -1,8 +1,8 @@
 #include "Parser/CellValue.h"
 
-CellValue::CellValue(const Production &production_value, const ParsingTableEntryType predictive_table_enum_value) {
+CellValue::CellValue(const Production &production_value, const ParsingTableEntryType entry_type) {
     this->production = production_value;
-    this->predictive_table_enum = predictive_table_enum_value;
+    this->entry_type = entry_type;
 }
 
 CellValue::~CellValue() {
@@ -13,6 +13,6 @@ const Production &CellValue::getProduction() const {
     return production;
 }
 
-ParsingTableEntryType CellValue::getPredictiveTableEnum() const {
-    return predictive_table_enum;
+ParsingTableEntryType CellValue::getPredictiveTableEntryType() const {
+    return entry_type;
 }

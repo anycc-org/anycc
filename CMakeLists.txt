@@ -38,4 +38,6 @@ add_executable(anycc
         src/Parser/CellValue.cpp
         include/Parser/CellValue.h
         include/Parser/ParsingTableEntryType.h
+        include/Parser/PredictiveTopDownParser.h
+        src/Parser/PredictiveTopDownParser.cpp
 )

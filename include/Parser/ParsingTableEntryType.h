@@ -4,7 +4,7 @@
 enum class ParsingTableEntryType {
     VALID_PRODUCTION,
     EMPTY,
-    SYNCHRONIZING
+    SYNC
 };
 
 #endif
