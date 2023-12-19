@@ -32,7 +32,7 @@ public:
      * @param terminal The string which moves non_terminal to the production
      * @return Pointer to cell value
      */
-    CellValue *lookUp(const std::string &non_terminal, const std::string &terminal);
+    const CellValue *lookUp(const std::string &non_terminal, const std::string &terminal);
 
     /**
      * @brief Gets the type of the cell

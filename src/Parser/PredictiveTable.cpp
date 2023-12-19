@@ -11,8 +11,9 @@ PredictiveTable::PredictiveTable(
 }
 
 PredictiveTable::~PredictiveTable() {
-    for (const auto &element: predictive_table)
+    for (const auto &element: predictive_table) {
         delete element.second;
+    }
 }
 
 void PredictiveTable::buildPredictiveTable() {
@@ -26,11 +27,12 @@ void PredictiveTable::insertFirstSets() {
     for (const auto &non_terminal: non_terminals) {
         const std::set<std::pair<std::string, Production>, CompareFirst> &first_set = computed_first_sets[non_terminal];
         for (const auto &first: first_set) {
-            if (isEpsilon(first))
+            if (isEpsilon(first)) {
                 insertEpsilonAtFollowSet(non_terminal, first.second,
                                          computed_follow_sets[non_terminal]);
-            else
+            } else {
                 insertProduction(non_terminal, first.first, first.second, ParsingTableEntryType::NOT_EMPTY);
+            }
         }
     }
 }
@@ -50,8 +52,9 @@ void
 PredictiveTable::addSynchAtFollowSetElements(const std::string &non_terminal, const std::set<std::string> &follow_set) {
     for (const auto &follow: follow_set) {
         Production production;
-        if (containsKey(non_terminal, follow))
+        if (containsKey(non_terminal, follow)) {
             continue;
+        }
         insertProduction(non_terminal, follow, production, ParsingTableEntryType::SYNCHRONIZING);
     }
 }
@@ -61,24 +64,25 @@ bool PredictiveTable::containsKey(const std::string &non_terminal,
     return predictive_table.find(CellKey(non_terminal, follow)) != predictive_table.end();
 }
 
-CellValue *PredictiveTable::lookUp(const std::string &non_terminal, const std::string &terminal) {
-    auto cell_key = new CellKey(non_terminal, terminal);
+const CellValue *PredictiveTable::lookUp(const std::string &non_terminal, const std::string &terminal) {
+    CellKey cell_key = CellKey(non_terminal, terminal);
     if (!containsKey(non_terminal, terminal)) {
         Production production;
         return new CellValue(production, ParsingTableEntryType::EMPTY);
     }
-    auto cell_value = predictive_table[*cell_key];
+    auto cell_value = predictive_table[cell_key];
     return cell_value;
 }
 
 ParsingTableEntryType PredictiveTable::getCellType(const std::string &non_terminal, const std::string &terminal) {
-    auto cell_key = new CellKey(non_terminal, terminal);
+    CellKey cell_key = CellKey(non_terminal, terminal);
     if (containsKey(non_terminal, terminal)) {
-        auto cell_value = predictive_table[*cell_key];
-        if (cell_value->getPredictiveTableEnum() == ParsingTableEntryType::SYNCHRONIZING)
+        auto cell_value = predictive_table[cell_key];
+        if (cell_value->getPredictiveTableEnum() == ParsingTableEntryType::SYNCHRONIZING) {
             return ParsingTableEntryType::SYNCHRONIZING;
-        else
+        } else {
             return ParsingTableEntryType::NOT_EMPTY;
+        }
     }
     return ParsingTableEntryType::EMPTY;
 }
@@ -97,14 +101,14 @@ bool PredictiveTable::isSynchronizing(const std::string &non_terminal, const std
 
 void PredictiveTable::insertProduction(const std::string &non_terminal, const std::string &terminal,
                                        const Production &production, ParsingTableEntryType predictive_table_enum) {
-    auto cell_key = new CellKey(non_terminal, terminal);
+    CellKey cell_key = CellKey(non_terminal, terminal);
     auto cell_value = new CellValue(production, predictive_table_enum);
     if (containsKey(non_terminal, terminal)) {
         std::cout << "\nGrammar isn't LL(1)\n";
         printConflict(non_terminal, terminal, production);
         return;
     }
-    predictive_table[*cell_key] = cell_value;
+    predictive_table[cell_key] = cell_value;
 }
 
 void PredictiveTable::printPredictiveTable() {
@@ -135,12 +139,14 @@ PredictiveTable::printConflict(const std::string &non_terminal, const std::strin
                                const Production &production) {
     std::cout << "Conflict at: " << non_terminal << ", " << terminal << " --> ";
 
-    for (const auto &i: production.productions[0])
+    for (const auto &i: production.productions[0]) {
         std::cout << i << " ";
+    }
     std::cout << "\n";
 
     std::cout << "Preferred production: ";
-    for (const auto &i: predictive_table[CellKey(non_terminal, terminal)]->getProduction().productions[0])
+    for (const auto &i: predictive_table[CellKey(non_terminal, terminal)]->getProduction().productions[0]) {
         std::cout << i << " ";
+    }
     std::cout << "\n";
 }
