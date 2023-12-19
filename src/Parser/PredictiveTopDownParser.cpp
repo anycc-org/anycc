@@ -7,7 +7,6 @@ PredictiveTopDownParser::PredictiveTopDownParser(
     stk.push({"$", true});
     stk.push({START_SYMBOL, false});
     left_most_derivation.push_back({START_SYMBOL});
-//    left_derivation_stack.emplace(START_SYMBOL);
 }
 
 PredictiveTopDownParser::~PredictiveTopDownParser() {}

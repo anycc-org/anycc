@@ -41,7 +41,6 @@ private:
     std::set<std::string> non_terminals;
     std::vector<std::vector<std::string>> left_most_derivation;
     std::stack<StackEntry> stk;
-//    std::stack<std::string> left_derivation_stack;
 
     void setNextDerivation(std::string &non_terminal, std::vector<std::string> &curr_production);
 };
