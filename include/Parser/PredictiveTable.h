@@ -30,7 +30,7 @@ public:
      * @warning the responsibility of deleting pointer is the caller's
      * @param non_terminal The LHS to get the production from
      * @param terminal The string which moves non_terminal to the production
-     * @return Pointer to cell value
+     * @return Pointer to cell value, or a cell value with its type set to empty and production set to empty
      */
     const CellValue *lookUp(const std::string &non_terminal, const std::string &terminal);
 
