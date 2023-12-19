@@ -31,7 +31,7 @@ void PredictiveTable::insertFirstSets() {
                 insertEpsilonAtFollowSet(non_terminal, first.second,
                                          computed_follow_sets[non_terminal]);
             } else {
-                insertProduction(non_terminal, first.first, first.second, ParsingTableEntryType::NOT_EMPTY);
+                insertProduction(non_terminal, first.first, first.second, ParsingTableEntryType::VALID_PRODUCTION);
             }
         }
     }
@@ -44,7 +44,7 @@ bool PredictiveTable::isEpsilon(const std::pair<std::string, const Production> &
 void PredictiveTable::insertEpsilonAtFollowSet(const std::string &non_terminal,
                                                const Production &production, const std::set<std::string> &follow_set) {
     for (const auto &follow: follow_set) {
-        insertProduction(non_terminal, follow, production, ParsingTableEntryType::NOT_EMPTY);
+        insertProduction(non_terminal, follow, production, ParsingTableEntryType::VALID_PRODUCTION);
     }
 }
 
