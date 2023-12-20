@@ -8,9 +8,9 @@ include_directories(include/Lex)
 
 add_executable(anycc
         include/constants.h
-        src/Paraser/FirstAndFollowGenerator.cpp
+        src/Parser/FirstAndFollowGenerator.cpp
         include/Parser/FirstAndFollowGenerator.h
-        src/Paraser/FirstAndFollowGeneratorUtility.cpp
+        src/Parser/FirstAndFollowGeneratorUtility.cpp
         include/Parser/FirstAndFollowGeneratorUtility.h
         include/Parser/Production.h
         src/Lex/InputReader.cpp
@@ -31,4 +31,11 @@ add_executable(anycc
         src/Lex/TransitionDiagramMinimizer.cpp
         include/Lex/RuleType.h
         include/Lex/Token.h
+        src/Parser/PredictiveTable.cpp
+        include/Parser/PredictiveTable.h
+        src/Parser/CellKey.cpp
+        include/Parser/CellKey.h
+        src/Parser/CellValue.cpp
+        include/Parser/CellValue.h
+        include/Parser/ParsingTableEntryType.h
 )
