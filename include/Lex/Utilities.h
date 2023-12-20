@@ -122,4 +122,15 @@ public:
      * @return True if the i-th character in expression is an open brace, false otherwise
      */
     static bool isOpenBrace(const std::string *expression, int i);
+
+    /**
+     * @brief Parse the CFG input file and generate a grammar representation.
+     *
+     * This function reads a CFG input file and generates a grammar representation as an
+     * unordered_map with non-terminals as keys and vectors of vectors of strings as values.
+     *
+     * @param filename The path to the CFG input file.
+     * @return An unordered_map representing the grammar parsed from the file.
+     */
+    static std::unordered_map<std::string, std::vector<std::vector<std::string>>> parseCFGInput(const std::string& filename);
 };
