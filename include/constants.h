@@ -1,6 +1,4 @@
-//
-// Created by abdel on 30/11/2023.
-//
+
 // constants.h
 #pragma once
 #ifndef CONSTANTS_H
@@ -10,5 +8,6 @@
 
 #define EPSILON "Epsilon"
 #define START_SYMBOL "E"
+
 
 #endif // CONSTANTS_H
