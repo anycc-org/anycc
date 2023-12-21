@@ -1,5 +1,8 @@
-E::= T E`
-E`::= + T E` | Epsilon
-T::= F T`
-T`::= * F T` | Epsilon
-F::= ( E ) | id
+# E= T E`
+# E` = '+' T E`
+ | Epsilon
+# T = F T`
+# T`= '*' F T`
+| Epsilon
+# F   = '(' E ')'
+| 'id'
