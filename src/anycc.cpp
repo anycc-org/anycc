@@ -6,12 +6,24 @@
 #include <set>
 #include <unordered_map>
 #include <vector>
-#include "Utilities.h"
+#include "Lex/Utilities.h"
 #include "Parser/PredictiveTable.h"
 
 int main() {
     std::unordered_map<std::string, std::vector<std::vector<std::string>>> grammar = Utilities::parseCFGInput(
             "../CFG.txt");
+    for(const auto& kv : grammar) {
+        std::cout << kv.first << " --> ";
+        for(const auto& rhs : kv.second) {
+            for(const auto& prod : rhs) {
+                std::cout << prod;
+            }
+            std::cout << " | ";
+        }
+        std::cout << "\n";
+    }
+    
+
     FirstAndFollowGenerator firstAndFollowGenerator(grammar);
     firstAndFollowGenerator.compute();
     // Print first_sets

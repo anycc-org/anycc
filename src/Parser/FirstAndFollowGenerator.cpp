@@ -8,10 +8,8 @@ FirstAndFollowGenerator::FirstAndFollowGenerator(
     for (const auto &entry: grammar) {
         const std::string &nonTerminal = entry.first;
         const std::vector<std::vector<std::string>> &productions = entry.second;
-
         productionVector.push_back({nonTerminal, productions});
     }
-
     nonTerminals = collectNonTerminals(productionVector);
 }
 
