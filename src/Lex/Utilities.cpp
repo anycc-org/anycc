@@ -199,34 +199,52 @@ std::unordered_map<std::string, std::vector<std::vector<std::string>>> Utilities
 
         while (std::getline(inputFile, line)) {
             // Skip comments and empty lines
-            if (line.empty() || line[0] == '#')
+            if (line.empty())
                 continue;
 
-            // Find the position of ::= in the line
-            size_t arrowPos = line.find("::=");
-            if (arrowPos != std::string::npos) {
-                // Extract the non-terminal before ::= as the current non-terminal
-                currentNonTerminal = line.substr(0, arrowPos);
+            std::vector<std::string> production;
+            if(line[0] == '#'){// new rule
+             // Find the position of = in the line
+              std::regex spacesBeforeArrow("\\s*\\=");
+              line = std::regex_replace(line, spacesBeforeArrow, "=");
+              size_t arrowPos = line.find("="); // first occurence
+              if (arrowPos != std::string::npos) {
+                  // Extract the non-terminal before ::= as the current non-terminal
+                  currentNonTerminal = line.substr(2, arrowPos-2); //skip '#' index 0 and ' ' index 1
 
-                // Tokenize the RHS of the production rule using '|'
-                line = line.substr(arrowPos + 3); // Move past "::="
-                std::istringstream ss(line);
-                std::string token;
-                std::vector<std::string> production;
+                  // Tokenize the RHS of the production rule using '|'
+                  line = line.substr(arrowPos + 1); // Move past "="
+                  std::istringstream ss(line);
+                  std::string token;
 
-                while (ss >> token) {
-                    if (token == "|") {
-                      // Start a new production for the same non-terminal
-                      grammar[currentNonTerminal].push_back(production);
-                      production.clear();
-                    } else {
-                      production.push_back(token);
-                    }
-                }
+                  while (ss >> token) {
+                      if (token == "|") {
+                        // Start a new production for the same non-terminal
+                        grammar[currentNonTerminal].push_back(production);
+                        production.clear();
+                      } else {
+                        token = std::regex_replace(token, std::regex("'"), "");
+                        production.push_back(token);
+                      }
+                  }
+              }
+            }else{
+                  std::istringstream ss(line);
+                  std::string token;
 
-                // Add the last production to the grammar
-                grammar[currentNonTerminal].push_back(production);
+                  while (ss >> token) {
+                      if (token == "|") {
+                        // Start a new production for the same non-terminal
+                        grammar[currentNonTerminal].push_back(production);
+                        production.clear();
+                      } else {
+                        token = std::regex_replace(token, std::regex("'"), "");
+                        production.push_back(token);
+                      }
+                  }
             }
+                // Add the last production to the grammar
+              grammar[currentNonTerminal].push_back(production);
         }
 
         inputFile.close();
