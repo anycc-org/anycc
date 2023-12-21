@@ -218,7 +218,10 @@ std::unordered_map<std::string, std::vector<std::vector<std::string>>> Utilities
                   std::string token;
 
                   while (ss >> token) {
-                      if (token == "|") {
+                      if(token == "|" && production.empty()) {
+                        continue ;
+                      }
+                      if (token == "|" && !production.empty()) {
                         // Start a new production for the same non-terminal
                         grammar[currentNonTerminal].push_back(production);
                         production.clear();
@@ -233,6 +236,9 @@ std::unordered_map<std::string, std::vector<std::vector<std::string>>> Utilities
                   std::string token;
 
                   while (ss >> token) {
+                      if(token == "|" && production.empty()) {
+                        continue ;
+                      }
                       if (token == "|") {
                         // Start a new production for the same non-terminal
                         grammar[currentNonTerminal].push_back(production);
