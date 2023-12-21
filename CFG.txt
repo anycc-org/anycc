@@ -1,5 +1,2 @@
-E::= T E`
-E`::= + T E` | Epsilon
-T::= F T`
-T`::= * F T` | Epsilon
-F::= ( E ) | id
+S::= a | b
+A::= S u | S | y S w | E | i S

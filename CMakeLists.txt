@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 14)
 
 include_directories(include)
 include_directories(include/Lex)
+include_directories(include/Parser)
 
 add_executable(anycc
         include/constants.h
@@ -38,4 +39,6 @@ add_executable(anycc
         src/Parser/CellValue.cpp
         include/Parser/CellValue.h
         include/Parser/ParsingTableEntryType.h
+        include/Parser/LeftRecursionRemover.h
+        src/Parser/LeftRecursionRemover.cpp
 )

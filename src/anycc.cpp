@@ -1,6 +1,7 @@
 #include <map>
 #include "Lex/Lex.h"
 #include "Parser/FirstAndFollowGenerator.h"
+#include "Parser/LeftRecursionRemover.h"
 #include "constants.h"
 #include <iostream>
 #include <set>
@@ -12,6 +13,17 @@
 int main() {
     std::unordered_map<std::string, std::vector<std::vector<std::string>>> grammar = Utilities::parseCFGInput(
             "../CFG.txt");
+    for(const auto& kv : grammar) {
+        std::cout << kv.first << " --> ";
+        for(const auto& rhs : kv.second) {
+            for(const auto& prod : rhs) {
+                std::cout << prod;
+            }
+            std::cout << " | ";
+        }
+        std::cout << "\n";
+    }
+    LeftRecursionRemover::substituteRHS(grammar, "A", "S");
     for(const auto& kv : grammar) {
         std::cout << kv.first << " --> ";
         for(const auto& rhs : kv.second) {
