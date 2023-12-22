@@ -1,2 +1,1 @@
-S::= a | b
-A::= S u | S | y S w | E | i S
+S::= S a | z | S b

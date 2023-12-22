@@ -1,4 +1,5 @@
 #include "Parser/LeftRecursionRemover.h"
+#include "constants.h"
 #include <algorithm>
 #include <iostream>
 
@@ -11,31 +12,55 @@ bool LeftRecursionRemover::isImmediateLR(const std::unordered_map<std::string, s
     return false;
 }
 
-bool LeftRecursionRemover::removeImmediateLR(std::unordered_map<std::string, std::vector<std::vector<std::string>>> &grammar, std::string non_terminal) {
-    if(grammar.find(non_terminal) == grammar.end()) return false;
-    auto& prods = grammar.at(non_terminal); 
+std::unordered_map<std::string, std::vector<std::vector<std::string>>> LeftRecursionRemover::removeImmediateLR(std::unordered_map<std::string, std::vector<std::vector<std::string>>> grammar, std::string non_terminal) {
+
+    if(grammar.find(non_terminal) == grammar.end()) return grammar;
+    auto new_grammar = grammar;
+    std::string new_non_terminal = non_terminal + "'";
+    auto& prods = new_grammar.at(non_terminal); 
+    std::vector<std::vector<std::string>> new_prods;
+    std::vector<std::vector<std::string>> new_prods_prime;
     for(auto& prod : prods) {
-        if(prod[0] == non_terminal) {
-           std::vector<std::string> alpha(prod.begin() + 1, prod.end()); 
-           
+        if(prod[0] != non_terminal) {
+            new_prods.push_back(prod); 
+        }
+        else {
+            std::vector<std::string> alpha(prod.begin() + 1, prod.end());
+            new_prods_prime.push_back(alpha);
         }
     }
-    return false;
+    for(size_t i = 0; i < new_prods.size(); i++) {
+        new_prods[i].push_back(new_non_terminal);
+    }
+    for(size_t i = 0; i < new_prods_prime.size(); i++) {
+        new_prods_prime[i].push_back(new_non_terminal);
+    }
+    new_prods_prime.push_back(std::vector<std::string>{EPSILON});
+    std::cout << new_prods.size() << "\n";
+    new_grammar.at(non_terminal) = new_prods;
+    new_grammar.insert({new_non_terminal, new_prods_prime});
+    for(auto kv : new_grammar) {
+        std::cout << "lol\n";
+        std::cout << kv.first << "\n";
+    }
+    return new_grammar;
 }
 
 
-void LeftRecursionRemover::removeLR(std::unordered_map<std::string, std::vector<std::vector<std::string>>> &grammar) {
+std::unordered_map<std::string, std::vector<std::vector<std::string>>> LeftRecursionRemover::removeLR(std::unordered_map<std::string, std::vector<std::vector<std::string>>> grammar) {
     std::vector<std::string> prev_non_terminals;
-    for(auto& kv : grammar) {
+    auto new_grammar = grammar;
+    for(auto& kv : new_grammar) {
         std::string non_terminal = kv.first;
         for(auto& prev_non_terminal : prev_non_terminals) {
-            LeftRecursionRemover::substituteRHS(grammar, non_terminal, prev_non_terminal);
+            LeftRecursionRemover::substituteRHS(new_grammar, non_terminal, prev_non_terminal);
         }
-        if(isImmediateLR(grammar, non_terminal)) {
-            LeftRecursionRemover::removeImmediateLR(grammar, non_terminal);
+        if(isImmediateLR(new_grammar, non_terminal)) {
+            LeftRecursionRemover::removeImmediateLR(new_grammar, non_terminal);
         }
         prev_non_terminals.push_back(non_terminal);
     }
+    return new_grammar;
 }
 
 

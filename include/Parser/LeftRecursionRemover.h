@@ -11,10 +11,10 @@ public:
     
     static bool isImmediateLR(const std::unordered_map<std::string, std::vector<std::vector<std::string>>>& grammar, std::string non_terminal);
 
-    static bool removeImmediateLR(std::unordered_map<std::string, std::vector<std::vector<std::string>>>& grammar, std::string non_terminal);
+    static std::unordered_map<std::string, std::vector<std::vector<std::string>>> removeImmediateLR(std::unordered_map<std::string, std::vector<std::vector<std::string>>> grammar, std::string non_terminal);
 
 
-    static void removeLR(std::unordered_map<std::string, std::vector<std::vector<std::string>>>& grammar);
+    static std::unordered_map<std::string, std::vector<std::vector<std::string>>> removeLR(std::unordered_map<std::string, std::vector<std::vector<std::string>>> grammar);
 
     static bool substituteRHS(std::unordered_map<std::string, std::vector<std::vector<std::string>>>& grammar, std::string lhs_non_terminal, std::string rhs_non_terminal);
 private:
