@@ -12,12 +12,11 @@ bool LeftRecursionRemover::isImmediateLR(const std::unordered_map<std::string, s
     return false;
 }
 
-std::unordered_map<std::string, std::vector<std::vector<std::string>>> LeftRecursionRemover::removeImmediateLR(std::unordered_map<std::string, std::vector<std::vector<std::string>>> grammar, std::string non_terminal) {
-
-    if(grammar.find(non_terminal) == grammar.end()) return grammar;
-    auto new_grammar = grammar;
-    std::string new_non_terminal = non_terminal + "'";
-    auto& prods = new_grammar.at(non_terminal); 
+void LeftRecursionRemover::removeImmediateLR(std::unordered_map<std::string, std::vector<std::vector<std::string>>>& grammar, std::string non_terminal) {
+    if(grammar.find(non_terminal) == grammar.end()) return;
+    if(!isImmediateLR(grammar, non_terminal)) return;
+    std::string new_non_terminal = non_terminal + "`";
+    auto& prods = grammar.at(non_terminal); 
     std::vector<std::vector<std::string>> new_prods;
     std::vector<std::vector<std::string>> new_prods_prime;
     for(auto& prod : prods) {
@@ -36,35 +35,43 @@ std::unordered_map<std::string, std::vector<std::vector<std::string>>> LeftRecur
         new_prods_prime[i].push_back(new_non_terminal);
     }
     new_prods_prime.push_back(std::vector<std::string>{EPSILON});
-    std::cout << new_prods.size() << "\n";
-    new_grammar.at(non_terminal) = new_prods;
-    new_grammar.insert({new_non_terminal, new_prods_prime});
-    for(auto kv : new_grammar) {
-        std::cout << "lol\n";
-        std::cout << kv.first << "\n";
-    }
-    return new_grammar;
+    grammar.at(non_terminal) = new_prods;
+    grammar.insert({new_non_terminal, new_prods_prime});
 }
 
 
 std::unordered_map<std::string, std::vector<std::vector<std::string>>> LeftRecursionRemover::removeLR(std::unordered_map<std::string, std::vector<std::vector<std::string>>> grammar) {
     std::vector<std::string> prev_non_terminals;
+    std::vector<std::string> ordered_non_terminals;
     auto new_grammar = grammar;
     for(auto& kv : new_grammar) {
-        std::string non_terminal = kv.first;
-        for(auto& prev_non_terminal : prev_non_terminals) {
-            LeftRecursionRemover::substituteRHS(new_grammar, non_terminal, prev_non_terminal);
+        std::cout << kv.first << "\n";
+        ordered_non_terminals.push_back(kv.first);
+    }
+    std::reverse(ordered_non_terminals.begin(), ordered_non_terminals.end());
+    for(size_t i = 0; i < ordered_non_terminals.size(); i++) {
+        for(size_t j = 0; j < i; j++) {
+            bool replace = false;
+            for(const auto& prod : new_grammar.at(ordered_non_terminals[j])) {
+                if(prod[0] == ordered_non_terminals[i]) {
+                    replace = true;
+                    break;
+                }
+            }
+            if(replace) {
+                LeftRecursionRemover::substituteRHS(new_grammar, ordered_non_terminals[i], ordered_non_terminals[j]);    
+            }
         }
-        if(isImmediateLR(new_grammar, non_terminal)) {
-            LeftRecursionRemover::removeImmediateLR(new_grammar, non_terminal);
+        if(isImmediateLR(new_grammar, ordered_non_terminals[i])) {
+            LeftRecursionRemover::removeImmediateLR(new_grammar, ordered_non_terminals[i]);
         }
-        prev_non_terminals.push_back(non_terminal);
+
     }
     return new_grammar;
 }
 
 
-bool LeftRecursionRemover::substituteRHS(std::unordered_map<std::string, std::vector<std::vector<std::string>>> &grammar, std::string lhs_non_terminal, std::string rhs_non_terminal) {
+void LeftRecursionRemover::substituteRHS(std::unordered_map<std::string, std::vector<std::vector<std::string>>> &grammar, std::string lhs_non_terminal, std::string rhs_non_terminal) {
     auto& src_prods = grammar.at(rhs_non_terminal);
     auto& dist_prods = grammar.at(lhs_non_terminal);
     std::vector<std::vector<std::string>> new_dist_prods;
@@ -89,5 +96,4 @@ bool LeftRecursionRemover::substituteRHS(std::unordered_map<std::string, std::ve
         }
     }
     grammar.at(lhs_non_terminal) = new_dist_prods;
-    return true;
 }

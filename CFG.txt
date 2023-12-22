@@ -1,8 +1,2 @@
-# E= T E`
-# E` = '+' T E`
- | Epsilon
-# T = F T`
-# T`= '*' F T`
-| Epsilon
-# F   = '(' E ')'
-| 'id'
+# S = A 'a' | 'b'
+# A = A 'c' | S 'd' | 'f'
