@@ -150,7 +150,7 @@ std::set<std::string> FirstAndFollowGenerator::computeFollow(const std::string &
                             //   then FOLLOW(B) contains { FIRST(q) – Є } U FOLLOW(A)
                             qIndex--;
                             if (qIndex < production.size() &&
-                                (computedFirstSetsWithoutProductions[production[qIndex]].find(EPSILON) ==
+                                (computedFirstSetsWithoutProductions[production[qIndex]].find(EPSILON) !=
                                  computedFirstSetsWithoutProductions[production[qIndex]].end()
                                  || nonTerminalHasEpsilon(production[qIndex]))) {
                                 const std::set<std::string> &followASet = computeFollow(rule.nonTerminal);
