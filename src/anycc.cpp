@@ -8,6 +8,7 @@
 #include <vector>
 #include "Utilities.h"
 #include "Parser/PredictiveTable.h"
+#include "Parser/PredictiveTopDownParser.h"
 
 int main() {
     std::unordered_map<std::string, std::vector<std::vector<std::string>>> grammar = Utilities::parseCFGInput(
@@ -48,6 +49,15 @@ int main() {
     std::cout << "\nPredictive Table:\n";
     predictiveTable.printPredictiveTable();
 
+    // LL(1) parsing
+    std::cout << "\nLL(1) parsing:\n";
+    PredictiveTopDownParser parser(predictiveTable, firstAndFollowGenerator.getNonTerminals());
+    // parsing input: id+id$
+    parser.processNextToken("id");
+    parser.processNextToken("+");
+    parser.processNextToken("id");
+    parser.processNextToken("$");
+    parser.printLeftmostDerivation();
 
     return 0;
 }

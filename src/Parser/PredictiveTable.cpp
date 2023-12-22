@@ -55,7 +55,7 @@ PredictiveTable::addSynchAtFollowSetElements(const std::string &non_terminal, co
         if (containsKey(non_terminal, follow)) {
             continue;
         }
-        insertProduction(non_terminal, follow, production, ParsingTableEntryType::SYNCHRONIZING);
+        insertProduction(non_terminal, follow, production, ParsingTableEntryType::SYNC);
     }
 }
 
@@ -78,8 +78,8 @@ ParsingTableEntryType PredictiveTable::getCellType(const std::string &non_termin
     CellKey cell_key = CellKey(non_terminal, terminal);
     if (containsKey(non_terminal, terminal)) {
         auto cell_value = predictive_table[cell_key];
-        if (cell_value->getPredictiveTableEnum() == ParsingTableEntryType::SYNCHRONIZING) {
-            return ParsingTableEntryType::SYNCHRONIZING;
+        if (cell_value->getPredictiveTableEntryType() == ParsingTableEntryType::SYNC) {
+            return ParsingTableEntryType::SYNC;
         } else {
             return ParsingTableEntryType::VALID_PRODUCTION;
         }
@@ -96,7 +96,7 @@ bool PredictiveTable::isCellEmpty(const std::string &non_terminal, const std::st
 }
 
 bool PredictiveTable::isSynchronizing(const std::string &non_terminal, const std::string &terminal) {
-    return getCellType(non_terminal, terminal) == ParsingTableEntryType::SYNCHRONIZING;
+    return getCellType(non_terminal, terminal) == ParsingTableEntryType::SYNC;
 }
 
 void PredictiveTable::insertProduction(const std::string &non_terminal, const std::string &terminal,
@@ -115,12 +115,12 @@ void PredictiveTable::printPredictiveTable() {
     for (const auto &element: predictive_table) {
         std::cout << element.first.getNonTerminal() << ", " << element.first.getTerminal();
 
-        switch (element.second->getPredictiveTableEnum()) {
+        switch (element.second->getPredictiveTableEntryType()) {
             case ParsingTableEntryType::EMPTY:
                 std::cout << " --> EMPTY\n";
                 break;
-            case ParsingTableEntryType::SYNCHRONIZING:
-                std::cout << " --> SYNCHRONIZING\n";
+            case ParsingTableEntryType::SYNC:
+                std::cout << " --> SYNC\n";
                 break;
             case ParsingTableEntryType::VALID_PRODUCTION:
                 std::cout << " --> ";
