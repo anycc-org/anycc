@@ -25,15 +25,15 @@ struct AcceptanceStateEntry {
     Word word;
 
     AcceptanceStateEntry(const NFAState *state, Word word) : state(state), word(std::move(word)) {}
+
+    AcceptanceStateEntry() = default;
 };
 
-class Analyzer : public FileReader {
+class Analyzer {
 public:
     Analyzer(std::string &program_file_name, const NFAState *start_state, TransitionDiagram *transition_diagram);
 
     ~Analyzer();
-
-    void analyzeProgram();
 
     /**
      * @brief Get the next token
@@ -47,8 +47,6 @@ public:
      */
     void printSymbolTable();
 
-    void readTemplate(std::ifstream *file) override;
-
 private:
     std::string program_file_name;
     std::unordered_map<const NFAState *, std::string> end_states_tokens_map;
@@ -58,12 +56,15 @@ private:
     std::queue<Token *> tokens;
     const NFAState *start_state;
     TransitionDiagram *transition_diagram;
+    std::ifstream *file;
     SymbolTable &symbol_table;
-
-    /**
-     * @brief Read the program file and analyze it
-     */
-    void readProgram();
+    AcceptanceStateEntry acceptance_state;
+    const NFAState *current_state;
+    std::string buffer;
+    int line_number;
+    std::size_t column_number;
+    char c{};
+    bool not_dead_state{};
 
     /**
      * @brief Accept the given token
@@ -71,27 +72,21 @@ private:
      * @param buffer The buffer of the token
      * @warning the responsibility of deleting pointer is the caller's
      */
-    const NFAState *getNextState(char &c, const NFAState *state);
-
-    /**
-     * @brief Read the program file and tokenize it
-     * @param file The file to be read
-     */
-    void tokenization(std::ifstream *file);
+    const NFAState *getNextState(char &terminal, const NFAState *state);
 
     /**
      * @brief Add the given token to the tokens queue and add it to the symbol table if it's id
      * @param acceptanceState The acceptance state of the token
      * @param buffer The buffer of the token
      */
-    void addToken(const NFAState *state, Word &word);
+    Token *addToken(const NFAState *state, Word &word);
 
     /**
      * @brief Accept the given token, call addToken and reset the acceptance state and delete it from buffer
-     * @param acceptanceState The acceptance state of the token
+     * @param acceptance_state The acceptance state of the token
      * @param buffer The buffer of the token
      */
-    void acceptToken(AcceptanceStateEntry &acceptanceState, std::string &buffer);
+    Token *acceptToken();
 
     /**
      * @brief Check if the given state is a acceptance state
@@ -111,15 +106,13 @@ private:
     /**
      * @brief Maximal munch algorithm with error recovery
      * @param line_number The line number of the error
-     * @param i The index of the error
+     * @param column_number The index of the error
      * @param acceptanceState The acceptance state of the token
      * @param state The state of the token
      * @param buffer The buffer of the token
      * @param bypass True if the buffer got space, new line or eof then no more characters can be found and any errors should be printed, false otherwise
      */
-    void
-    maximalMunchWithErrorRecovery(int line_number, size_t i, AcceptanceStateEntry &acceptanceState,
-                                  const NFAState *&state, std::string &buffer, bool bypass);
+    Token *maximalMunchWithErrorRecovery(bool bypass);
 
     /**
      * @brief Check if the given state is a dead state
