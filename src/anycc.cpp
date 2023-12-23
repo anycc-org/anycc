@@ -19,7 +19,6 @@ int main() {
     lex->getAllTokensAndCreateOutputFile();
     lex->printSymbolTable();
 
-    return 0;
     std::unordered_map<std::string, std::vector<std::vector<std::string>>> grammar = Utilities::parseCFGInput(
             "../CFG.txt");
     FirstAndFollowGenerator firstAndFollowGenerator(grammar);
