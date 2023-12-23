@@ -64,7 +64,7 @@ private:
     int line_number;
     std::size_t column_number;
     char c{};
-    bool not_dead_state{};
+    bool is_dead_state{};
 
     /**
      * @brief Accept the given token

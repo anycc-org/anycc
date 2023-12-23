@@ -20,7 +20,7 @@ Analyzer::Analyzer(std::string &program_file_name, const NFAState *start_state, 
     this->buffer = "";
     this->line_number = 0;
     this->column_number = 0;
-    this->not_dead_state = false;
+    this->is_dead_state = false;
 }
 
 Analyzer::~Analyzer() {
@@ -37,8 +37,8 @@ Analyzer::~Analyzer() {
 Token *Analyzer::getNextToken() {
     if (!buffer.empty()) {
         auto token = maximalMunchWithErrorRecovery(false);
-        if (not_dead_state) {
-            not_dead_state = false;
+        if (is_dead_state) {
+            is_dead_state = false;
             column_number++;
         }
         if (token != nullptr) return token;
@@ -109,7 +109,7 @@ Token *Analyzer::getNextToken() {
                     buffer.erase(0, 1);
                     token = maximalMunchWithErrorRecovery(false);
                 } else {
-                    not_dead_state = true;
+                    is_dead_state = true;
                     token = acceptToken();
                 }
             }
