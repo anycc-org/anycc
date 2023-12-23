@@ -1,4 +1,3 @@
-#include <map>
 #include "Lex/Lex.h"
 #include "Parser/FirstAndFollowGenerator.h"
 #include "constants.h"
@@ -11,6 +10,16 @@
 #include "Parser/PredictiveTopDownParser.h"
 
 int main() {
+    auto *rules_file_name = new std::string("../rules.txt");
+    auto *program_file_name = new std::string("../program.txt");
+
+    Lex *lex = new Lex(rules_file_name, program_file_name);
+    lex->buildLex();
+
+    lex->getAllTokensAndCreateOutputFile();
+    lex->printSymbolTable();
+
+    return 0;
     std::unordered_map<std::string, std::vector<std::vector<std::string>>> grammar = Utilities::parseCFGInput(
             "../CFG.txt");
     FirstAndFollowGenerator firstAndFollowGenerator(grammar);

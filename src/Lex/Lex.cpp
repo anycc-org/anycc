@@ -23,7 +23,12 @@ void Lex::buildLex() {
     auto *transition_diagram = buildDFA(nfa);
 
     analyzer = new Analyzer(*program_file_name, transition_diagram->getStartState(), transition_diagram);
-    analyzer->analyzeProgram();
+    auto token = analyzer->getNextToken();
+    // print the tokenization result
+    while (token != nullptr) {
+        std::cout << "{" << *(token->getKey()) << " -> " << *(token->getValue()) << "}" << '\n';
+        token = analyzer->getNextToken();
+    }
 }
 
 void Lex::read_rules() {
