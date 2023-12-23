@@ -42,6 +42,8 @@ public:
      */
     Token *getNextToken();
 
+    Token *getNextTokenInQueue();
+
     /**
      * @brief Print the symbol table
      */

@@ -34,6 +34,15 @@ Analyzer::~Analyzer() {
     }
 }
 
+Token *Analyzer::getNextTokenInQueue() {
+    if (tokens.empty())
+        return nullptr;
+
+    auto next_token = tokens.front();
+    tokens.pop();
+    return next_token;
+}
+
 Token *Analyzer::getNextToken() {
     if (!buffer.empty()) {
         auto token = maximalMunchWithErrorRecovery(false);
