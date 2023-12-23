@@ -47,7 +47,7 @@ Token *Analyzer::getNextToken() {
     while (file->get(c)) {
         // If the character is not a new line or a space and not in the inputs set
         // then it is a bad token, and we should log an error and accept the last accepted token
-        if (c != '\n' && c != ' ' && inputs.find(c) == inputs.end()) {
+        if (c != '\t' && c != '\n' && c != ' ' && inputs.find(c) == inputs.end()) {
             auto token = acceptToken();
             std::string s(1, c);
             logError(line_number, column_number, s);
@@ -57,7 +57,7 @@ Token *Analyzer::getNextToken() {
                 return token;
             }
         } else if (c == '\n') {
-            Token *token;
+            Token *token = nullptr;
             if (acceptance_state.state != nullptr) {
                 token = acceptToken();
             }
@@ -76,7 +76,7 @@ Token *Analyzer::getNextToken() {
             column_number = 0;
             if (token != nullptr) return token;
         } else if (c == ' ' || c == '\t') {
-            Token *token;
+            Token *token = nullptr;
             if (acceptance_state.state != nullptr) {
                 token = acceptToken();
             }
@@ -91,7 +91,11 @@ Token *Analyzer::getNextToken() {
 
             buffer = "";
             current_state = this->start_state;
-            column_number++;
+            if (c == '\t') {
+                column_number += 4;
+            } else {
+                column_number++;
+            }
             if (token != nullptr) return token;
         } else {
             Token *token = nullptr;
@@ -111,6 +115,8 @@ Token *Analyzer::getNextToken() {
                 } else {
                     is_dead_state = true;
                     token = acceptToken();
+                    if (token != nullptr) return token;
+                    continue;
                 }
             }
             column_number++;
