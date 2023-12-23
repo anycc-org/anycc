@@ -19,6 +19,13 @@ int main() {
     lex->getAllTokensAndCreateOutputFile();
     lex->printSymbolTable();
 
+    auto token = lex->getNextToken();
+    // print the tokenization result
+    while (token != nullptr) {
+        std::cout << "{" << *(token->getKey()) << " -> " << *(token->getValue()) << "}" << '\n';
+        token = lex->getNextToken();
+    }
+
     std::unordered_map<std::string, std::vector<std::vector<std::string>>> grammar = Utilities::parseCFGInput(
             "../CFG.txt");
     FirstAndFollowGenerator firstAndFollowGenerator(grammar);
