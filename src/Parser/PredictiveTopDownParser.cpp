@@ -2,8 +2,10 @@
 #include "constants.h"
 
 PredictiveTopDownParser::PredictiveTopDownParser(
+        Lex &lex,
         const PredictiveTable &predictive_table,
-        const std::set<std::string> &non_terminals) : predictive_table(predictive_table), non_terminals(non_terminals) {
+        const std::set<std::string> &non_terminals)
+        : lex(lex), predictive_table(predictive_table), non_terminals(non_terminals) {
     stk.push({"$", true});
     stk.push({START_SYMBOL, false});
     left_most_derivation.push_back({START_SYMBOL});
@@ -11,57 +13,64 @@ PredictiveTopDownParser::PredictiveTopDownParser(
 
 PredictiveTopDownParser::~PredictiveTopDownParser() {}
 
-void PredictiveTopDownParser::processNextToken(const std::string &current_token) {
-    auto top = stk.top();
-    std::cout << "stack top: " << top.token << std::endl;
-    std::cout << "current token: " << current_token <<  std::endl;
+void PredictiveTopDownParser::parseInputTokens() {
+    // get token for the first time
+    Token *curr_token = lex.getNextToken();
+    while (!stk.empty()) {
+        auto top = stk.top();
+        std::cout << "stack top: " << top.token << " ,curr token: " << *(curr_token->getKey());
 
-    if (top.isTerminal) {
-        if (top.token == current_token) {
-            // match
-            std::cout << "matched " << current_token << std::endl;
-            stk.pop();
-            // get next token
-            return;
-        } else {
-            // panic mode error recovery
-            std::cerr << "Error: missing " << top.token << ", inserted" << std::endl;
-            stk.pop();
-            return processNextToken(current_token);
-        }
-    }
-    else{
-        const CellValue *cellValue = predictive_table.lookUp(top.token, current_token);
-        ParsingTableEntryType entryType = cellValue->getPredictiveTableEntryType();
-        if (entryType == ParsingTableEntryType::EMPTY) {
-            // panic mode error recovery
-            std::cerr << "Error:(illegal " << top.token <<") – discard " << current_token << std::endl;
-            // get next token
-            return;
-        }
-        if (entryType == ParsingTableEntryType::SYNC) {
-            // panic mode error recovery
-            std::cerr << "Error: missing " << top.token << ", discarded" << std::endl;
-            stk.pop();
-            return processNextToken(current_token);
-        }
-        if (entryType == ParsingTableEntryType::VALID_PRODUCTION) {
-            stk.pop();
-            auto production = cellValue->getProduction().productions[0];
-
-            // construct next derivation
-            setNextDerivation(top.token, production);
-
-            // Loop through the vector in reverse order
-            for (auto it = production.rbegin(); it != production.rend(); ++it) {
-                // Push instances into the stack
-                bool isTerminal = non_terminals.find(*it) == non_terminals.end();
-                stk.push({*it, isTerminal});
-            }
-            if (stk.top().token == EPSILON) {
+        if (top.isTerminal) {
+            if (top.token == *(curr_token->getValue())) {
+                // match
+                std::cout << " ,matched " << curr_token << std::endl;
                 stk.pop();
+                // get next token
+                curr_token = lex.getNextToken();
+                continue; // for convenience
+            } else {
+                // panic mode error recovery
+                std::cerr << "Error: missing " << top.token << ", inserted" << std::endl;
+                stk.pop();
+                continue; // for convenience
             }
-            return processNextToken(current_token);
+        }
+        else{
+            // stack top is non-terminal
+            const CellValue *cellValue = predictive_table.lookUp(top.token, *(curr_token->getKey()));
+            ParsingTableEntryType entryType = cellValue->getPredictiveTableEntryType();
+
+            if (entryType == ParsingTableEntryType::EMPTY) {
+                // panic mode error recovery
+                std::cerr << "Error:(illegal " << top.token << ") – discard " << curr_token << std::endl;
+                // get next token
+                curr_token = lex.getNextToken();
+                continue;
+            }
+            if (entryType == ParsingTableEntryType::SYNC) {
+                // panic mode error recovery
+                std::cerr << "Error: missing " << top.token << ", discarded" << std::endl;
+                stk.pop();
+                continue;
+            }
+            if (entryType == ParsingTableEntryType::VALID_PRODUCTION) {
+                stk.pop();
+                auto production = cellValue->getProduction().productions[0];
+
+                // construct next derivation
+                setNextDerivation(top.token, production);
+
+                // Loop through the vector in reverse order
+                for (auto it = production.rbegin(); it != production.rend(); ++it) {
+                    // Push instances into the stack
+                    bool isTerminal = non_terminals.find(*it) == non_terminals.end();
+                    stk.push({*it, isTerminal});
+                }
+                if (stk.top().token == EPSILON) {
+                    stk.pop();
+                }
+                continue;
+            }
         }
     }
 }

@@ -4,6 +4,7 @@
 #include <stack>
 #include "PredictiveTable.h"
 #include "Token.h"
+#include "Lex.h"
 
 /**
  * @brief produce the leftmost derivation for a correct input.
@@ -11,7 +12,9 @@
  */
 class PredictiveTopDownParser {
 public:
-    PredictiveTopDownParser(const PredictiveTable &predictive_table, const std::set<std::string> &non_terminals);
+    PredictiveTopDownParser(Lex &lex,
+                            const PredictiveTable &predictive_table,
+                            const std::set<std::string> &non_terminals);
 
     ~PredictiveTopDownParser();
 
@@ -21,7 +24,7 @@ public:
      * apply the panic mode error recovery in case of ERROR
      * @parm current_token is the input symbol
      */
-    void processNextToken(const std::string &current_token);
+    void parseInputTokens();
 
     /**
      * @brief returns the computed productions by the LL(1) parser
@@ -37,6 +40,7 @@ private:
         bool isTerminal;
     };
 
+    Lex &lex;
     PredictiveTable predictive_table;
     std::set<std::string> non_terminals;
     std::vector<std::vector<std::string>> left_most_derivation;

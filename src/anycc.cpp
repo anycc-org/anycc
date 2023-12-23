@@ -59,12 +59,9 @@ int main() {
 
     // LL(1) parsing
     std::cout << "\nLL(1) parsing:\n";
-    PredictiveTopDownParser parser(predictiveTable, firstAndFollowGenerator.getNonTerminals());
+    PredictiveTopDownParser parser(*lex, predictiveTable, firstAndFollowGenerator.getNonTerminals());
     // parsing input: id+id$
-    parser.processNextToken("id");
-    parser.processNextToken("+");
-    parser.processNextToken("id");
-    parser.processNextToken("$");
+    parser.parseInputTokens();
     parser.printLeftmostDerivation();
 
     return 0;
