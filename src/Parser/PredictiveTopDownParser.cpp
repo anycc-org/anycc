@@ -18,10 +18,66 @@ void PredictiveTopDownParser::parseInputTokens() {
     Token *curr_token = lex.getNextToken();
     while (!stk.empty()) {
         auto top = stk.top();
-        std::cout << "stack top: " << top.token << " ,curr token: " << *(curr_token->getKey());
+
+        if (curr_token == nullptr) { // $ is the end of input
+            while (!stk.empty()) {
+                top = stk.top();
+                if (top.isTerminal) {
+                    if (top.token == "$") {
+                        std::cout << "Accept!" << std::endl;
+                        stk.pop();
+                        return;
+                    }
+                    else {
+                        std::cerr << "Error: missing " << top.token << ", discarded" << std::endl;
+                        stk.pop();
+                        continue;
+                    }
+                }
+                else {
+                    // stack top is non-terminal
+                    const CellValue *cellValue = predictive_table.lookUp(top.token, "$");
+                    ParsingTableEntryType entryType = cellValue->getPredictiveTableEntryType();
+
+                    if (entryType == ParsingTableEntryType::EMPTY) {
+                        // panic mode error recovery
+                        std::cerr << "Error:(illegal " << top.token << ") – Wrong Grammar!" << std::endl;
+                        return; // reject grammar
+                    }
+                    if (entryType == ParsingTableEntryType::SYNC) {
+                        // panic mode error recovery
+                        std::cerr << "Error: missing " << top.token << ", discarded" << std::endl;
+                        stk.pop();
+                        continue;
+                    }
+                    if (entryType == ParsingTableEntryType::VALID_PRODUCTION) {
+                        stk.pop();
+                        auto production = cellValue->getProduction().productions[0];
+
+                        // construct next derivation
+                        setNextDerivation(top.token, production);
+
+                        // Loop through the vector in reverse order
+                        for (auto it = production.rbegin(); it != production.rend(); ++it) {
+                            // Push instances into the stack
+                            bool isTerminal = non_terminals.find(*it) == non_terminals.end();
+                            stk.push({*it, isTerminal});
+                        }
+                        if (stk.top().token == EPSILON) {
+                            stk.pop();
+                        }
+                        continue;
+                    }
+                }
+            }
+            return;
+        }
+
+        std::cout << "stack top: " << top.token << std::endl;
+        std::cout << "curr token: " << *(curr_token->getKey()) << std::endl;
 
         if (top.isTerminal) {
-            if (top.token == *(curr_token->getValue())) {
+            if (top.token == *(curr_token->getKey())) {
                 // match
                 std::cout << " ,matched " << curr_token << std::endl;
                 stk.pop();

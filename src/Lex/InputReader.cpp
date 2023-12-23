@@ -106,7 +106,7 @@ void InputReader::addPunctuations(std::string pString) {
             pos++;
         } else if ((pString)[pos] == '\\') {
             std::string punctuation;
-            punctuation += pString[pos];
+//            punctuation += pString[pos];
             punctuation += pString[pos + 1];
             rules->addRule(RuleType::PUNCTUATION, punctuation);
             pos += 2;

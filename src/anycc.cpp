@@ -16,14 +16,14 @@ int main() {
     Lex *lex = new Lex(rules_file_name, program_file_name);
     lex->buildLex();
 
-    auto token = lex->getNextToken();
-    // print the tokenization result
-    while (token != nullptr) {
-        std::cout << "{" << *(token->getKey()) << " -> " << *(token->getValue()) << "}" << '\n';
-        token = lex->getNextToken();
-    }
+//    auto token = lex->getNextToken();
+//    // print the tokenization result
+//    while (token != nullptr) {
+//        std::cout << "{" << *(token->getKey()) << " -> " << *(token->getValue()) << "}" << '\n';
+//        token = lex->getNextToken();
+//    }
 
-    lex->printSymbolTable();
+//    lex->printSymbolTable();
 
     std::unordered_map<std::string, std::vector<std::vector<std::string>>> grammar = Utilities::parseCFGInput(
             "../CFG.txt");

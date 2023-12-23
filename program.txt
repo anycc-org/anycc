@@ -1,34 +1,10 @@
-!!!!!
-@@@@@
-1.5E-6
-int sum , count , pass , mnt; whi!=
-le (pass !1.5E !
-10 )
+int x; 
+x = 5; 
+if (x > 2) 
+{ 
+ x = 0; 
+}
+else
 {
-pass = pass + 1;
+ x = 1;
 }
-boolean float int intx!
-!
-whi!
-@int sum , count , pass , mnt; whi! 1.5E-6
-do!
-1.5E-6
-@int sum , count , pass , mnt; whi!
-le (pass ! !
-10 )
-}
-boolean float int intx!
-!
-whi!
-
-do!
-dou!
-whi!le
-do!
-1.5E while
-1.5E 123
-1.5E
-1.5E@
-do!
-@
-1.5E
