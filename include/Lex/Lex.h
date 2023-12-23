@@ -23,6 +23,8 @@ public:
      */
     void getAllTokensAndCreateOutputFile();
 
+    Token *getNextToken();
+
     /**
      * @brief Print the symbol table
      */

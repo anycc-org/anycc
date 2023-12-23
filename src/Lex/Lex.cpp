@@ -93,3 +93,7 @@ void Lex::getAllTokensAndCreateOutputFile() {
 void Lex::printSymbolTable() {
     analyzer->printSymbolTable();
 }
+
+Token *Lex::getNextToken() {
+    return analyzer->getNextToken();
+}
