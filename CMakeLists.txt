@@ -42,5 +42,6 @@ add_executable(anycc
         include/Parser/LeftRecursionRemover.h
         src/Parser/LeftRecursionRemover.cpp
         src/Parser/LeftFactorer.cpp
-
+        include/Parser/PredictiveTopDownParser.h
+        src/Parser/PredictiveTopDownParser.cpp
 )
