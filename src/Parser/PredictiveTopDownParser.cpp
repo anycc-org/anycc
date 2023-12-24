@@ -90,6 +90,8 @@ void PredictiveTopDownParser::handleNonTerminal(const StackItem &top, Token *&cu
         case ParsingTableEntryType::VALID_PRODUCTION:
             handleValidProduction(top, cellValue);
             break;
+        default:
+            break;
     }
 }
 
