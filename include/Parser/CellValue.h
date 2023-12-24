@@ -7,17 +7,17 @@
 
 class CellValue {
 public:
-    CellValue(const Production &production_value, ParsingTableEntryType predictive_table_enum_value);
+    CellValue(const Production &production_value, ParsingTableEntryType entry_type);
 
     ~CellValue();
 
     const Production &getProduction() const;
 
-    ParsingTableEntryType getPredictiveTableEnum() const;
+    ParsingTableEntryType getPredictiveTableEntryType() const;
 
 private:
     Production production;
-    ParsingTableEntryType predictive_table_enum;
+    ParsingTableEntryType entry_type;
 };
 
 

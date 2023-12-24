@@ -71,10 +71,13 @@ public:
      */
     void printPredictiveTable();
 
+    void generateMarkdownTable(const std::string &outputFilePath);
+
 
 private:
     std::unordered_map<CellKey, CellValue *, CellKeyHashFn> predictive_table;
     std::set<std::string> non_terminals;
+    std::set<std::string> terminals;
     std::unordered_map<std::string, std::set<std::pair<std::string, Production>, CompareFirst>> computed_first_sets;
     std::unordered_map<std::string, std::set<std::string>> computed_follow_sets;
 

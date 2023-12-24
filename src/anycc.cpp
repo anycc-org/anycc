@@ -1,53 +1,26 @@
-#include <map>
 #include "Lex/Lex.h"
-#include "Parser/FirstAndFollowGenerator.h"
 #include "constants.h"
-#include <iostream>
 #include <set>
-#include <unordered_map>
-#include <vector>
-#include "Utilities.h"
-#include "Parser/PredictiveTable.h"
+#include "Parser/Parser.h"
 
-int main() {
-    std::unordered_map<std::string, std::vector<std::vector<std::string>>> grammar = Utilities::parseCFGInput(
-            "../CFG.txt");
-    FirstAndFollowGenerator firstAndFollowGenerator(grammar);
-    firstAndFollowGenerator.compute();
-    // Print first_sets
-    const auto &first_sets = firstAndFollowGenerator.getFirstSets();
-    std::cout << "First Sets:\n";
-    for (const auto &entry: first_sets) {
-        const std::string &non_terminal = entry.first;
-        const std::set<std::pair<std::string, Production>, CompareFirst> &first_set = entry.second;
-
-        std::cout << non_terminal << ": { ";
-        for (std::pair<std::string, Production> symbol: first_set) {
-            std::cout << symbol.first << ' ';
-        }
-        std::cout << "}\n";
+int main(int argc, char **argv) {
+    if (argc != 4) {
+        std::cerr << "Usage: " << argv[0] << " <rules_file_name> <cfg_file_name> <program_file_name>\n";
+        return 1;
     }
 
-    // Print followSets
-    const auto &followSets = firstAndFollowGenerator.getFollowSets();
-    std::cout << "\nFollow Sets:\n";
-    for (const auto &entry: followSets) {
-        const std::string &non_terminal = entry.first;
-        const std::set<std::string> &follow_set = entry.second;
+    std::string rules_file_name = argv[1];
+    std::string cfg_file_name = argv[2];
+    std::string program_file_name = argv[3];
 
-        std::cout << non_terminal << ": { ";
-        for (std::string symbol: follow_set) {
-            std::cout << symbol << ' ';
-        }
-        std::cout << "}\n";
-    }
+    auto lex = new Lex(rules_file_name, program_file_name);
+    lex->buildLex();
 
-    // build predictive table
-    PredictiveTable predictiveTable(first_sets, followSets, firstAndFollowGenerator.getNonTerminals());
-    predictiveTable.buildPredictiveTable();
-    std::cout << "\nPredictive Table:\n";
-    predictiveTable.printPredictiveTable();
+    auto parser = new Parser(cfg_file_name, lex);
+    parser->buildParser();
+    parser->parseProgram();
 
+    SymbolTable::getInstance().generateMarkdownTable("../SymbolTable.md");
 
     return 0;
 }

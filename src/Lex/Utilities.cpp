@@ -1,5 +1,5 @@
-#include "Utilities.h"
-#include "Operator.h"
+#include "Lex/Utilities.h"
+#include "Lex/Operator.h"
 #include <regex>
 
 std::string *Utilities::cleanRegex(std::string *input) {
@@ -188,51 +188,3 @@ void Utilities::deleteVectorOfTokens(std::vector<Token *> *vector) {
     }
 }
 
-
-std::unordered_map<std::string, std::vector<std::vector<std::string>>> Utilities::parseCFGInput(const std::string& filename) {
-    std::ifstream inputFile(filename);
-    std::unordered_map<std::string, std::vector<std::vector<std::string>>> grammar;
-
-    if (inputFile.is_open()) {
-        std::string line;
-        std::string currentNonTerminal;
-
-        while (std::getline(inputFile, line)) {
-            // Skip comments and empty lines
-            if (line.empty() || line[0] == '#')
-                continue;
-
-            // Find the position of ::= in the line
-            size_t arrowPos = line.find("::=");
-            if (arrowPos != std::string::npos) {
-                // Extract the non-terminal before ::= as the current non-terminal
-                currentNonTerminal = line.substr(0, arrowPos);
-
-                // Tokenize the RHS of the production rule using '|'
-                line = line.substr(arrowPos + 3); // Move past "::="
-                std::istringstream ss(line);
-                std::string token;
-                std::vector<std::string> production;
-
-                while (ss >> token) {
-                    if (token == "|") {
-                      // Start a new production for the same non-terminal
-                      grammar[currentNonTerminal].push_back(production);
-                      production.clear();
-                    } else {
-                      production.push_back(token);
-                    }
-                }
-
-                // Add the last production to the grammar
-                grammar[currentNonTerminal].push_back(production);
-            }
-        }
-
-        inputFile.close();
-    } else {
-        std::cerr << "Unable to open file: " << filename << std::endl;
-    }
-
-    return grammar;
-}

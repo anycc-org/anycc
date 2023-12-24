@@ -8,11 +8,9 @@ Lex::~Lex() {
     delete rules;
     delete inputReader;
     delete analyzer;
-    delete rules_file_name;
-    delete program_file_name;
 }
 
-Lex::Lex(std::string *rules_file_name, std::string *program_file_name) {
+Lex::Lex(std::string &rules_file_name, std::string &program_file_name) {
     this->rules_file_name = rules_file_name;
     this->program_file_name = program_file_name;
 }
@@ -22,8 +20,7 @@ void Lex::buildLex() {
     NFA *nfa = buildNFA();
     auto *transition_diagram = buildDFA(nfa);
 
-    analyzer = new Analyzer(*program_file_name, transition_diagram->getStartState(), transition_diagram);
-    analyzer->analyzeProgram();
+    analyzer = new Analyzer(program_file_name, transition_diagram->getStartState(), transition_diagram);
 }
 
 void Lex::read_rules() {
@@ -77,7 +74,7 @@ void Lex::printTransitionDiagramStatistics(TransitionDiagram *transition_diagram
 void Lex::getAllTokensAndCreateOutputFile() {
     std::ofstream tokens_file("tokens.txt");
     Token *token;
-    while ((token = analyzer->getNextToken()) != nullptr) {
+    while ((token = analyzer->getNextTokenInQueue()) != nullptr) {
         tokens_file << "{" << *(token->getKey()) << " -> " << *(token->getValue()) << "}" << '\n';
         std::cout << "{" << *(token->getKey()) << " -> " << *(token->getValue()) << "}" << '\n';
     }
@@ -85,6 +82,6 @@ void Lex::getAllTokensAndCreateOutputFile() {
     std::cout << '\n';
 }
 
-void Lex::printSymbolTable() {
-    analyzer->printSymbolTable();
+Token *Lex::getNextToken() {
+    return analyzer->getNextToken();
 }

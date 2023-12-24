@@ -1,3 +1,4 @@
+#include "Parser/CFGReader.h"
 #include "Parser/FirstAndFollowGenerator.h"
 #include "Parser/FirstAndFollowGeneratorUtility.h"
 #include "Parser/Production.h"
@@ -8,10 +9,8 @@ FirstAndFollowGenerator::FirstAndFollowGenerator(
     for (const auto &entry: grammar) {
         const std::string &nonTerminal = entry.first;
         const std::vector<std::vector<std::string>> &productions = entry.second;
-
         productionVector.push_back({nonTerminal, productions});
     }
-
     nonTerminals = collectNonTerminals(productionVector);
 }
 
@@ -80,7 +79,7 @@ std::set<std::string> FirstAndFollowGenerator::computeFollow(const std::string &
 
     // The start symbol has $ (end of input) in its Follow set
     //1) FOLLOW(S) = { $ }   // where S is the starting Non-Terminal
-    if (nonTerminal == START_SYMBOL) {
+    if (nonTerminal == CFGReader::start_symbol) {
         followSet.insert("$");
     }
     // Mark the Follow set as computed to handle recursive calls
@@ -150,7 +149,7 @@ std::set<std::string> FirstAndFollowGenerator::computeFollow(const std::string &
                             //   then FOLLOW(B) contains { FIRST(q) – Є } U FOLLOW(A)
                             qIndex--;
                             if (qIndex < production.size() &&
-                                (computedFirstSetsWithoutProductions[production[qIndex]].find(EPSILON) ==
+                                (computedFirstSetsWithoutProductions[production[qIndex]].find(EPSILON) !=
                                  computedFirstSetsWithoutProductions[production[qIndex]].end()
                                  || nonTerminalHasEpsilon(production[qIndex]))) {
                                 const std::set<std::string> &followASet = computeFollow(rule.nonTerminal);
@@ -164,6 +163,9 @@ std::set<std::string> FirstAndFollowGenerator::computeFollow(const std::string &
                     // Case: A -> αB, where B is the last symbol
                     // Add Follow(A) to Follow(B)
                     // If A->pB is a production, then everything in FOLLOW(A) is in FOLLOW(B).
+                    if (nonTerminal == rule.nonTerminal) {
+                        continue;
+                    }
                     const std::set<std::string> &followASet = computeFollow(rule.nonTerminal);
 
                     if (!followASet.empty()) {
@@ -194,6 +196,7 @@ void FirstAndFollowGenerator::computeFirstSets(
 }
 
 void FirstAndFollowGenerator::computeFollowSets(std::unordered_map<std::string, std::set<std::string>> &followSets) {
+    followSets[CFGReader::start_symbol] = computeFollow(CFGReader::start_symbol);
     for (const std::string &nonTerminal: nonTerminals) {
         followSets[nonTerminal] = computeFollow(nonTerminal);
     }
@@ -247,4 +250,32 @@ void FirstAndFollowGenerator::compute() {
 
     // Compute Follow sets for each non-terminal
     computeFollowSets(computedFollowSets);
+}
+
+void FirstAndFollowGenerator::printFirstSets() {
+    std::cout << "First Sets:\n";
+    for (const auto &entry: computedFirstSets) {
+        const std::string &non_terminal = entry.first;
+        const std::set<std::pair<std::string, Production>, CompareFirst> &first_set = entry.second;
+
+        std::cout << non_terminal << ": { ";
+        for (const std::pair<std::string, Production> &symbol: first_set) {
+            std::cout << symbol.first << ' ';
+        }
+        std::cout << "}\n";
+    }
+}
+
+void FirstAndFollowGenerator::printFollowSets() {
+    std::cout << "\nFollow Sets:\n";
+    for (const auto &entry: computedFollowSets) {
+        const std::string &non_terminal = entry.first;
+        const std::set<std::string> &follow_set = entry.second;
+
+        std::cout << non_terminal << ": { ";
+        for (const std::string &symbol: follow_set) {
+            std::cout << symbol << ' ';
+        }
+        std::cout << "}\n";
+    }
 }

@@ -36,6 +36,10 @@ public:
 
     void compute();
 
+    void printFirstSets();
+
+    void printFollowSets();
+
 private:
     std::vector<Production> productionVector;
     std::set<std::string> nonTerminals;
