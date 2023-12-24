@@ -1,4 +1,4 @@
-#include "Lex/SymbolTable.h"
+#include "SymbolTable.h"
 #include <iostream>
 
 void

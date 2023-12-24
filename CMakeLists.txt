@@ -15,7 +15,7 @@ add_executable(anycc
         src/Lex/NFA.cpp
         src/Lex/NFAGenerator.cpp
         src/Lex/NFAState.cpp
-        src/Lex/SymbolTable.cpp
+        src/SymbolTable.cpp
         src/Lex/Token.cpp
         src/anycc.cpp
         src/Lex/Utilities.cpp
