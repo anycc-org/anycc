@@ -40,4 +40,5 @@ add_executable(anycc
         include/Parser/ParsingTableEntryType.h
         include/Parser/PredictiveTopDownParser.h
         src/Parser/PredictiveTopDownParser.cpp
-)
+        include/Parser/CFGReader.h src/Parser/CFGReader.cpp
+        )

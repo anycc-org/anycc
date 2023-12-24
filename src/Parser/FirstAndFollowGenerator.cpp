@@ -1,3 +1,4 @@
+#include "Parser/CFGReader.h"
 #include "Parser/FirstAndFollowGenerator.h"
 #include "Parser/FirstAndFollowGeneratorUtility.h"
 #include "Parser/Production.h"
@@ -80,7 +81,7 @@ std::set<std::string> FirstAndFollowGenerator::computeFollow(const std::string &
 
     // The start symbol has $ (end of input) in its Follow set
     //1) FOLLOW(S) = { $ }   // where S is the starting Non-Terminal
-    if (nonTerminal == START_SYMBOL) {
+    if (nonTerminal == CFGReader::start_symbol) {
         followSet.insert("$");
     }
     // Mark the Follow set as computed to handle recursive calls
