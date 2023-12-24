@@ -125,7 +125,7 @@ void PredictiveTable::printPredictiveTable() {
             case ParsingTableEntryType::VALID_PRODUCTION:
                 std::cout << " --> ";
                 for (const auto &i: element.second->getProduction().productions[0])
-                    std::cout << i;
+                    std::cout << i << ' ';
                 std::cout << "\n";
                 break;
             default:
