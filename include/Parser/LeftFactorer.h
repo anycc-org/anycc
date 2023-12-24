@@ -15,7 +15,8 @@ public:
 private:
     static std::pair<std::vector<std::string>, std::set<std::vector<std::string>>> getLongestCommonPrefix(const std::unordered_map<std::string, std::vector<std::vector<std::string>>>& grammar, std::string non_terminal);
 
-    static std::string leftFactorProd(std::unordered_map<std::string, std::vector<std::vector<std::string>>>& grammar, std::string non_terminal, size_t factored_count);
+    static std::string leftFactorProduction(std::unordered_map<std::string, std::vector<std::vector<std::string>>>& grammar, std::string non_terminal, size_t factored_count);
+
 
 };
 

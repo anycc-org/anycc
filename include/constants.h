@@ -8,6 +8,6 @@
 
 #define EPSILON "Epsilon"
 #define START_SYMBOL "A"
-#define NEW_NT_SYMBOL "`"
+#define NEW_NT_SYMBOL "\"";
 
 #endif // CONSTANTS_H

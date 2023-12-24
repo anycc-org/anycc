@@ -17,11 +17,11 @@ std::unordered_map<std::string, std::vector<std::vector<std::string>>> LeftFacto
         std::string current_non_terminal = to_be_factored.top();
         to_be_factored.pop();
         size_t factored_count = 1;
-        std::string new_non_terminal = LeftFactorer::leftFactorProd(new_grammar, current_non_terminal, factored_count);
+        std::string new_non_terminal = LeftFactorer::leftFactorProduction(new_grammar, current_non_terminal, factored_count);
         while(new_non_terminal != current_non_terminal) {
             factored_count++;
             to_be_factored.push(new_non_terminal);
-            new_non_terminal = LeftFactorer::leftFactorProd(new_grammar, current_non_terminal, factored_count);
+            new_non_terminal = LeftFactorer::leftFactorProduction(new_grammar, current_non_terminal, factored_count);
         }
     }
     return new_grammar;   
@@ -69,7 +69,7 @@ std::pair<std::vector<std::string>, std::set<std::vector<std::string>>> LeftFact
     return std::pair<std::vector<std::string>, std::set<std::vector<std::string>>>(common_prefix, prefix_to_rhs_map.at(common_prefix));
 }
 
-std::string LeftFactorer::leftFactorProd(std::unordered_map<std::string, std::vector<std::vector<std::string>>>& grammar, std::string non_terminal, size_t factored_count) {
+std::string LeftFactorer::leftFactorProduction(std::unordered_map<std::string, std::vector<std::vector<std::string>>>& grammar, std::string non_terminal, size_t factored_count) {
     auto common_prefix_pair = LeftFactorer::getLongestCommonPrefix(grammar, non_terminal);
     auto common_prefix = common_prefix_pair.first;
     if(common_prefix.empty()) return non_terminal;
