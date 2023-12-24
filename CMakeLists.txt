@@ -27,5 +27,6 @@ add_executable(anycc
         src/Parser/CellKey.cpp
         src/Parser/CellValue.cpp
         src/Parser/PredictiveTopDownParser.cpp
+        include/Parser/CFGReader.h src/Parser/CFGReader.cpp
         src/Parser/Parser.cpp
-)
+        )

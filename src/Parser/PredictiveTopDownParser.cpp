@@ -2,27 +2,24 @@
 #include <iostream>
 #include <fstream>
 #include "Parser/PredictiveTopDownParser.h"
+#include "Parser/CFGReader.h"
 #include "constants.h"
 
 PredictiveTopDownParser::PredictiveTopDownParser(
         Lex &lex,
         const PredictiveTable &predictive_table,
         const std::set<std::string> &non_terminals,
-        const std::string& filename)
+        const std::string &filename)
         : lex(lex), predictive_table(predictive_table), non_terminals(non_terminals) {
     stk.push({"$", true});
-    stk.push({START_SYMBOL, false});
-    left_most_derivation.push_back({START_SYMBOL});
+    stk.push({CFGReader::start_symbol, false});
+    left_most_derivation.push_back({CFGReader::start_symbol});
 
     parsingFile.open(filename);
 
     if (!parsingFile.is_open()) {
         std::cerr << "Error opening file: output.md" << std::endl;
     }
-}
-
-PredictiveTopDownParser::~PredictiveTopDownParser() {
-    parsingFile.close();
 }
 
 void PredictiveTopDownParser::parseInputTokens() {
