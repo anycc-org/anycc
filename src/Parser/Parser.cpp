@@ -40,6 +40,7 @@ void Parser::buildPredictiveTable() {
     predictiveTable->buildPredictiveTable();
     std::cout << "\nPredictive Table:\n";
     predictiveTable->printPredictiveTable();
+    predictiveTable->generateMarkdownTable("../PredictiveTable.md");
 }
 
 void Parser::buildPredictiveTopDownParser() {
