@@ -113,7 +113,7 @@ Token *Analyzer::getNextToken() {
 
             if (isAcceptanceState(current_state)) {
                 acceptance_state = {current_state,
-                                    {buffer, line_number, (int) column_number - (int) buffer.length() + 2}};
+                                    {buffer, line_number, column_number - (int) buffer.length() + 2}};
             } else if (isDeadState(current_state)) {
                 // If the state is dead then we should log an error if there is no acceptance state
                 if (acceptance_state.state == nullptr) {
@@ -133,16 +133,19 @@ Token *Analyzer::getNextToken() {
         }
     }
 
+    Token *token = nullptr;
     // Check if there is a token in the buffer or there is an acceptance state
     if (acceptance_state.state != nullptr) {
-        return acceptToken();
+        token = acceptToken();
     } else {
         if (!buffer.empty()) {
-            return maximalMunchWithErrorRecovery(true);
+            token = maximalMunchWithErrorRecovery(true);
         }
     }
 
-    return nullptr;
+    if (token != nullptr) return token;
+    return new Token(new std::string("$"), new std::string("$"),
+                     new Position(line_number, column_number));
 }
 
 Token *Analyzer::maximalMunchWithErrorRecovery(bool bypass) {
@@ -153,7 +156,7 @@ Token *Analyzer::maximalMunchWithErrorRecovery(bool bypass) {
         char b = buffer[j++];
         current_state = getNextState(b, current_state);
         if (isAcceptanceState(current_state)) {
-            acceptance_state = {current_state, {buffer.substr(0, j), line_number, (int) column_number - j}};
+            acceptance_state = {current_state, {buffer.substr(0, j), line_number, column_number - j}};
         } else if (isDeadState(current_state) || bypass) {
             std::string temp_buffer = buffer;
             j = 0;
@@ -201,7 +204,8 @@ Token *Analyzer::addToken(const NFAState *state, Word &word) {
     auto token_name = new std::string(end_states_tokens_map.at(state));
     auto token_id = state->getStateId();
     auto lexeme = new std::string(word.lexeme);
-    auto token = new Token(token_name, lexeme);
+    auto position = new Position(word.line_number, word.column_number);
+    auto token = new Token(token_name, lexeme, position);
 
     tokens.push(token);
 

@@ -64,7 +64,7 @@ private:
     const NFAState *current_state;
     std::string buffer;
     int line_number;
-    std::size_t column_number;
+    int column_number;
     char c{};
     bool is_dead_state{};
 
