@@ -20,7 +20,7 @@ int main(int argc, char **argv) {
     parser->buildParser();
     parser->parseProgram();
 
-    SymbolTable::getInstance().printTable();
+    SymbolTable::getInstance().generateMarkdownTable("../SymbolTable.md");
 
     return 0;
 }
