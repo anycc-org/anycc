@@ -163,6 +163,9 @@ std::set<std::string> FirstAndFollowGenerator::computeFollow(const std::string &
                     // Case: A -> αB, where B is the last symbol
                     // Add Follow(A) to Follow(B)
                     // If A->pB is a production, then everything in FOLLOW(A) is in FOLLOW(B).
+                    if (nonTerminal == rule.nonTerminal) {
+                        continue;
+                    }
                     const std::set<std::string> &followASet = computeFollow(rule.nonTerminal);
 
                     if (!followASet.empty()) {
@@ -193,6 +196,7 @@ void FirstAndFollowGenerator::computeFirstSets(
 }
 
 void FirstAndFollowGenerator::computeFollowSets(std::unordered_map<std::string, std::set<std::string>> &followSets) {
+    followSets[CFGReader::start_symbol] = computeFollow(CFGReader::start_symbol);
     for (const std::string &nonTerminal: nonTerminals) {
         followSets[nonTerminal] = computeFollow(nonTerminal);
     }
@@ -246,4 +250,32 @@ void FirstAndFollowGenerator::compute() {
 
     // Compute Follow sets for each non-terminal
     computeFollowSets(computedFollowSets);
+}
+
+void FirstAndFollowGenerator::printFirstSets() {
+    std::cout << "First Sets:\n";
+    for (const auto &entry: computedFirstSets) {
+        const std::string &non_terminal = entry.first;
+        const std::set<std::pair<std::string, Production>, CompareFirst> &first_set = entry.second;
+
+        std::cout << non_terminal << ": { ";
+        for (const std::pair<std::string, Production> &symbol: first_set) {
+            std::cout << symbol.first << ' ';
+        }
+        std::cout << "}\n";
+    }
+}
+
+void FirstAndFollowGenerator::printFollowSets() {
+    std::cout << "\nFollow Sets:\n";
+    for (const auto &entry: computedFollowSets) {
+        const std::string &non_terminal = entry.first;
+        const std::set<std::string> &follow_set = entry.second;
+
+        std::cout << non_terminal << ": { ";
+        for (const std::string &symbol: follow_set) {
+            std::cout << symbol << ' ';
+        }
+        std::cout << "}\n";
+    }
 }

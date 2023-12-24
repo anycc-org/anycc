@@ -20,7 +20,7 @@ inline bool compareSubstringInfo(const SubstringInfo &a, const SubstringInfo &b)
 
 class InputReader : public FileReader {
 public:
-    explicit InputReader(std::string *rules_file_name, Rules *rules);
+    explicit InputReader(std::string &rules_file_name, Rules *rules);
 
     void readTemplate(std::ifstream *file) override;
 

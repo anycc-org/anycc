@@ -1,10 +1,10 @@
 #include "Lex/InputReader.h"
 #include "Lex/Utilities.h"
 
-InputReader::InputReader(std::string *rules_file_name, Rules *rules) {
+InputReader::InputReader(std::string &rules_file_name, Rules *rules) {
     this->rules = rules;
     this->non_terminal_symbols = new std::set<std::string>();
-    auto *file = new std::ifstream(*rules_file_name);
+    auto *file = new std::ifstream(rules_file_name);
 
     buildRules(file);
 }
@@ -106,7 +106,6 @@ void InputReader::addPunctuations(std::string pString) {
             pos++;
         } else if ((pString)[pos] == '\\') {
             std::string punctuation;
-            punctuation += pString[pos];
             punctuation += pString[pos + 1];
             rules->addRule(RuleType::PUNCTUATION, punctuation);
             pos += 2;

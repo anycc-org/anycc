@@ -1,3 +1,4 @@
+#include <fstream>
 #include "Parser/PredictiveTable.h"
 #include "constants.h"
 
@@ -8,6 +9,7 @@ PredictiveTable::PredictiveTable(
     this->computed_first_sets = computed_first_sets;
     this->computed_follow_sets = computed_follow_sets;
     this->non_terminals = non_terminals;
+    this->terminals.insert("$");
 }
 
 PredictiveTable::~PredictiveTable() {
@@ -103,6 +105,7 @@ void PredictiveTable::insertProduction(const std::string &non_terminal, const st
                                        const Production &production, ParsingTableEntryType predictive_table_enum) {
     CellKey cell_key = CellKey(non_terminal, terminal);
     auto cell_value = new CellValue(production, predictive_table_enum);
+    terminals.insert(terminal);
     if (containsKey(non_terminal, terminal)) {
         std::cout << "\nGrammar isn't LL(1)\n";
         printConflict(non_terminal, terminal, production);
@@ -125,7 +128,7 @@ void PredictiveTable::printPredictiveTable() {
             case ParsingTableEntryType::VALID_PRODUCTION:
                 std::cout << " --> ";
                 for (const auto &i: element.second->getProduction().productions[0])
-                    std::cout << i;
+                    std::cout << i << ' ';
                 std::cout << "\n";
                 break;
             default:
@@ -149,4 +152,47 @@ PredictiveTable::printConflict(const std::string &non_terminal, const std::strin
         std::cout << i << " ";
     }
     std::cout << "\n";
+}
+
+// Function to generate a Markdown table
+void PredictiveTable::generateMarkdownTable(const std::string &outputFilePath) {
+    std::ofstream outputFile(outputFilePath);
+
+    // Write header row
+    outputFile << "| **Non-Terminal** |";
+    for (const auto &terminal: terminals) {
+        if (terminal == "*")
+            outputFile << " __*__ |";
+        else
+            outputFile << " **" << terminal << "** |";
+    }
+    outputFile << "\n|------------------|";
+    for (int i = 0; i < terminals.size(); ++i) {
+        outputFile << "------------|";
+    }
+    outputFile << "\n";
+
+    // Iterate through non-terminals and terminals to fill in the table
+    for (const auto &non_terminal: non_terminals) {
+        outputFile << "| **" << non_terminal << "** |";
+        for (const auto &terminal: terminals) {
+            const CellValue *cellValue = lookUp(non_terminal, terminal);
+            if (hasProduction(non_terminal, terminal)) {
+                const auto &production = cellValue->getProduction();
+                std::string productionStr;
+                if (!production.productions.empty()) {
+                    for (const auto &symbol: production.productions[0]) {
+                        productionStr += symbol + " ";
+                    }
+                    productionStr.pop_back(); // Remove the extra space
+                }
+                outputFile << " `" << productionStr << "` |";
+            } else if (isSynchronizing(non_terminal, terminal)) {
+                outputFile << " `Synch` |";
+            }
+        }
+        outputFile << "\n";
+    }
+
+    outputFile.close();
 }

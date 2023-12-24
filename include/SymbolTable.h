@@ -42,7 +42,7 @@ public:
     /**
      * @brief Print the symbol table
      */
-    void printTable();
+    void generateMarkdownTable(const std::string& filename);
 
     SymbolTable(const SymbolTable &) = delete;
 
