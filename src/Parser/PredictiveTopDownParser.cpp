@@ -22,8 +22,7 @@ PredictiveTopDownParser::PredictiveTopDownParser(
     }
 }
 
-PredictiveTopDownParser::~PredictiveTopDownParser() {
-}
+PredictiveTopDownParser::~PredictiveTopDownParser() {}
 
 void PredictiveTopDownParser::parseInputTokens() {
     std::cout << "Parsing input tokens..." << std::endl;
@@ -49,8 +48,6 @@ void PredictiveTopDownParser::parseInputTokens() {
         handleNonTerminal(top, curr_token);
         parsingFile << "\n";
     }
-    // Accept the grammar if the stack is empty
-    std::cout << "Accept -_-" << std::endl;
     parsingFile.close();
 }
 
@@ -60,9 +57,13 @@ bool PredictiveTopDownParser::handleMatchOrError(const StackItem &top, Token *&c
             handleMatch(top, curr_token);
             return true;
         } else {
-            handleMissingTerminal(top);
+            handleMissingTerminalOrSyncEntry(top);
             return true;
         }
+    }
+    if (*(curr_token->getKey()) == "$") {
+        handleEndOfInput();
+        return true;
     }
     return false;
 }
@@ -72,9 +73,19 @@ void PredictiveTopDownParser::handleMatch(const StackItem &top, Token *&curr_tok
 
     std::cout << "Match " << *(curr_token->getKey()) << std::endl;
     stk.pop();
+    if (*(curr_token->getKey()) == "$") {
+        handleEndOfInput();
+        return;
+    }
     curr_token = lex.getNextToken(); // Advance to the next token
 }
 
+void PredictiveTopDownParser::handleEndOfInput() {
+    while (!stk.empty()) {
+        handleMissingTerminalOrSyncEntry(stk.top());
+        stk.pop();
+    }
+}
 
 void PredictiveTopDownParser::handleNonTerminal(const StackItem &top, Token *&curr_token) {
     const CellValue *cellValue = predictive_table.lookUp(top.token, *(curr_token->getKey()));
@@ -85,7 +96,7 @@ void PredictiveTopDownParser::handleNonTerminal(const StackItem &top, Token *&cu
             handleEmptyEntry(top, curr_token);
             break;
         case ParsingTableEntryType::SYNC:
-            handleSyncEntry(top);
+            handleMissingTerminalOrSyncEntry(top);
             break;
         case ParsingTableEntryType::VALID_PRODUCTION:
             handleValidProduction(top, cellValue);
@@ -96,13 +107,16 @@ void PredictiveTopDownParser::handleNonTerminal(const StackItem &top, Token *&cu
 }
 
 // Helper functions for error handling and stack operations
-void PredictiveTopDownParser::handleMissingTerminal(const StackItem &top) {
-    parsingFile << "Error: missing  " << top.token << ", discarded" << " |";
+void PredictiveTopDownParser::handleMissingTerminalOrSyncEntry(const StackItem &top) {
+    parsingFile << "Error: missing  " << top.token << " discarded" << " |";
 
-    std::cerr << "Error: missing " << top.token << ", discarded" << std::endl;
+    std::cerr << "Error: missing " << top.token << " discarded" << std::endl;
     stk.pop();
 }
 
+/**
+ * @brief discard the current token (input symbol) and advance to the next token
+ * */
 void PredictiveTopDownParser::handleEmptyEntry(const StackItem &top, Token *&curr_token) {
     parsingFile << "Error:(illegal " << top.token << ") at line("
                 << curr_token->getPosition()->line_number << ") column("
@@ -112,13 +126,6 @@ void PredictiveTopDownParser::handleEmptyEntry(const StackItem &top, Token *&cur
               << curr_token->getPosition()->line_number << ") column("
               << curr_token->getPosition()->column_number << ") - discard " << *(curr_token->getKey()) << std::endl;
     curr_token = lex.getNextToken();
-}
-
-void PredictiveTopDownParser::handleSyncEntry(const StackItem &top) {
-    parsingFile << "Error: missing  " << top.token << ", discarded" << " |";
-
-    std::cerr << "Error: missing " << top.token << ", discarded" << std::endl;
-    stk.pop();
 }
 
 void PredictiveTopDownParser::handleValidProduction(const StackItem &top, const CellValue *cellValue) {
