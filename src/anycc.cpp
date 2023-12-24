@@ -1,19 +1,25 @@
 #include <map>
 #include "Lex/Lex.h"
 #include "Parser/FirstAndFollowGenerator.h"
+#include "Parser/LeftFactorer.h"
+#include "Parser/LeftRecursionRemover.h"
 #include "constants.h"
 #include <iostream>
 #include <set>
 #include <unordered_map>
 #include <vector>
 #include "Parser/CFGReader.h"
+
 #include "Parser/PredictiveTable.h"
 #include "Parser/PredictiveTopDownParser.h"
 
 int main() {
     std::unordered_map<std::string, std::vector<std::vector<std::string>>> grammar = CFGReader::parseCFGInput(
             "../CFG.txt");
-    FirstAndFollowGenerator firstAndFollowGenerator(grammar);
+  
+    auto lr_free_grammar = LeftRecursionRemover::removeLR(grammar);
+    auto left_factored_grammar = LeftFactorer::leftFactor(lr_free_grammar);
+    FirstAndFollowGenerator firstAndFollowGenerator(left_factored_grammar);
     firstAndFollowGenerator.compute();
     // Print first_sets
     const auto &first_sets = firstAndFollowGenerator.getFirstSets();
