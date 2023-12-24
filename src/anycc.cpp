@@ -1,6 +1,7 @@
 #include <map>
 #include "Lex/Lex.h"
 #include "Parser/FirstAndFollowGenerator.h"
+#include "Parser/LeftFactorer.h"
 #include "Parser/LeftRecursionRemover.h"
 #include "constants.h"
 #include <iostream>
@@ -13,30 +14,10 @@
 int main() {
     std::unordered_map<std::string, std::vector<std::vector<std::string>>> grammar = Utilities::parseCFGInput(
             "../CFG.txt");
-    for(const auto& kv : grammar) {
-        std::cout << kv.first << " --> ";
-        for(const auto& rhs : kv.second) {
-            for(const auto& prod : rhs) {
-                std::cout << prod;
-            }
-            std::cout << " | ";
-        }
-        std::cout << "\n";
-    }
-    auto new_grammar = LeftRecursionRemover::removeLR(grammar);
-    std::cout << "after LR\n";
-    for(const auto& kv : new_grammar) {
-        std::cout << kv.first << " --> ";
-        for(const auto& rhs : kv.second) {
-            for(const auto& prod : rhs) {
-                std::cout << prod;
-            }
-            std::cout << " | ";
-        }
-        std::cout << "\n";
-    }
-    std::cout << "after print\n";
-    FirstAndFollowGenerator firstAndFollowGenerator(grammar);
+  
+    auto lr_free_grammar = LeftRecursionRemover::removeLR(grammar);
+    auto left_factored_grammar = LeftFactorer::leftFactor(lr_free_grammar);
+    FirstAndFollowGenerator firstAndFollowGenerator(left_factored_grammar);
     firstAndFollowGenerator.compute();
     // Print first_sets
     const auto &first_sets = firstAndFollowGenerator.getFirstSets();

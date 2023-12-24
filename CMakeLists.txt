@@ -41,4 +41,6 @@ add_executable(anycc
         include/Parser/ParsingTableEntryType.h
         include/Parser/LeftRecursionRemover.h
         src/Parser/LeftRecursionRemover.cpp
+        src/Parser/LeftFactorer.cpp
+
 )

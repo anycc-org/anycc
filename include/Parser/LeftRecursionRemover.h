@@ -9,7 +9,7 @@
 class LeftRecursionRemover {
 public:
 
-    static std::unordered_map<std::string, std::vector<std::vector<std::string>>> removeLR(std::unordered_map<std::string, std::vector<std::vector<std::string>>> grammar);
+    static std::unordered_map<std::string, std::vector<std::vector<std::string>>> removeLR(std::unordered_map<std::string, std::vector<std::vector<std::string>>>& grammar);
 
 private:
     static bool isImmediateLR(const std::unordered_map<std::string, std::vector<std::vector<std::string>>>& grammar, std::string non_terminal);
