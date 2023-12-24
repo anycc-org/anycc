@@ -14,7 +14,8 @@ class PredictiveTopDownParser {
 public:
     PredictiveTopDownParser(Lex &lex,
                             const PredictiveTable &predictive_table,
-                            const std::set<std::string> &non_terminals);
+                            const std::set<std::string> &non_terminals,
+                            const std::string& filename);
 
     ~PredictiveTopDownParser();
 
@@ -47,9 +48,8 @@ private:
     std::set<std::string> non_terminals;
     std::vector<std::vector<std::string>> left_most_derivation;
     std::stack<StackItem> stk;
+    std::ofstream parsingFile;
 
-    bool handleParsingCompletion(const StackItem& top, Token*& curr_token);
-    void handleNonTerminalAtEndOfInput(const StackItem& top);
     bool handleMatchOrError(const StackItem& top, Token*& curr_token);
     void handleMatch(const StackItem& top, Token*& curr_token);
     void handleNonTerminal(const StackItem& top, Token*& curr_token);
