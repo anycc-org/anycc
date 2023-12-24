@@ -1,12 +1,13 @@
 #include "Parser/PredictiveTopDownParser.h"
+#include "Parser/CFGReader.h"
 #include "constants.h"
 
 PredictiveTopDownParser::PredictiveTopDownParser(
         const PredictiveTable &predictive_table,
         const std::set<std::string> &non_terminals) : predictive_table(predictive_table), non_terminals(non_terminals) {
     stk.push({"$", true});
-    stk.push({START_SYMBOL, false});
-    left_most_derivation.push_back({START_SYMBOL});
+    stk.push({CFGReader::start_symbol, false});
+    left_most_derivation.push_back({CFGReader::start_symbol});
 }
 
 PredictiveTopDownParser::~PredictiveTopDownParser() {}
