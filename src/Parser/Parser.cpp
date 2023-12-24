@@ -1,13 +1,12 @@
 #include "Parser/Parser.h"
 #include "Utilities.h"
 
-Parser::Parser(std::string *cfg_file_name, Lex *lex) {
+Parser::Parser(std::string &cfg_file_name, Lex *lex) {
     this->cfg_file_name = cfg_file_name;
     this->lex = lex;
 }
 
 Parser::~Parser() {
-    delete cfg_file_name;
     delete firstAndFollowGenerator;
     delete predictiveTable;
     delete predictiveTopDownParser;

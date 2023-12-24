@@ -9,7 +9,7 @@
 
 class Lex {
 public:
-    Lex(std::string *rules_file_name, std::string *program_file_name);
+    Lex(std::string &rules_file_name, std::string &program_file_name);
 
     ~Lex();
 
@@ -32,7 +32,7 @@ public:
 
 private:
     Analyzer *analyzer;
-    std::string *program_file_name, *rules_file_name;
+    std::string program_file_name, rules_file_name;
     InputReader *inputReader;
     Rules *rules;
 

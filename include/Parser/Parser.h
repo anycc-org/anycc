@@ -9,7 +9,7 @@
 
 class Parser {
 public:
-    Parser(std::string *cfg_file_name, Lex *lex);
+    Parser(std::string &cfg_file_name, Lex *lex);
 
     ~Parser();
 
@@ -18,7 +18,7 @@ public:
     void parseProgram();
 
 private:
-    std::string *cfg_file_name;
+    std::string cfg_file_name;
     Lex *lex;
     FirstAndFollowGenerator *firstAndFollowGenerator;
     PredictiveTable *predictiveTable;
