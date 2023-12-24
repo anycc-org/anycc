@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 14)
 
 include_directories(include)
 include_directories(include/Lex)
+include_directories(include/Parser)
 
 add_executable(anycc
         src/Parser/FirstAndFollowGenerator.cpp
@@ -26,7 +27,9 @@ add_executable(anycc
         src/Parser/PredictiveTable.cpp
         src/Parser/CellKey.cpp
         src/Parser/CellValue.cpp
+        src/Parser/LeftRecursionRemover.cpp
+        src/Parser/LeftFactorer.cpp
         src/Parser/PredictiveTopDownParser.cpp
-        include/Parser/CFGReader.h src/Parser/CFGReader.cpp
+        src/Parser/CFGReader.cpp
         src/Parser/Parser.cpp
         )
