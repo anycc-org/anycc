@@ -163,6 +163,9 @@ std::set<std::string> FirstAndFollowGenerator::computeFollow(const std::string &
                     // Case: A -> αB, where B is the last symbol
                     // Add Follow(A) to Follow(B)
                     // If A->pB is a production, then everything in FOLLOW(A) is in FOLLOW(B).
+                    if (nonTerminal == rule.nonTerminal) {
+                        continue;
+                    }
                     const std::set<std::string> &followASet = computeFollow(rule.nonTerminal);
 
                     if (!followASet.empty()) {
@@ -193,6 +196,7 @@ void FirstAndFollowGenerator::computeFirstSets(
 }
 
 void FirstAndFollowGenerator::computeFollowSets(std::unordered_map<std::string, std::set<std::string>> &followSets) {
+    followSets[CFGReader::start_symbol] = computeFollow(CFGReader::start_symbol);
     for (const std::string &nonTerminal: nonTerminals) {
         followSets[nonTerminal] = computeFollow(nonTerminal);
     }
