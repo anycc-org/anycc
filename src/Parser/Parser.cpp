@@ -1,5 +1,6 @@
 #include "Parser/Parser.h"
 #include "Utilities.h"
+#include "Parser/CFGReader.h"
 
 Parser::Parser(std::string &cfg_file_name, Lex *lex) {
     this->cfg_file_name = cfg_file_name;
