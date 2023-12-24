@@ -1,4 +1,6 @@
 #include <iomanip>
+#include <iostream>
+#include <fstream>
 #include "Parser/PredictiveTopDownParser.h"
 #include "constants.h"
 
@@ -166,4 +168,45 @@ void PredictiveTopDownParser::printLeftmostDerivation() {
         }
         std::cout << std::endl;
     }
+}
+
+void PredictiveTopDownParser::generateMarkdownLeftmostDerivation(const std::string& filename) {
+    std::ofstream outputFile(filename);
+
+    if (!outputFile.is_open()) {
+        std::cerr << "Error opening file: " << filename << std::endl;
+        return;
+    }
+
+    outputFile << "\nLeftmost derivation:\n\n";
+
+    int max_length = 0;
+    for (const auto &production: left_most_derivation) {
+        max_length = std::max(max_length, static_cast<int>(production.size()));
+    }
+
+    // Print table header
+    outputFile << "| Step |";
+    for (int i = 1; i <= max_length; ++i) {
+        outputFile << " Symbol " << i << " |";
+    }
+    outputFile << "\n";
+
+    // Print separator line
+    outputFile << "| --- |";
+    for (int i = 1; i <= max_length; ++i) {
+        outputFile << " --- |";
+    }
+    outputFile << "\n";
+
+    // Print table rows
+    for (size_t i = 0; i < left_most_derivation.size(); ++i) {
+        outputFile << "| " << i + 1 << " |";
+        for (const auto &symbol : left_most_derivation[i]) {
+            outputFile << " " << std::setw(max_length) << std::left << symbol << " |";
+        }
+        outputFile << "\n";
+    }
+
+    outputFile.close();
 }

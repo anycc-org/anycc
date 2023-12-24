@@ -34,6 +34,8 @@ public:
 
     void printLeftmostDerivation();
 
+    void generateMarkdownLeftmostDerivation(const std::string& filename);
+
 private:
     struct StackItem {
         std::string token;

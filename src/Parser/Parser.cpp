@@ -21,7 +21,7 @@ void Parser::buildParser() {
 
 void Parser::parseProgram() {
     predictiveTopDownParser->parseInputTokens();
-    predictiveTopDownParser->printLeftmostDerivation();
+    predictiveTopDownParser->generateMarkdownLeftmostDerivation("../LeftmostDerivation.md");
 }
 
 std::unordered_map<std::string, std::vector<std::vector<std::string>>> Parser::buildCFG() {
