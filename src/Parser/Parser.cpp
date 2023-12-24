@@ -1,6 +1,8 @@
 #include "Parser/Parser.h"
 #include "Utilities.h"
 #include "Parser/CFGReader.h"
+#include "LeftRecursionRemover.h"
+#include "LeftFactorer.h"
 
 Parser::Parser(std::string &cfg_file_name, Lex *lex) {
     this->cfg_file_name = cfg_file_name;
@@ -26,12 +28,17 @@ void Parser::parseProgram() {
 }
 
 std::unordered_map<std::string, std::vector<std::vector<std::string>>> Parser::buildCFG() {
-    return CFGReader::parseCFGInput("../CFG.txt");
+    auto grammar = CFGReader::parseCFGInput("../CFG.txt");
+    auto lr_free_grammar = LeftRecursionRemover::removeLR(grammar);
+    auto left_factored_grammar = LeftFactorer::leftFactor(lr_free_grammar);
+    return left_factored_grammar;
 }
 
 void Parser::buildFirstAndFollowSets(std::unordered_map<std::string, std::vector<std::vector<std::string>>> &grammar) {
     firstAndFollowGenerator = new FirstAndFollowGenerator(grammar);
     firstAndFollowGenerator->compute();
+    firstAndFollowGenerator->printFirstSets();
+    firstAndFollowGenerator->printFollowSets();
 }
 
 void Parser::buildPredictiveTable() {
