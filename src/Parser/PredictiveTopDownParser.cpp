@@ -22,6 +22,9 @@ PredictiveTopDownParser::PredictiveTopDownParser(
     }
 }
 
+PredictiveTopDownParser::~PredictiveTopDownParser() {
+}
+
 void PredictiveTopDownParser::parseInputTokens() {
     std::cout << "Parsing input tokens..." << std::endl;
 
@@ -100,12 +103,12 @@ void PredictiveTopDownParser::handleMissingTerminal(const StackItem &top) {
 
 void PredictiveTopDownParser::handleEmptyEntry(const StackItem &top, Token *&curr_token) {
     parsingFile << "Error:(illegal " << top.token << ") at line("
-        << curr_token->getPosition()->line_number << ") column("
-        << curr_token->getPosition()->column_number << ") – discard " << curr_token << " |";
+                << curr_token->getPosition()->line_number << ") column("
+                << curr_token->getPosition()->column_number << ") – discard " << curr_token << " |";
 
     std::cerr << "Error:(illegal " << top.token << ") at line("
-        << curr_token->getPosition()->line_number << ") column("
-        << curr_token->getPosition()->column_number << ") – discard " << curr_token << std::endl;
+              << curr_token->getPosition()->line_number << ") column("
+              << curr_token->getPosition()->column_number << ") – discard " << curr_token << std::endl;
     curr_token = lex.getNextToken();
 }
 
@@ -188,7 +191,7 @@ void PredictiveTopDownParser::printLeftmostDerivation() {
     }
 }
 
-void PredictiveTopDownParser::generateMarkdownLeftmostDerivation(const std::string& filename) {
+void PredictiveTopDownParser::generateMarkdownLeftmostDerivation(const std::string &filename) {
     std::ofstream outputFile(filename);
 
     if (!outputFile.is_open()) {
@@ -220,7 +223,7 @@ void PredictiveTopDownParser::generateMarkdownLeftmostDerivation(const std::stri
     // Print table rows
     for (size_t i = 0; i < left_most_derivation.size(); ++i) {
         outputFile << "| " << i + 1 << " |";
-        for (const auto &symbol : left_most_derivation[i]) {
+        for (const auto &symbol: left_most_derivation[i]) {
             outputFile << " " << std::setw(max_length) << std::left << symbol << " |";
         }
         outputFile << "\n";
