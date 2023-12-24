@@ -44,7 +44,7 @@ void Parser::buildPredictiveTable() {
 }
 
 void Parser::buildPredictiveTopDownParser() {
-    std::cout << "\nLL(1) parsing:\n";
+    std::cout << "\nLL(1) parser\n";
     predictiveTopDownParser = new PredictiveTopDownParser(*lex, *predictiveTable,
                                                           firstAndFollowGenerator->getNonTerminals());
 }

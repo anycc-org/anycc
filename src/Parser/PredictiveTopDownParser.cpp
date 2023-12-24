@@ -26,11 +26,6 @@ void PredictiveTopDownParser::parseInputTokens() {
     while (!stk.empty()) {
         auto top = stk.top();
 
-        const bool is_parsing_complete = handleParsingCompletion(top, curr_token);
-        if (is_parsing_complete) {
-            return;
-        }
-
         std::cout << "stack top: " << top.token << std::endl;
         std::cout << "curr token: " << *(curr_token->getKey()) << std::endl;
 
@@ -42,43 +37,8 @@ void PredictiveTopDownParser::parseInputTokens() {
         // Handle non-terminal at stack top
         handleNonTerminal(top, curr_token);
     }
-}
-
-bool PredictiveTopDownParser::handleParsingCompletion(const StackItem &top, Token *&curr_token) {
-    if (curr_token == nullptr) { // $ is the end of input
-        while (!stk.empty()) {
-            if (top.isTerminal) {
-                if (top.token == "$") {
-                    std::cout << "Accept!" << std::endl;
-                    stk.pop();
-                    return true;
-                } else {
-                    handleMissingTerminal(top);
-                }
-            } else {
-                handleNonTerminalAtEndOfInput(top);
-            }
-        }
-        return true;
-    }
-    return false;
-}
-
-void PredictiveTopDownParser::handleNonTerminalAtEndOfInput(const StackItem &top) {
-    const CellValue *cellValue = predictive_table.lookUp(top.token, "$"); // Look up using lookahead of $
-    ParsingTableEntryType entryType = cellValue->getPredictiveTableEntryType();
-
-    switch (entryType) {
-        case ParsingTableEntryType::EMPTY:
-            std::cerr << "Error:(illegal " << top.token << ") – Wrong Grammar!" << std::endl;
-            return; // Reject grammar
-        case ParsingTableEntryType::SYNC:
-            handleSyncEntry(top);
-            break;
-        case ParsingTableEntryType::VALID_PRODUCTION:
-            handleValidProduction(top, cellValue);
-            break;
-    }
+    // Accept the grammar if the stack is empty
+    std::cout << "Accept!" << std::endl;
 }
 
 bool PredictiveTopDownParser::handleMatchOrError(const StackItem &top, Token *&curr_token) {
@@ -125,7 +85,9 @@ void PredictiveTopDownParser::handleMissingTerminal(const StackItem &top) {
 }
 
 void PredictiveTopDownParser::handleEmptyEntry(const StackItem &top, Token *&curr_token) {
-    std::cerr << "Error:(illegal " << top.token << ") – discard " << curr_token << std::endl;
+    std::cerr << "Error:(illegal " << top.token << ") at line("
+        << curr_token->getPosition()->line_number << ") column("
+        << curr_token->getPosition()->column_number << ") – discard " << curr_token << std::endl;
     curr_token = lex.getNextToken();
 }
 
