@@ -19,16 +19,16 @@ public:
     void buildLex();
 
     /**
-     * @brief Get all tokens and print them and create the output file
+     * @brief Get the next token
+     * @warning the responsibility of deleting pointer is the caller's
+     * @return Pointer to the next token (Return $ token if no more tokens are found)
      */
-    void getAllTokensAndCreateOutputFile();
-
     Token *getNextToken();
 
     /**
-     * @brief Print the symbol table
+     * @brief Get all tokens and print them and create the output file
      */
-    void printSymbolTable();
+    void getAllTokensAndCreateOutputFile();
 
 private:
     Analyzer *analyzer;

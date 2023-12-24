@@ -82,10 +82,6 @@ void Lex::getAllTokensAndCreateOutputFile() {
     std::cout << '\n';
 }
 
-void Lex::printSymbolTable() {
-    analyzer->printSymbolTable();
-}
-
 Token *Lex::getNextToken() {
     return analyzer->getNextToken();
 }
