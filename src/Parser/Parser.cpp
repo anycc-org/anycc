@@ -25,7 +25,7 @@ void Parser::parseProgram() {
 }
 
 std::unordered_map<std::string, std::vector<std::vector<std::string>>> Parser::buildCFG() {
-    return Utilities::parseCFGInput("../CFG.txt");
+    return CFGReader::parseCFGInput("../CFG.txt");
 }
 
 void Parser::buildFirstAndFollowSets(std::unordered_map<std::string, std::vector<std::vector<std::string>>> &grammar) {
