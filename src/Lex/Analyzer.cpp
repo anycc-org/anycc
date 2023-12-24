@@ -214,7 +214,3 @@ Token *Analyzer::addToken(const NFAState *state, Word &word) {
 
     return token;
 }
-
-void Analyzer::printSymbolTable() {
-    symbol_table.printTable();
-}

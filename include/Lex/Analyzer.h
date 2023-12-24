@@ -24,8 +24,6 @@ struct AcceptanceStateEntry {
     const NFAState *state{};
     Word word;
 
-    AcceptanceStateEntry(const NFAState *state, Word word) : state(state), word(std::move(word)) {}
-
     AcceptanceStateEntry() = default;
 };
 
@@ -38,16 +36,16 @@ public:
     /**
      * @brief Get the next token
      * @warning the responsibility of deleting pointer is the caller's
-     * @return Pointer to the next token
+     * @return Pointer to the next token (Return $ token if no more tokens are found)
      */
     Token *getNextToken();
 
-    Token *getNextTokenInQueue();
-
     /**
-     * @brief Print the symbol table
+     * @brief Get the next token in the queue
+     * @warning the responsibility of deleting pointer is the caller's
+     * @return Pointer to the next token in the queue (Return nullptr if no more tokens are found)
      */
-    void printSymbolTable();
+    Token *getNextTokenInQueue();
 
 private:
     std::string program_file_name;
@@ -69,24 +67,27 @@ private:
     bool is_dead_state{};
 
     /**
-     * @brief Accept the given token
-     * @param acceptanceState The acceptance state of the token
-     * @param buffer The buffer of the token
+     * @brief Get the next state of the given state with the given terminal
+     * @param terminal The terminal to be searched for
+     * @param state The state to be searched in
+     * @return The next state of the given state with the given terminal
      * @warning the responsibility of deleting pointer is the caller's
      */
     const NFAState *getNextState(char &terminal, const NFAState *state);
 
     /**
-     * @brief Add the given token to the tokens queue and add it to the symbol table if it's id
-     * @param acceptanceState The acceptance state of the token
-     * @param buffer The buffer of the token
+     * @brief Add the given token to the tokens queue
+     * @param state The state of the token
+     * @param word The word of the token
+     * @return Pointer to the added token
+     * @warning the responsibility of deleting pointer is the caller's
      */
     Token *addToken(const NFAState *state, Word &word);
 
     /**
-     * @brief Accept the given token, call addToken and reset the acceptance state and delete it from buffer
-     * @param acceptance_state The acceptance state of the token
-     * @param buffer The buffer of the token
+     * @brief Accept the token and add it to the tokens queue
+     * @return Pointer to the accepted token
+     * @warning the responsibility of deleting pointer is the caller's
      */
     Token *acceptToken();
 
