@@ -8,12 +8,13 @@
 #include <set>
 #include <unordered_map>
 #include <vector>
-#include "Lex/Utilities.h"
+#include "Parser/CFGReader.h"
+
 #include "Parser/PredictiveTable.h"
 #include "Parser/PredictiveTopDownParser.h"
 
 int main() {
-    std::unordered_map<std::string, std::vector<std::vector<std::string>>> grammar = Utilities::parseCFGInput(
+    std::unordered_map<std::string, std::vector<std::vector<std::string>>> grammar = CFGReader::parseCFGInput(
             "../CFG.txt");
   
     auto lr_free_grammar = LeftRecursionRemover::removeLR(grammar);

@@ -44,4 +44,5 @@ add_executable(anycc
         src/Parser/LeftFactorer.cpp
         include/Parser/PredictiveTopDownParser.h
         src/Parser/PredictiveTopDownParser.cpp
-)
+        include/Parser/CFGReader.h src/Parser/CFGReader.cpp
+        )
