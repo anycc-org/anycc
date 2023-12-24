@@ -37,8 +37,9 @@ void Parser::buildPredictiveTable() {
     predictiveTable = new PredictiveTable(firstAndFollowGenerator->getFirstSets(),
                                           firstAndFollowGenerator->getFollowSets(),
                                           firstAndFollowGenerator->getNonTerminals());
-    std::cout << "\nPredictive Table:\n";
     predictiveTable->buildPredictiveTable();
+    std::cout << "\nPredictive Table:\n";
+    predictiveTable->printPredictiveTable();
 }
 
 void Parser::buildPredictiveTopDownParser() {
