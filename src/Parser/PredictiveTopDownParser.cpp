@@ -54,11 +54,9 @@ bool PredictiveTopDownParser::handleMatchOrError(const StackItem &top, Token *&c
     if (top.isTerminal) {
         if (top.token == *(curr_token->getKey())) {
             handleMatch(top, curr_token);
-        }
-        else if (top.token == "$") {
+        } else if (top.token == "$") {
             handleEndOfStack(curr_token);
-        }
-        else {
+        } else {
             handleMissingTerminal(top, curr_token);
         }
         return true;
@@ -79,7 +77,7 @@ void PredictiveTopDownParser::handleEndOfStack(Token *&curr_token) {
     curr_token = lex.getNextToken();
     while (*(curr_token->getKey()) != "$") {
         parsingFile << "| $ | " << *(curr_token->getKey())
-            << " | Error: ``" << *(curr_token->getKey()) << "`` discarded |";
+                    << " | Error: ``" << *(curr_token->getKey()) << "`` discarded |";
 
         std::cerr << "Error: " << *(curr_token->getKey()) << " discarded" << std::endl;
         curr_token = lex.getNextToken();
@@ -110,10 +108,6 @@ void PredictiveTopDownParser::handleNonTerminal(const StackItem &top, Token *&cu
 
 // Helper functions for error handling and stack operations
 void PredictiveTopDownParser::handleMissingTerminal(const StackItem &top, Token *&curr_token) {
-    if (*(curr_token->getKey()) == "$") {
-        handleEndOfInput(top); // report error and pop stack
-        return;
-    }
     parsingFile << "Error: missing  ``" << top.token << "`` inserted" << " |";
 
     std::cerr << "Error: missing '" << top.token << "' inserted" << std::endl;
