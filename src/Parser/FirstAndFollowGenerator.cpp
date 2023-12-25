@@ -252,30 +252,34 @@ void FirstAndFollowGenerator::compute() {
     computeFollowSets(computedFollowSets);
 }
 
-void FirstAndFollowGenerator::printFirstSets() {
-    std::cout << "First Sets:\n";
+void FirstAndFollowGenerator::generateMarkdownFirstAndFollowSets(const std::string &filename) {
+    std::ofstream out(filename);
+    out << "# First and Follow Sets\n\n";
+    out << "## First Sets\n\n";
+    out << "| Non-Terminal | First Set |\n";
+    out << "| ------------ | --------- |\n";
     for (const auto &entry: computedFirstSets) {
         const std::string &non_terminal = entry.first;
         const std::set<std::pair<std::string, Production>, CompareFirst> &first_set = entry.second;
 
-        std::cout << non_terminal << ": { ";
+        out << "| " << non_terminal << " | ";
         for (const std::pair<std::string, Production> &symbol: first_set) {
-            std::cout << symbol.first << ' ';
+            out << '`' << symbol.first << "` ";
         }
-        std::cout << "}\n";
+        out << " |\n";
     }
-}
-
-void FirstAndFollowGenerator::printFollowSets() {
-    std::cout << "\nFollow Sets:\n";
+    out << "\n## Follow Sets\n\n";
+    out << "| Non-Terminal | Follow Set |\n";
+    out << "| ------------ | ---------- |\n";
     for (const auto &entry: computedFollowSets) {
         const std::string &non_terminal = entry.first;
         const std::set<std::string> &follow_set = entry.second;
 
-        std::cout << non_terminal << ": { ";
+        out << "| " << non_terminal << " | ";
         for (const std::string &symbol: follow_set) {
-            std::cout << symbol << ' ';
+            out << '`' << symbol << "` ";
         }
-        std::cout << "}\n";
+        out << " |\n";
     }
+    out.close();
 }
