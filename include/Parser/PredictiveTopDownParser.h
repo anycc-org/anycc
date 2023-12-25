@@ -53,10 +53,12 @@ private:
     bool handleMatchOrError(const StackItem& top, Token*& curr_token);
     void handleMatch(const StackItem& top, Token*& curr_token);
     void handleNonTerminal(const StackItem& top, Token*& curr_token);
-    void handleMissingTerminal(const StackItem& top);
+    void handleMissingTerminal(const StackItem& top, Token *&curr_token);
+    void handleSyncEntry(const StackItem &top);
     void handleEmptyEntry(const StackItem& top, Token*& curr_token);
-    void handleSyncEntry(const StackItem& top);
     void handleValidProduction(const StackItem& top, const CellValue* cellValue);
+    void handleEndOfInput(const StackItem &top);
+    void handleEndOfStack(Token *&curr_token);
     void pushProductionToStack(const std::vector<std::string>& production);
     void setNextDerivation(const StackItem& top, std::vector<std::string> &curr_production);
 };

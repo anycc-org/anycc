@@ -1,5 +1,4 @@
 #include "Parser/Parser.h"
-#include "Utilities.h"
 #include "Parser/CFGReader.h"
 #include "LeftRecursionRemover.h"
 #include "LeftFactorer.h"
@@ -31,14 +30,14 @@ std::unordered_map<std::string, std::vector<std::vector<std::string>>> Parser::b
     auto grammar = CFGReader::parseCFGInput("../CFG.txt");
     auto lr_free_grammar = LeftRecursionRemover::removeLR(grammar);
     auto left_factored_grammar = LeftFactorer::leftFactor(lr_free_grammar);
+    printGrammar(left_factored_grammar);
     return left_factored_grammar;
 }
 
 void Parser::buildFirstAndFollowSets(std::unordered_map<std::string, std::vector<std::vector<std::string>>> &grammar) {
     firstAndFollowGenerator = new FirstAndFollowGenerator(grammar);
     firstAndFollowGenerator->compute();
-    firstAndFollowGenerator->printFirstSets();
-    firstAndFollowGenerator->printFollowSets();
+    firstAndFollowGenerator->generateMarkdownFirstAndFollowSets("../FirstAndFollowSets.md");
 }
 
 void Parser::buildPredictiveTable() {
@@ -46,8 +45,6 @@ void Parser::buildPredictiveTable() {
                                           firstAndFollowGenerator->getFollowSets(),
                                           firstAndFollowGenerator->getNonTerminals());
     predictiveTable->buildPredictiveTable();
-    std::cout << "\nPredictive Table:\n";
-    predictiveTable->printPredictiveTable();
     predictiveTable->generateMarkdownTable("../PredictiveTable.md");
 }
 
@@ -56,4 +53,21 @@ void Parser::buildPredictiveTopDownParser() {
     predictiveTopDownParser = new PredictiveTopDownParser(*lex, *predictiveTable,
                                                           firstAndFollowGenerator->getNonTerminals(),
                                                           "../LL1ParsingOutput.md");
+}
+
+void Parser::printGrammar(std::unordered_map<std::string, std::vector<std::vector<std::string>>> &grammar) {
+    std::cout << "Grammar:\n";
+    for (auto &non_terminal: grammar) {
+        std::cout << non_terminal.first << " --> ";
+        int i = 0;
+        for (auto &production: non_terminal.second) {
+            i++;
+            for (auto &symbol: production) {
+                std::cout << symbol << " ";
+            }
+            if (i < non_terminal.second.size())
+                std::cout << "| ";
+        }
+        std::cout << "\n";
+    }
 }

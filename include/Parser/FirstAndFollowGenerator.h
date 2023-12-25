@@ -36,9 +36,7 @@ public:
 
     void compute();
 
-    void printFirstSets();
-
-    void printFollowSets();
+    void generateMarkdownFirstAndFollowSets(const std::string &filename);
 
 private:
     std::vector<Production> productionVector;

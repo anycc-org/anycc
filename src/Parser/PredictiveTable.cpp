@@ -172,24 +172,38 @@ void PredictiveTable::generateMarkdownTable(const std::string &outputFilePath) {
     }
     outputFile << "\n";
 
-    // Iterate through non-terminals and terminals to fill in the table
+    // create table with empty cells then replace them with the correct values like replace strings
+    std::vector<std::vector<std::string>> table;
     for (const auto &non_terminal: non_terminals) {
-        outputFile << "| **" << non_terminal << "** |";
+        std::vector<std::string> row;
         for (const auto &terminal: terminals) {
             const CellValue *cellValue = lookUp(non_terminal, terminal);
             if (hasProduction(non_terminal, terminal)) {
                 const auto &production = cellValue->getProduction();
                 std::string productionStr;
                 if (!production.productions.empty()) {
+                    productionStr.push_back('`');
                     for (const auto &symbol: production.productions[0]) {
                         productionStr += symbol + " ";
                     }
                     productionStr.pop_back(); // Remove the extra space
+                    productionStr.push_back('`');
                 }
-                outputFile << " `" << productionStr << "` |";
+                row.push_back(productionStr);
             } else if (isSynchronizing(non_terminal, terminal)) {
-                outputFile << " `Synch` |";
+                row.push_back("`Synch`");
+            } else {
+                row.push_back("");
             }
+        }
+        table.push_back(row);
+    }
+
+    // Write table rows
+    for (int i = 0; i < non_terminals.size(); ++i) {
+        outputFile << "| **" << *std::next(non_terminals.begin(), i) << "** |";
+        for (int j = 0; j < terminals.size(); ++j) {
+            outputFile << " " << table[i][j] << " |";
         }
         outputFile << "\n";
     }
