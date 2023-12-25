@@ -55,7 +55,7 @@ bool PredictiveTopDownParser::handleMatchOrError(const StackItem &top, Token *&c
         if (top.token == *(curr_token->getKey())) {
             handleMatch(top, curr_token);
         }
-        else if (top.token == EPSILON) {
+        else if (top.token == "$") {
             handleEndOfStack(curr_token);
         }
         else {
@@ -75,11 +75,17 @@ void PredictiveTopDownParser::handleMatch(const StackItem &top, Token *&curr_tok
 }
 
 void PredictiveTopDownParser::handleEndOfStack(Token *&curr_token) {
+    parsingFile << "Error: ``" << *(curr_token->getKey()) << "`` discarded |\n";
+    curr_token = lex.getNextToken();
     while (*(curr_token->getKey()) != "$") {
-        parsingFile << "Error: ``" << *(curr_token->getKey()) << "`` discarded |";
+        parsingFile << "| $ | " << *(curr_token->getKey())
+            << " | Error: ``" << *(curr_token->getKey()) << "`` discarded |";
 
-        std::cout << "Error: " << *(curr_token->getKey()) << " discarded" << std::endl;
+        std::cerr << "Error: " << *(curr_token->getKey()) << " discarded" << std::endl;
         curr_token = lex.getNextToken();
+        if (*(curr_token->getKey()) != "$") {
+            parsingFile << "\n";
+        }
     }
 }
 
