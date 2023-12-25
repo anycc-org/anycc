@@ -16,9 +16,8 @@ PredictiveTopDownParser::PredictiveTopDownParser(
     left_most_derivation.push_back({CFGReader::start_symbol});
 
     parsingFile.open(filename);
-
     if (!parsingFile.is_open()) {
-        std::cerr << "Error opening file: output.md" << std::endl;
+        std::cerr << "Error opening file: LL1ParsingOutput.md" << std::endl;
     }
 }
 
@@ -27,7 +26,7 @@ PredictiveTopDownParser::~PredictiveTopDownParser() {}
 void PredictiveTopDownParser::parseInputTokens() {
     std::cout << "Parsing input tokens..." << std::endl;
 
-    parsingFile << "Parsing input tokens...\n\n";
+    parsingFile << "*Parsing input tokens...*\n\n";
     parsingFile << "| Stack  | Current Token | Output                 |\n";
     parsingFile << "|--------|---------------|------------------------|\n";
 
@@ -57,32 +56,24 @@ bool PredictiveTopDownParser::handleMatchOrError(const StackItem &top, Token *&c
             handleMatch(top, curr_token);
             return true;
         } else {
-            handleMissingTerminalOrSyncEntry(top);
+            handleMissingTerminal(top);
             return true;
         }
-    }
-    if (*(curr_token->getKey()) == "$") {
-        handleEndOfInput();
-        return true;
     }
     return false;
 }
 
 void PredictiveTopDownParser::handleMatch(const StackItem &top, Token *&curr_token) {
-    parsingFile << "match " << *(curr_token->getKey()) << " |";
+    parsingFile << "match ``" << *(curr_token->getKey()) << "`` |";
 
     std::cout << "Match " << *(curr_token->getKey()) << std::endl;
     stk.pop();
-    if (*(curr_token->getKey()) == "$") {
-        handleEndOfInput();
-        return;
-    }
     curr_token = lex.getNextToken(); // Advance to the next token
 }
 
 void PredictiveTopDownParser::handleEndOfInput() {
     while (!stk.empty()) {
-        handleMissingTerminalOrSyncEntry(stk.top());
+        handleMissingTerminal(stk.top());
         stk.pop();
     }
 }
@@ -96,7 +87,7 @@ void PredictiveTopDownParser::handleNonTerminal(const StackItem &top, Token *&cu
             handleEmptyEntry(top, curr_token);
             break;
         case ParsingTableEntryType::SYNC:
-            handleMissingTerminalOrSyncEntry(top);
+            handleSyncEntry(top);
             break;
         case ParsingTableEntryType::VALID_PRODUCTION:
             handleValidProduction(top, cellValue);
@@ -107,10 +98,10 @@ void PredictiveTopDownParser::handleNonTerminal(const StackItem &top, Token *&cu
 }
 
 // Helper functions for error handling and stack operations
-void PredictiveTopDownParser::handleMissingTerminalOrSyncEntry(const StackItem &top) {
-    parsingFile << "Error: missing  " << top.token << " discarded" << " |";
+void PredictiveTopDownParser::handleMissingTerminal(const StackItem &top) {
+    parsingFile << "Error: missing  ``" << top.token << "`` inserted" << " |";
 
-    std::cerr << "Error: missing " << top.token << " discarded" << std::endl;
+    std::cerr << "Error: missing '" << top.token << "' inserted" << std::endl;
     stk.pop();
 }
 
@@ -118,19 +109,36 @@ void PredictiveTopDownParser::handleMissingTerminalOrSyncEntry(const StackItem &
  * @brief discard the current token (input symbol) and advance to the next token
  * */
 void PredictiveTopDownParser::handleEmptyEntry(const StackItem &top, Token *&curr_token) {
-    parsingFile << "Error:(illegal " << top.token << ") at line("
+    parsingFile << "Error:(illegal ``" << top.token << "``) at line("
                 << curr_token->getPosition()->line_number << ") column("
-                << curr_token->getPosition()->column_number << ") - discard " << *(curr_token->getKey()) << " |";
+                << curr_token->getPosition()->column_number << ") - discard ``" << *(curr_token->getKey()) << "`` |";
 
     std::cerr << "Error:(illegal " << top.token << ") at line("
               << curr_token->getPosition()->line_number << ") column("
               << curr_token->getPosition()->column_number << ") - discard " << *(curr_token->getKey()) << std::endl;
-    curr_token = lex.getNextToken();
+    if (*(curr_token->getKey()) != "$") {
+        curr_token = lex.getNextToken();
+    }
+    else {
+        // report error and pop stack
+        stk.pop();
+    }
+}
+
+void PredictiveTopDownParser::handleSyncEntry(const StackItem &top) {
+    parsingFile << "Error: ``Sync`` " << ",discard " << top.token << "|";
+
+    std::cerr << "Error: Sync " << "discard " << top.token << std::endl;
+    stk.pop();
 }
 
 void PredictiveTopDownParser::handleValidProduction(const StackItem &top, const CellValue *cellValue) {
+    parsingFile << top.token << " &#8594; ";
     stk.pop();
     auto production = cellValue->getProduction().productions[0];
+    for (auto &symbol: production) {
+        parsingFile << symbol << " ";
+    }
     setNextDerivation(top, production);
     pushProductionToStack(production);
 }

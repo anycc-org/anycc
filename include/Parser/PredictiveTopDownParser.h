@@ -53,7 +53,8 @@ private:
     bool handleMatchOrError(const StackItem& top, Token*& curr_token);
     void handleMatch(const StackItem& top, Token*& curr_token);
     void handleNonTerminal(const StackItem& top, Token*& curr_token);
-    void handleMissingTerminalOrSyncEntry(const StackItem& top);
+    void handleMissingTerminal(const StackItem& top);
+    void handleSyncEntry(const StackItem &top);
     void handleEmptyEntry(const StackItem& top, Token*& curr_token);
     void handleValidProduction(const StackItem& top, const CellValue* cellValue);
     void handleEndOfInput();
