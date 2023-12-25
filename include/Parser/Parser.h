@@ -51,6 +51,8 @@ private:
      * @brief Build the predictive top down parser
      */
     void buildPredictiveTopDownParser();
+
+    static void printGrammar(std::unordered_map<std::string, std::vector<std::vector<std::string>>> &grammar);
 };
 
 
