@@ -31,7 +31,16 @@ FirstAndFollowGenerator::computeFirst(const std::string &nonTerminal) {
                                 symbolStr);
                         // insert all the first from nonTerminalFirstSet but with the production in the for loop not the one coming with the variable
                         for (const auto &pair: nonTerminalFirstSet) {
-                            firstSet.insert({pair.first, {nonTerminal, {production}}});
+                            bool foundBefore = false;
+                            for (const auto &it: firstSet) {
+                                if (it.first == pair.first) {
+                                    foundBefore = true;
+                                    break;
+                                }
+                            }
+                            if (!foundBefore) {
+                                firstSet.insert({pair.first, {nonTerminal, {production}}});
+                            }
                         }
 
                         // Check if the non-terminal has an epsilon production
@@ -41,8 +50,13 @@ FirstAndFollowGenerator::computeFirst(const std::string &nonTerminal) {
                         }
                     } else {
                         // Handle terminal symbols
+                        for (auto it = firstSet.begin(); it != firstSet.end(); ++it) {
+                            if (it->first == symbol) {
+                                firstSet.erase(it);
+                                break;
+                            }
+                        }
                         firstSet.insert({symbol, {nonTerminal, {production}}});
-                        //firstSet.insert(symbol);
                         // Break the loop for terminal symbols
                         break;
                     }
