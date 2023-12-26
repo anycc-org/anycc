@@ -1,282 +1,386 @@
 [
   {
     "arguments": [
-      "/usr/bin/g++",
+      "/usr/bin/c++",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include/Lex",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include/Parser",
+      "-std=gnu++14",
       "-c",
-      "-I./include",
-      "-std=c++11",
       "-o",
-      "main",
-      "src/anycc.cpp"
+      "CMakeFiles/anycc.dir/src/Parser/FirstAndFollowGenerator.cpp.o",
+      "/home/kotb/ccsed/Compilers/project/anycc/src/Parser/FirstAndFollowGenerator.cpp"
     ],
-    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc",
-    "file": "/home/kotb/csed/4/1/Compilers/project/anycc/src/anycc.cpp",
-    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/main"
+    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc/build",
+    "file": "/home/kotb/ccsed/Compilers/project/anycc/src/Parser/FirstAndFollowGenerator.cpp",
+    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/build/CMakeFiles/anycc.dir/src/Parser/FirstAndFollowGenerator.cpp.o"
   },
   {
     "arguments": [
-      "/usr/bin/g++",
+      "/usr/bin/c++",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include/Lex",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include/Parser",
+      "-std=gnu++14",
       "-c",
-      "-I./include",
-      "-std=c++11",
       "-o",
-      "main",
-      "src/Lex/DFA.cpp"
+      "CMakeFiles/anycc.dir/src/Parser/FirstAndFollowGeneratorUtility.cpp.o",
+      "/home/kotb/ccsed/Compilers/project/anycc/src/Parser/FirstAndFollowGeneratorUtility.cpp"
     ],
-    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc",
-    "file": "/home/kotb/csed/4/1/Compilers/project/anycc/src/Lex/DFA.cpp",
-    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/main"
+    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc/build",
+    "file": "/home/kotb/ccsed/Compilers/project/anycc/src/Parser/FirstAndFollowGeneratorUtility.cpp",
+    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/build/CMakeFiles/anycc.dir/src/Parser/FirstAndFollowGeneratorUtility.cpp.o"
   },
   {
     "arguments": [
-      "/usr/bin/g++",
+      "/usr/bin/c++",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include/Lex",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include/Parser",
+      "-std=gnu++14",
       "-c",
-      "-I./include",
-      "-std=c++11",
       "-o",
-      "main",
-      "src/Lex/DFAMinimizer.cpp"
+      "CMakeFiles/anycc.dir/src/Lex/InputReader.cpp.o",
+      "/home/kotb/ccsed/Compilers/project/anycc/src/Lex/InputReader.cpp"
     ],
-    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc",
-    "file": "/home/kotb/csed/4/1/Compilers/project/anycc/src/Lex/DFAMinimizer.cpp",
-    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/main"
+    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc/build",
+    "file": "/home/kotb/ccsed/Compilers/project/anycc/src/Lex/InputReader.cpp",
+    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/build/CMakeFiles/anycc.dir/src/Lex/InputReader.cpp.o"
   },
   {
     "arguments": [
-      "/usr/bin/g++",
+      "/usr/bin/c++",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include/Lex",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include/Parser",
+      "-std=gnu++14",
       "-c",
-      "-I./include",
-      "-std=c++11",
       "-o",
-      "main",
-      "src/Lex/Input.cpp"
+      "CMakeFiles/anycc.dir/src/Lex/Lex.cpp.o",
+      "/home/kotb/ccsed/Compilers/project/anycc/src/Lex/Lex.cpp"
     ],
-    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc",
-    "file": "/home/kotb/csed/4/1/Compilers/project/anycc/src/Lex/Input.cpp",
-    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/main"
+    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc/build",
+    "file": "/home/kotb/ccsed/Compilers/project/anycc/src/Lex/Lex.cpp",
+    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/build/CMakeFiles/anycc.dir/src/Lex/Lex.cpp.o"
   },
   {
     "arguments": [
-      "/usr/bin/g++",
+      "/usr/bin/c++",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include/Lex",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include/Parser",
+      "-std=gnu++14",
       "-c",
-      "-I./include",
-      "-std=c++11",
       "-o",
-      "main",
-      "src/Lex/InputReader.cpp"
+      "CMakeFiles/anycc.dir/src/Lex/Rules.cpp.o",
+      "/home/kotb/ccsed/Compilers/project/anycc/src/Lex/Rules.cpp"
     ],
-    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc",
-    "file": "/home/kotb/csed/4/1/Compilers/project/anycc/src/Lex/InputReader.cpp",
-    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/main"
+    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc/build",
+    "file": "/home/kotb/ccsed/Compilers/project/anycc/src/Lex/Rules.cpp",
+    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/build/CMakeFiles/anycc.dir/src/Lex/Rules.cpp.o"
   },
   {
     "arguments": [
-      "/usr/bin/g++",
+      "/usr/bin/c++",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include/Lex",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include/Parser",
+      "-std=gnu++14",
       "-c",
-      "-I./include",
-      "-std=c++11",
       "-o",
-      "main",
-      "src/Lex/Lex.cpp"
+      "CMakeFiles/anycc.dir/src/Lex/NFA.cpp.o",
+      "/home/kotb/ccsed/Compilers/project/anycc/src/Lex/NFA.cpp"
     ],
-    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc",
-    "file": "/home/kotb/csed/4/1/Compilers/project/anycc/src/Lex/Lex.cpp",
-    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/main"
+    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc/build",
+    "file": "/home/kotb/ccsed/Compilers/project/anycc/src/Lex/NFA.cpp",
+    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/build/CMakeFiles/anycc.dir/src/Lex/NFA.cpp.o"
   },
   {
     "arguments": [
-      "/usr/bin/g++",
+      "/usr/bin/c++",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include/Lex",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include/Parser",
+      "-std=gnu++14",
       "-c",
-      "-I./include",
-      "-std=c++11",
       "-o",
-      "main",
-      "src/Lex/LexError.cpp"
+      "CMakeFiles/anycc.dir/src/Lex/NFAGenerator.cpp.o",
+      "/home/kotb/ccsed/Compilers/project/anycc/src/Lex/NFAGenerator.cpp"
     ],
-    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc",
-    "file": "/home/kotb/csed/4/1/Compilers/project/anycc/src/Lex/LexError.cpp",
-    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/main"
+    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc/build",
+    "file": "/home/kotb/ccsed/Compilers/project/anycc/src/Lex/NFAGenerator.cpp",
+    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/build/CMakeFiles/anycc.dir/src/Lex/NFAGenerator.cpp.o"
   },
   {
     "arguments": [
-      "/usr/bin/g++",
+      "/usr/bin/c++",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include/Lex",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include/Parser",
+      "-std=gnu++14",
       "-c",
-      "-I./include",
-      "-std=c++11",
       "-o",
-      "main",
-      "src/Lex/NFA.cpp"
+      "CMakeFiles/anycc.dir/src/Lex/NFAState.cpp.o",
+      "/home/kotb/ccsed/Compilers/project/anycc/src/Lex/NFAState.cpp"
     ],
-    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc",
-    "file": "/home/kotb/csed/4/1/Compilers/project/anycc/src/Lex/NFA.cpp",
-    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/main"
+    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc/build",
+    "file": "/home/kotb/ccsed/Compilers/project/anycc/src/Lex/NFAState.cpp",
+    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/build/CMakeFiles/anycc.dir/src/Lex/NFAState.cpp.o"
   },
   {
     "arguments": [
-      "/usr/bin/g++",
+      "/usr/bin/c++",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include/Lex",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include/Parser",
+      "-std=gnu++14",
       "-c",
-      "-I./include",
-      "-std=c++11",
       "-o",
-      "main",
-      "src/Lex/NFAGenerator.cpp"
+      "CMakeFiles/anycc.dir/src/SymbolTable.cpp.o",
+      "/home/kotb/ccsed/Compilers/project/anycc/src/SymbolTable.cpp"
     ],
-    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc",
-    "file": "/home/kotb/csed/4/1/Compilers/project/anycc/src/Lex/NFAGenerator.cpp",
-    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/main"
+    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc/build",
+    "file": "/home/kotb/ccsed/Compilers/project/anycc/src/SymbolTable.cpp",
+    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/build/CMakeFiles/anycc.dir/src/SymbolTable.cpp.o"
   },
   {
     "arguments": [
-      "/usr/bin/g++",
+      "/usr/bin/c++",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include/Lex",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include/Parser",
+      "-std=gnu++14",
       "-c",
-      "-I./include",
-      "-std=c++11",
       "-o",
-      "main",
-      "src/Lex/NFAState.cpp"
+      "CMakeFiles/anycc.dir/src/Lex/Token.cpp.o",
+      "/home/kotb/ccsed/Compilers/project/anycc/src/Lex/Token.cpp"
     ],
-    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc",
-    "file": "/home/kotb/csed/4/1/Compilers/project/anycc/src/Lex/NFAState.cpp",
-    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/main"
+    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc/build",
+    "file": "/home/kotb/ccsed/Compilers/project/anycc/src/Lex/Token.cpp",
+    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/build/CMakeFiles/anycc.dir/src/Lex/Token.cpp.o"
   },
   {
     "arguments": [
-      "/usr/bin/g++",
+      "/usr/bin/c++",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include/Lex",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include/Parser",
+      "-std=gnu++14",
       "-c",
-      "-I./include",
-      "-std=c++11",
       "-o",
-      "main",
-      "src/Lex/Output.cpp"
+      "CMakeFiles/anycc.dir/src/anycc.cpp.o",
+      "/home/kotb/ccsed/Compilers/project/anycc/src/anycc.cpp"
     ],
-    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc",
-    "file": "/home/kotb/csed/4/1/Compilers/project/anycc/src/Lex/Output.cpp",
-    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/main"
+    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc/build",
+    "file": "/home/kotb/ccsed/Compilers/project/anycc/src/anycc.cpp",
+    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/build/CMakeFiles/anycc.dir/src/anycc.cpp.o"
   },
   {
     "arguments": [
-      "/usr/bin/g++",
+      "/usr/bin/c++",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include/Lex",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include/Parser",
+      "-std=gnu++14",
       "-c",
-      "-I./include",
-      "-std=c++11",
       "-o",
-      "main",
-      "src/Lex/OutputReader.cpp"
+      "CMakeFiles/anycc.dir/src/Lex/Utilities.cpp.o",
+      "/home/kotb/ccsed/Compilers/project/anycc/src/Lex/Utilities.cpp"
     ],
-    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc",
-    "file": "/home/kotb/csed/4/1/Compilers/project/anycc/src/Lex/OutputReader.cpp",
-    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/main"
+    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc/build",
+    "file": "/home/kotb/ccsed/Compilers/project/anycc/src/Lex/Utilities.cpp",
+    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/build/CMakeFiles/anycc.dir/src/Lex/Utilities.cpp.o"
   },
   {
     "arguments": [
-      "/usr/bin/g++",
+      "/usr/bin/c++",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include/Lex",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include/Parser",
+      "-std=gnu++14",
       "-c",
-      "-I./include",
-      "-std=c++11",
       "-o",
-      "main",
-      "src/Lex/Regex.cpp"
+      "CMakeFiles/anycc.dir/src/Lex/TransitionDiagram.cpp.o",
+      "/home/kotb/ccsed/Compilers/project/anycc/src/Lex/TransitionDiagram.cpp"
     ],
-    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc",
-    "file": "/home/kotb/csed/4/1/Compilers/project/anycc/src/Lex/Regex.cpp",
-    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/main"
+    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc/build",
+    "file": "/home/kotb/ccsed/Compilers/project/anycc/src/Lex/TransitionDiagram.cpp",
+    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/build/CMakeFiles/anycc.dir/src/Lex/TransitionDiagram.cpp.o"
   },
   {
     "arguments": [
-      "/usr/bin/g++",
+      "/usr/bin/c++",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include/Lex",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include/Parser",
+      "-std=gnu++14",
       "-c",
-      "-I./include",
-      "-std=c++11",
       "-o",
-      "main",
-      "src/Lex/RegexGenerator.cpp"
+      "CMakeFiles/anycc.dir/src/Lex/Analyzer.cpp.o",
+      "/home/kotb/ccsed/Compilers/project/anycc/src/Lex/Analyzer.cpp"
     ],
-    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc",
-    "file": "/home/kotb/csed/4/1/Compilers/project/anycc/src/Lex/RegexGenerator.cpp",
-    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/main"
+    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc/build",
+    "file": "/home/kotb/ccsed/Compilers/project/anycc/src/Lex/Analyzer.cpp",
+    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/build/CMakeFiles/anycc.dir/src/Lex/Analyzer.cpp.o"
   },
   {
     "arguments": [
-      "/usr/bin/g++",
+      "/usr/bin/c++",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include/Lex",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include/Parser",
+      "-std=gnu++14",
       "-c",
-      "-I./include",
-      "-std=c++11",
       "-o",
-      "main",
-      "src/Lex/Rules.cpp"
+      "CMakeFiles/anycc.dir/src/Lex/DeterministicTransitionDiagramCreator.cpp.o",
+      "/home/kotb/ccsed/Compilers/project/anycc/src/Lex/DeterministicTransitionDiagramCreator.cpp"
     ],
-    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc",
-    "file": "/home/kotb/csed/4/1/Compilers/project/anycc/src/Lex/Rules.cpp",
-    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/main"
+    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc/build",
+    "file": "/home/kotb/ccsed/Compilers/project/anycc/src/Lex/DeterministicTransitionDiagramCreator.cpp",
+    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/build/CMakeFiles/anycc.dir/src/Lex/DeterministicTransitionDiagramCreator.cpp.o"
   },
   {
     "arguments": [
-      "/usr/bin/g++",
+      "/usr/bin/c++",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include/Lex",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include/Parser",
+      "-std=gnu++14",
       "-c",
-      "-I./include",
-      "-std=c++11",
       "-o",
-      "main",
-      "src/Lex/SymbolTable.cpp"
+      "CMakeFiles/anycc.dir/src/Lex/TransitionDiagramMinimizer.cpp.o",
+      "/home/kotb/ccsed/Compilers/project/anycc/src/Lex/TransitionDiagramMinimizer.cpp"
     ],
-    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc",
-    "file": "/home/kotb/csed/4/1/Compilers/project/anycc/src/Lex/SymbolTable.cpp",
-    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/main"
+    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc/build",
+    "file": "/home/kotb/ccsed/Compilers/project/anycc/src/Lex/TransitionDiagramMinimizer.cpp",
+    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/build/CMakeFiles/anycc.dir/src/Lex/TransitionDiagramMinimizer.cpp.o"
   },
   {
     "arguments": [
-      "/usr/bin/g++",
+      "/usr/bin/c++",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include/Lex",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include/Parser",
+      "-std=gnu++14",
       "-c",
-      "-I./include",
-      "-std=c++11",
       "-o",
-      "main",
-      "src/Lex/Token.cpp"
+      "CMakeFiles/anycc.dir/src/Parser/PredictiveTable.cpp.o",
+      "/home/kotb/ccsed/Compilers/project/anycc/src/Parser/PredictiveTable.cpp"
     ],
-    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc",
-    "file": "/home/kotb/csed/4/1/Compilers/project/anycc/src/Lex/Token.cpp",
-    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/main"
+    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc/build",
+    "file": "/home/kotb/ccsed/Compilers/project/anycc/src/Parser/PredictiveTable.cpp",
+    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/build/CMakeFiles/anycc.dir/src/Parser/PredictiveTable.cpp.o"
   },
   {
     "arguments": [
-      "/usr/bin/g++",
+      "/usr/bin/c++",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include/Lex",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include/Parser",
+      "-std=gnu++14",
       "-c",
-      "-I./include",
-      "-std=c++11",
       "-o",
-      "main",
-      "src/Lex/TransTable.cpp"
+      "CMakeFiles/anycc.dir/src/Parser/CellKey.cpp.o",
+      "/home/kotb/ccsed/Compilers/project/anycc/src/Parser/CellKey.cpp"
     ],
-    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc",
-    "file": "/home/kotb/csed/4/1/Compilers/project/anycc/src/Lex/TransTable.cpp",
-    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/main"
+    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc/build",
+    "file": "/home/kotb/ccsed/Compilers/project/anycc/src/Parser/CellKey.cpp",
+    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/build/CMakeFiles/anycc.dir/src/Parser/CellKey.cpp.o"
   },
   {
     "arguments": [
-      "/usr/bin/g++",
+      "/usr/bin/c++",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include/Lex",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include/Parser",
+      "-std=gnu++14",
       "-c",
-      "-I./include",
-      "-std=c++11",
       "-o",
-      "main",
-      "src/Lex/TransitionDiagram.cpp"
+      "CMakeFiles/anycc.dir/src/Parser/CellValue.cpp.o",
+      "/home/kotb/ccsed/Compilers/project/anycc/src/Parser/CellValue.cpp"
     ],
-    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc",
-    "file": "/home/kotb/csed/4/1/Compilers/project/anycc/src/Lex/TransitionDiagram.cpp",
-    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/main"
+    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc/build",
+    "file": "/home/kotb/ccsed/Compilers/project/anycc/src/Parser/CellValue.cpp",
+    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/build/CMakeFiles/anycc.dir/src/Parser/CellValue.cpp.o"
   },
   {
     "arguments": [
-      "/usr/bin/g++",
+      "/usr/bin/c++",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include/Lex",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include/Parser",
+      "-std=gnu++14",
       "-c",
-      "-I./include",
-      "-std=c++11",
       "-o",
-      "main",
-      "src/Lex/Utilities.cpp"
+      "CMakeFiles/anycc.dir/src/Parser/LeftRecursionRemover.cpp.o",
+      "/home/kotb/ccsed/Compilers/project/anycc/src/Parser/LeftRecursionRemover.cpp"
     ],
-    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc",
-    "file": "/home/kotb/csed/4/1/Compilers/project/anycc/src/Lex/Utilities.cpp",
-    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/main"
+    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc/build",
+    "file": "/home/kotb/ccsed/Compilers/project/anycc/src/Parser/LeftRecursionRemover.cpp",
+    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/build/CMakeFiles/anycc.dir/src/Parser/LeftRecursionRemover.cpp.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/c++",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include/Lex",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include/Parser",
+      "-std=gnu++14",
+      "-c",
+      "-o",
+      "CMakeFiles/anycc.dir/src/Parser/LeftFactorer.cpp.o",
+      "/home/kotb/ccsed/Compilers/project/anycc/src/Parser/LeftFactorer.cpp"
+    ],
+    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc/build",
+    "file": "/home/kotb/ccsed/Compilers/project/anycc/src/Parser/LeftFactorer.cpp",
+    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/build/CMakeFiles/anycc.dir/src/Parser/LeftFactorer.cpp.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/c++",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include/Lex",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include/Parser",
+      "-std=gnu++14",
+      "-c",
+      "-o",
+      "CMakeFiles/anycc.dir/src/Parser/PredictiveTopDownParser.cpp.o",
+      "/home/kotb/ccsed/Compilers/project/anycc/src/Parser/PredictiveTopDownParser.cpp"
+    ],
+    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc/build",
+    "file": "/home/kotb/ccsed/Compilers/project/anycc/src/Parser/PredictiveTopDownParser.cpp",
+    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/build/CMakeFiles/anycc.dir/src/Parser/PredictiveTopDownParser.cpp.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/c++",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include/Lex",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include/Parser",
+      "-std=gnu++14",
+      "-c",
+      "-o",
+      "CMakeFiles/anycc.dir/src/Parser/CFGReader.cpp.o",
+      "/home/kotb/ccsed/Compilers/project/anycc/src/Parser/CFGReader.cpp"
+    ],
+    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc/build",
+    "file": "/home/kotb/ccsed/Compilers/project/anycc/src/Parser/CFGReader.cpp",
+    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/build/CMakeFiles/anycc.dir/src/Parser/CFGReader.cpp.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/c++",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include/Lex",
+      "-I/home/kotb/ccsed/Compilers/project/anycc/include/Parser",
+      "-std=gnu++14",
+      "-c",
+      "-o",
+      "CMakeFiles/anycc.dir/src/Parser/Parser.cpp.o",
+      "/home/kotb/ccsed/Compilers/project/anycc/src/Parser/Parser.cpp"
+    ],
+    "directory": "/home/kotb/csed/4/1/Compilers/project/anycc/build",
+    "file": "/home/kotb/ccsed/Compilers/project/anycc/src/Parser/Parser.cpp",
+    "output": "/home/kotb/csed/4/1/Compilers/project/anycc/build/CMakeFiles/anycc.dir/src/Parser/Parser.cpp.o"
   }
 ]
