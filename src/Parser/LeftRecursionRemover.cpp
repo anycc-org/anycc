@@ -11,7 +11,6 @@ std::unordered_map<std::string, std::vector<std::vector<std::string>>> LeftRecur
     for(auto& kv : new_grammar) {
         ordered_non_terminals.push_back(kv.first);
     }
-    std::reverse(ordered_non_terminals.begin(), ordered_non_terminals.end());
     for(size_t i = 0; i < ordered_non_terminals.size(); i++) {
         for(size_t j = 0; j < i; j++) {
             bool replace = false;
@@ -82,12 +81,16 @@ void LeftRecursionRemover::substituteRHS(std::unordered_map<std::string, std::ve
             for(size_t j = 0; j < dist_prod.size(); j++) {
                 if(dist_prod[j] == rhs_non_terminal) {
                     for(auto src_prod : src_prods[i]) {
+                        if(src_prod == EPSILON) break;
                         new_dist_prod.push_back(src_prod);
                     }
                 }
                 else {
                     new_dist_prod.push_back(dist_prod[j]);
                 }
+            }
+            if(new_dist_prod.empty()) {
+                new_dist_prod.push_back(EPSILON);
             }
             new_dist_prods.push_back(new_dist_prod);
         }
