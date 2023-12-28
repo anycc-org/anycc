@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ANYCC_RULETYPE_H
+#define ANYCC_RULETYPE_H
 
 enum class RuleType {
     REGULAR_EXPRESSION,
@@ -7,3 +8,5 @@ enum class RuleType {
     PUNCTUATION,
     NONE
 };
+
+#endif //ANYCC_RULETYPE_H

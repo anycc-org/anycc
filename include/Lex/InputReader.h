@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ANYCC_INPUTREADER_H
+#define ANYCC_INPUTREADER_H
 
 #include <iostream>
 #include <regex>
@@ -20,7 +21,7 @@ inline bool compareSubstringInfo(const SubstringInfo &a, const SubstringInfo &b)
 
 class InputReader : public FileReader {
 public:
-    explicit InputReader(std::string *rules_file_name, Rules *rules);
+    explicit InputReader(std::string &rules_file_name, Rules *rules);
 
     void readTemplate(std::ifstream *file) override;
 
@@ -88,3 +89,5 @@ private:
      */
     void buildRules(std::ifstream *file);
 };
+
+#endif //ANYCC_INPUTREADER_H

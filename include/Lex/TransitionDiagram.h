@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ANYCC_TRANSITIONDIAGRAM_H
+#define ANYCC_TRANSITIONDIAGRAM_H
 
 #include <iostream>
 #include <map>
@@ -88,3 +89,5 @@ private:
 
     std::string getMaxPriorityToken(const std::vector<std::string> &tokens_vector);
 };
+
+#endif //ANYCC_TRANSITIONDIAGRAM_H

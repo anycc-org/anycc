@@ -5,24 +5,31 @@ set(CMAKE_CXX_STANDARD 14)
 
 include_directories(include)
 include_directories(include/Lex)
+include_directories(include/Parser)
 
 add_executable(anycc
+        src/Parser/FirstAndFollowGenerator.cpp
+        src/Parser/FirstAndFollowGeneratorUtility.cpp
         src/Lex/InputReader.cpp
         src/Lex/Lex.cpp
         src/Lex/Rules.cpp
         src/Lex/NFA.cpp
         src/Lex/NFAGenerator.cpp
         src/Lex/NFAState.cpp
-        src/Lex/SymbolTable.cpp
+        src/SymbolTable.cpp
         src/Lex/Token.cpp
         src/anycc.cpp
         src/Lex/Utilities.cpp
-        include/Lex/Operator.h
         src/Lex/TransitionDiagram.cpp
         src/Lex/Analyzer.cpp
-        include/Lex/FileReader.h
         src/Lex/DeterministicTransitionDiagramCreator.cpp
         src/Lex/TransitionDiagramMinimizer.cpp
-        include/Lex/RuleType.h
-        include/Lex/Token.h
-)
+        src/Parser/PredictiveTable.cpp
+        src/Parser/CellKey.cpp
+        src/Parser/CellValue.cpp
+        src/Parser/LeftRecursionRemover.cpp
+        src/Parser/LeftFactorer.cpp
+        src/Parser/PredictiveTopDownParser.cpp
+        src/Parser/CFGReader.cpp
+        src/Parser/Parser.cpp
+        )

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ANYCC_LEX_H
+#define ANYCC_LEX_H
 
 #include <iostream>
 #include "Lex/InputReader.h"
@@ -9,7 +10,7 @@
 
 class Lex {
 public:
-    Lex(std::string *rules_file_name, std::string *program_file_name);
+    Lex(std::string &rules_file_name, std::string &program_file_name);
 
     ~Lex();
 
@@ -19,18 +20,20 @@ public:
     void buildLex();
 
     /**
+     * @brief Get the next token
+     * @warning the responsibility of deleting pointer is the caller's
+     * @return Pointer to the next token (Return $ token if no more tokens are found)
+     */
+    Token *getNextToken();
+
+    /**
      * @brief Get all tokens and print them and create the output file
      */
     void getAllTokensAndCreateOutputFile();
 
-    /**
-     * @brief Print the symbol table
-     */
-    void printSymbolTable();
-
 private:
     Analyzer *analyzer;
-    std::string *program_file_name, *rules_file_name;
+    std::string program_file_name, rules_file_name;
     InputReader *inputReader;
     Rules *rules;
 
@@ -68,3 +71,5 @@ private:
      */
     static void createDiagramWithDifferentTypes(TransitionDiagram *transition_diagram, const std::string &title);
 };
+
+#endif //ANYCC_LEX_H

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ANYCC_NFASTATE_H
+#define ANYCC_NFASTATE_H
 
 #include <unordered_map>
 #include <vector>
@@ -34,3 +35,5 @@ private:
     std::string tokenName;
     std::unordered_map<char, std::vector<NFAState *>> transitions;
 };
+
+#endif //ANYCC_NFASTATE_H

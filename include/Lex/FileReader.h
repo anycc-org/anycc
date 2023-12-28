@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ANYCC_FILEREADER_H
+#define ANYCC_FILEREADER_H
 
 #include <iostream>
 #include <fstream>
@@ -27,3 +28,5 @@ public:
      */
     virtual void readTemplate(std::ifstream *file) = 0;
 };
+
+#endif //ANYCC_FILEREADER_H

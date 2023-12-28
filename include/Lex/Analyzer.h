@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ANYCC_ANALYZER_H
+#define ANYCC_ANALYZER_H
 
 #include <iostream>
 #include <regex>
@@ -24,30 +25,28 @@ struct AcceptanceStateEntry {
     const NFAState *state{};
     Word word;
 
-    AcceptanceStateEntry(const NFAState *state, Word word) : state(state), word(std::move(word)) {}
+    AcceptanceStateEntry() = default;
 };
 
-class Analyzer : public FileReader {
+class Analyzer {
 public:
     Analyzer(std::string &program_file_name, const NFAState *start_state, TransitionDiagram *transition_diagram);
 
     ~Analyzer();
 
-    void analyzeProgram();
-
     /**
      * @brief Get the next token
      * @warning the responsibility of deleting pointer is the caller's
-     * @return Pointer to the next token
+     * @return Pointer to the next token (Return $ token if no more tokens are found)
      */
     Token *getNextToken();
 
     /**
-     * @brief Print the symbol table
+     * @brief Get the next token in the queue
+     * @warning the responsibility of deleting pointer is the caller's
+     * @return Pointer to the next token in the queue (Return nullptr if no more tokens are found)
      */
-    void printSymbolTable();
-
-    void readTemplate(std::ifstream *file) override;
+    Token *getNextTokenInQueue();
 
 private:
     std::string program_file_name;
@@ -58,40 +57,40 @@ private:
     std::queue<Token *> tokens;
     const NFAState *start_state;
     TransitionDiagram *transition_diagram;
+    std::ifstream *file;
     SymbolTable &symbol_table;
+    AcceptanceStateEntry acceptance_state;
+    const NFAState *current_state;
+    std::string buffer;
+    int line_number;
+    int column_number;
+    char c{};
+    bool is_dead_state{};
 
     /**
-     * @brief Read the program file and analyze it
-     */
-    void readProgram();
-
-    /**
-     * @brief Accept the given token
-     * @param acceptanceState The acceptance state of the token
-     * @param buffer The buffer of the token
+     * @brief Get the next state of the given state with the given terminal
+     * @param terminal The terminal to be searched for
+     * @param state The state to be searched in
+     * @return The next state of the given state with the given terminal
      * @warning the responsibility of deleting pointer is the caller's
      */
-    const NFAState *getNextState(char &c, const NFAState *state);
+    const NFAState *getNextState(char &terminal, const NFAState *state);
 
     /**
-     * @brief Read the program file and tokenize it
-     * @param file The file to be read
+     * @brief Add the given token to the tokens queue
+     * @param state The state of the token
+     * @param word The word of the token
+     * @return Pointer to the added token
+     * @warning the responsibility of deleting pointer is the caller's
      */
-    void tokenization(std::ifstream *file);
+    Token *addToken(const NFAState *state, Word &word);
 
     /**
-     * @brief Add the given token to the tokens queue and add it to the symbol table if it's id
-     * @param acceptanceState The acceptance state of the token
-     * @param buffer The buffer of the token
+     * @brief Accept the token and add it to the tokens queue
+     * @return Pointer to the accepted token
+     * @warning the responsibility of deleting pointer is the caller's
      */
-    void addToken(const NFAState *state, Word &word);
-
-    /**
-     * @brief Accept the given token, call addToken and reset the acceptance state and delete it from buffer
-     * @param acceptanceState The acceptance state of the token
-     * @param buffer The buffer of the token
-     */
-    void acceptToken(AcceptanceStateEntry &acceptanceState, std::string &buffer);
+    Token *acceptToken();
 
     /**
      * @brief Check if the given state is a acceptance state
@@ -111,15 +110,13 @@ private:
     /**
      * @brief Maximal munch algorithm with error recovery
      * @param line_number The line number of the error
-     * @param i The index of the error
+     * @param column_number The index of the error
      * @param acceptanceState The acceptance state of the token
      * @param state The state of the token
      * @param buffer The buffer of the token
      * @param bypass True if the buffer got space, new line or eof then no more characters can be found and any errors should be printed, false otherwise
      */
-    void
-    maximalMunchWithErrorRecovery(int line_number, size_t i, AcceptanceStateEntry &acceptanceState,
-                                  const NFAState *&state, std::string &buffer, bool bypass);
+    Token *maximalMunchWithErrorRecovery(bool bypass);
 
     /**
      * @brief Check if the given state is a dead state
@@ -128,3 +125,5 @@ private:
      */
     static bool isDeadState(const NFAState *state);
 };
+
+#endif //ANYCC_ANALYZER_H

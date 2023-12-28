@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ANYCC_NFAGENERATOR_H
+#define ANYCC_NFAGENERATOR_H
 
 #include <vector>
 #include <string>
@@ -31,3 +32,5 @@ private:
 
     static bool isOperator(char op);
 };
+
+#endif //ANYCC_NFAGENERATOR_H

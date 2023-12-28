@@ -1,5 +1,5 @@
-#include "Utilities.h"
-#include "Operator.h"
+#include "Lex/Utilities.h"
+#include "Lex/Operator.h"
 #include <regex>
 
 std::string *Utilities::cleanRegex(std::string *input) {
@@ -187,3 +187,4 @@ void Utilities::deleteVectorOfTokens(std::vector<Token *> *vector) {
         delete token;
     }
 }
+

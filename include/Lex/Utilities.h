@@ -1,11 +1,11 @@
-#pragma once
+#ifndef ANYCC_UTILITIES_H
+#define ANYCC_UTILITIES_H
 
-#include <vector>
-#include <regex>
-#include "RuleType.h"
 #include "InputReader.h"
 #include "Operator.h"
-
+#include "RuleType.h"
+#include <regex>
+#include <vector>
 
 class Utilities {
 public:
@@ -123,3 +123,5 @@ public:
      */
     static bool isOpenBrace(const std::string *expression, int i);
 };
+
+#endif //ANYCC_UTILITIES_H
