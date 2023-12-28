@@ -132,8 +132,6 @@ void PredictiveTopDownParser::handleEmptyEntry(const StackItem &top, Token *&cur
     std::cerr << "Error: (illegal " << top.token << ") at line("
               << curr_token->getPosition()->line_number << ") column("
               << curr_token->getPosition()->column_number << ") - discard " << *(curr_token->getKey()) << std::endl;
-    last_line = curr_token->getPosition()->line_number + 1;
-    last_column = curr_token->getPosition()->column_number + (int) curr_token->getValue()->length();
     curr_token = lex.getNextToken();
 }
 
