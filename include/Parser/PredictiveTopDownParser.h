@@ -15,7 +15,7 @@ public:
     PredictiveTopDownParser(Lex &lex,
                             const PredictiveTable &predictive_table,
                             const std::set<std::string> &non_terminals,
-                            const std::string& filename);
+                            const std::string &filename);
 
     ~PredictiveTopDownParser();
 
@@ -35,7 +35,7 @@ public:
 
     void printLeftmostDerivation();
 
-    void generateMarkdownLeftmostDerivation(const std::string& filename);
+    void generateMarkdownLeftmostDerivation(const std::string &filename);
 
 private:
     struct StackItem {
@@ -49,18 +49,30 @@ private:
     std::vector<std::vector<std::string>> left_most_derivation;
     std::stack<StackItem> stk;
     std::ofstream parsingFile;
+    int last_column = 1;
+    int last_line = 1;
 
-    bool handleMatchOrError(const StackItem& top, Token*& curr_token);
-    void handleMatch(const StackItem& top, Token*& curr_token);
-    void handleNonTerminal(const StackItem& top, Token*& curr_token);
-    void handleMissingTerminal(const StackItem& top, Token *&curr_token);
+    bool handleMatchOrError(const StackItem &top, Token *&curr_token);
+
+    void handleMatch(const StackItem &top, Token *&curr_token);
+
+    void handleNonTerminal(const StackItem &top, Token *&curr_token);
+
+    void handleMissingTerminal(const StackItem &top, Token *&curr_token);
+
     void handleSyncEntry(const StackItem &top);
-    void handleEmptyEntry(const StackItem& top, Token*& curr_token);
-    void handleValidProduction(const StackItem& top, const CellValue* cellValue);
+
+    void handleEmptyEntry(const StackItem &top, Token *&curr_token);
+
+    void handleValidProduction(const StackItem &top, const CellValue *cellValue);
+
     void handleEndOfInput(const StackItem &top);
+
     void handleEndOfStack(Token *&curr_token);
-    void pushProductionToStack(const std::vector<std::string>& production);
-    void setNextDerivation(const StackItem& top, std::vector<std::string> &curr_production);
+
+    void pushProductionToStack(const std::vector<std::string> &production);
+
+    void setNextDerivation(const StackItem &top, std::vector<std::string> &curr_production);
 };
 
 #endif //ANYCC_PREDICTIVETOPDOWNPARSER_H
