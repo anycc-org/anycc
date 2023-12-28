@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ANYCC_LEX_H
+#define ANYCC_LEX_H
 
 #include <iostream>
 #include "Lex/InputReader.h"
@@ -70,3 +71,5 @@ private:
      */
     static void createDiagramWithDifferentTypes(TransitionDiagram *transition_diagram, const std::string &title);
 };
+
+#endif //ANYCC_LEX_H

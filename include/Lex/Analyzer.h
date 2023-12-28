@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ANYCC_ANALYZER_H
+#define ANYCC_ANALYZER_H
 
 #include <iostream>
 #include <regex>
@@ -124,3 +125,5 @@ private:
      */
     static bool isDeadState(const NFAState *state);
 };
+
+#endif //ANYCC_ANALYZER_H

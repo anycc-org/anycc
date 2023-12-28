@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ANYCC_TRANSITIONDIAGRAMMINIMIZER_H
+#define ANYCC_TRANSITIONDIAGRAMMINIMIZER_H
 
 #include "Lex/NFAState.h"
 #include "Lex/TransitionDiagram.h"
@@ -34,3 +35,5 @@ private:
     static std::set<const NFAState *>
     extractNewMergedStatesFromOld(const NFAState *state, std::vector<std::set<const NFAState *>> states);
 };
+
+#endif //ANYCC_TRANSITIONDIAGRAMMINIMIZER_H

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ANYCC_DETERMINISTIC_TRANSITION_DIAGRAM_CREATOR_H
+#define ANYCC_DETERMINISTIC_TRANSITION_DIAGRAM_CREATOR_H
 
 #include "Lex/TransitionDiagram.h"
 
@@ -21,3 +22,5 @@ public:
 private:
     static TransitionDiagram *subsetConstructionInplace(TransitionDiagram *transition_diagram);
 };
+
+#endif //ANYCC_DETERMINISTIC_TRANSITION_DIAGRAM_CREATOR_H

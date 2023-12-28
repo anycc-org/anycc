@@ -1,6 +1,3 @@
-
-
-#pragma once
 #ifndef PRODUCTION_H
 #define PRODUCTION_H
 

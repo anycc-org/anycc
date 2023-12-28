@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ANYCC_TOKEN_H
+#define ANYCC_TOKEN_H
 
 #include <string>
 
@@ -33,3 +34,5 @@ private:
     std::string *value{};
     Position *position{};
 };
+
+#endif //ANYCC_TOKEN_H

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SYMBOLTABLE_H
+#define SYMBOLTABLE_H
 
 #include <string>
 #include <unordered_map>
@@ -42,7 +43,7 @@ public:
     /**
      * @brief Print the symbol table
      */
-    void generateMarkdownTable(const std::string& filename);
+    void generateMarkdownTable(const std::string &filename);
 
     SymbolTable(const SymbolTable &) = delete;
 
@@ -60,3 +61,5 @@ private:
             delete entry.second;
     };
 };
+
+#endif // SYMBOLTABLE_H

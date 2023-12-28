@@ -1,5 +1,3 @@
-
-#pragma once
 #ifndef FIRST_AND_FOLLOW_GENERATOR_H
 #define FIRST_AND_FOLLOW_GENERATOR_H
 

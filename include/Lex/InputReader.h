@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ANYCC_INPUTREADER_H
+#define ANYCC_INPUTREADER_H
 
 #include <iostream>
 #include <regex>
@@ -88,3 +89,5 @@ private:
      */
     void buildRules(std::ifstream *file);
 };
+
+#endif //ANYCC_INPUTREADER_H

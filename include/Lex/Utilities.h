@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ANYCC_UTILITIES_H
+#define ANYCC_UTILITIES_H
 
 #include "InputReader.h"
 #include "Operator.h"
@@ -121,5 +122,6 @@ public:
      * @return True if the i-th character in expression is an open brace, false otherwise
      */
     static bool isOpenBrace(const std::string *expression, int i);
-
 };
+
+#endif //ANYCC_UTILITIES_H

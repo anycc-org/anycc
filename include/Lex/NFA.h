@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ANYCC_NFA_H
+#define ANYCC_NFA_H
 
 #include <vector>
 #include <unordered_map>
@@ -50,3 +51,5 @@ private:
     NFAState *endState;
     std::vector<NFAState *> endStates;
 };
+
+#endif //ANYCC_NFA_H
