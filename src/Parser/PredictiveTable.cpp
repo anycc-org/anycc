@@ -26,15 +26,21 @@ void PredictiveTable::buildPredictiveTable() {
 }
 
 void PredictiveTable::insertFirstSets() {
+    Production production;
     for (const auto &non_terminal: non_terminals) {
+        bool has_epsilon = false;
         const std::set<std::pair<std::string, Production>, CompareFirst> &first_set = computed_first_sets[non_terminal];
         for (const auto &first: first_set) {
             if (isEpsilon(first)) {
-                insertEpsilonAtFollowSet(non_terminal, first.second,
-                                         computed_follow_sets[non_terminal]);
+                production = first.second;
+                has_epsilon = true;
             } else {
                 insertProduction(non_terminal, first.first, first.second, ParsingTableEntryType::VALID_PRODUCTION);
             }
+        }
+        if (has_epsilon) {
+            insertEpsilonAtFollowSet(non_terminal, production,
+                                     computed_follow_sets[non_terminal]);
         }
     }
 }
