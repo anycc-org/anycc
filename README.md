@@ -68,7 +68,7 @@ Ensure you have the necessary dependencies installed on your system
         cmake -G "Visual Studio 17 2022" ..
         ```
 
-4. Build the project:
+4. Build the project
       ```bash
       cmake --build .
       ```
