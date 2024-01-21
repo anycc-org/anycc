@@ -9,7 +9,7 @@
 
 class Parser {
 public:
-    Parser(std::string &cfg_file_name, Lex *lex);
+    Parser(std::string &cfg_file_name_param, Lex *lex);
 
     ~Parser();
 
@@ -34,7 +34,7 @@ private:
      * @brief Build the cfg
      * @return The cfg
      */
-    static std::unordered_map<std::string, std::vector<std::vector<std::string>>> buildCFG();
+    std::unordered_map<std::string, std::vector<std::vector<std::string>>> buildCFG();
 
     /**
      * @brief Build the first and follow sets

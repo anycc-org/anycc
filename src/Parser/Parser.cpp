@@ -3,8 +3,8 @@
 #include "LeftRecursionRemover.h"
 #include "LeftFactorer.h"
 
-Parser::Parser(std::string &cfg_file_name, Lex *lex) {
-    this->cfg_file_name = cfg_file_name;
+Parser::Parser(std::string &cfg_file_name_param, Lex *lex) {
+    this->cfg_file_name = cfg_file_name_param;
     this->lex = lex;
 }
 
@@ -23,11 +23,11 @@ void Parser::buildParser() {
 
 void Parser::parseProgram() {
     predictiveTopDownParser->parseInputTokens();
-    predictiveTopDownParser->generateMarkdownLeftmostDerivation("../LeftmostDerivation.md");
+    predictiveTopDownParser->generateMarkdownLeftmostDerivation("../output/LeftmostDerivation.md");
 }
 
 std::unordered_map<std::string, std::vector<std::vector<std::string>>> Parser::buildCFG() {
-    auto grammar = CFGReader::parseCFGInput("../CFG.txt");
+    auto grammar = CFGReader::parseCFGInput(cfg_file_name);
     auto lr_free_grammar = LeftRecursionRemover::removeLR(grammar);
     auto left_factored_grammar = LeftFactorer::leftFactor(lr_free_grammar);
     printGrammar(left_factored_grammar);
@@ -37,7 +37,7 @@ std::unordered_map<std::string, std::vector<std::vector<std::string>>> Parser::b
 void Parser::buildFirstAndFollowSets(std::unordered_map<std::string, std::vector<std::vector<std::string>>> &grammar) {
     firstAndFollowGenerator = new FirstAndFollowGenerator(grammar);
     firstAndFollowGenerator->compute();
-    firstAndFollowGenerator->generateMarkdownFirstAndFollowSets("../FirstAndFollowSets.md");
+    firstAndFollowGenerator->generateMarkdownFirstAndFollowSets("../output/FirstAndFollowSets.md");
 }
 
 void Parser::buildPredictiveTable() {
@@ -45,14 +45,14 @@ void Parser::buildPredictiveTable() {
                                           firstAndFollowGenerator->getFollowSets(),
                                           firstAndFollowGenerator->getNonTerminals());
     predictiveTable->buildPredictiveTable();
-    predictiveTable->generateMarkdownTable("../PredictiveTable.md");
+    predictiveTable->generateMarkdownTable("../output/PredictiveTable.md");
 }
 
 void Parser::buildPredictiveTopDownParser() {
     std::cout << "\nLL(1) parser\n";
     predictiveTopDownParser = new PredictiveTopDownParser(*lex, *predictiveTable,
                                                           firstAndFollowGenerator->getNonTerminals(),
-                                                          "../LL1ParsingOutput.md");
+                                                          "../output/LL1ParsingOutput.md");
 }
 
 void Parser::printGrammar(std::unordered_map<std::string, std::vector<std::vector<std::string>>> &grammar) {

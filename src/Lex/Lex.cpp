@@ -72,7 +72,7 @@ void Lex::printTransitionDiagramStatistics(TransitionDiagram *transition_diagram
 }
 
 void Lex::getAllTokensAndCreateOutputFile() {
-    std::ofstream tokens_file("tokens.txt");
+    std::ofstream tokens_file("../output/tokens.txt");
     Token *token;
     while ((token = analyzer->getNextTokenInQueue()) != nullptr) {
         tokens_file << "{" << *(token->getKey()) << " -> " << *(token->getValue()) << "}" << '\n';
