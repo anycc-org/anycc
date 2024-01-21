@@ -13,9 +13,9 @@ including how to build and use the compiler.
 
 ## Documentation
 
-- [Lexical Analyzer Generator](https://github.com/anycc-org/anycc/blob/ANYCC-54-Write-Documentation/docs/Lexical%20Analyzer%20Generator.md)
-- [Parser Generator](https://github.com/anycc-org/anycc/blob/ANYCC-54-Write-Documentation/docs/Parser%20Generator.md)
-- [Symbol Table](https://github.com/anycc-org/anycc/blob/ANYCC-54-Write-Documentation/docs/Symbol%20Table.md)
+- [Lexical Analyzer Generator](https://github.com/anycc-org/anycc/blob/main/docs/Lexical%20Analyzer%20Generator.md)
+- [Parser Generator](https://github.com/anycc-org/anycc/blob/main/docs/Parser%20Generator.md)
+- [Symbol Table](https://github.com/anycc-org/anycc/blob/main/docs/Symbol%20Table.md)
 
 ## Project Structure
 
