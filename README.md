@@ -8,7 +8,7 @@ including how to build and use the compiler.
 
 - [Ahmed ElSaeed](https://github.com/Ahmedelsa3eed)
 - [Abdelrahman Bahaa](https://github.com/AbdelrahmanMosly)
-- [Muhammad Kotb](https://github.com/MuhammadElkotb)
+- [Muhammad Kotb](https://github.com/MuhammadKotb)
 - [Youssef Bazina](https://github.com/Bazina)
 
 ## Documentation
