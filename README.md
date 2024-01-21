@@ -7,9 +7,9 @@ including how to build and use the compiler.
 ## Authors
 
 - [Ahmed ElSaeed](https://github.com/Ahmedelsa3eed)
-- [Abdelrahman Ahmed Bahaa](https://github.com/AbdelrahmanMosly)
-- [Muhammad Ibrahim Elkotb](https://github.com/MuhammadElkotb)
-- [Youssef Ali Mohamed Bazina](https://github.com/Bazina)
+- [Abdelrahman Bahaa](https://github.com/AbdelrahmanMosly)
+- [Muhammad Kotb](https://github.com/MuhammadElkotb)
+- [Youssef Bazina](https://github.com/Bazina)
 
 ## Documentation
 
