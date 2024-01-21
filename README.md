@@ -108,10 +108,4 @@ anycc ../input/rules.txt ../input/CFG.txt ../input/program.txt
 This example assumes that `lex_rules.txt` contains lexical rules, `cfg_rules.txt` contains context-free grammar rules,
 and `source_code.txt` contains the program source code.
 
-## Additional Notes
-
-- The project is actively under development, and improvements and additional features will be added over time.
-
-- Please report any issues or bugs on the project's GitHub repository.
-
-Enjoy using the AnyCC Compiler!
+### ***Enjoy using the AnyCC Compiler!***
