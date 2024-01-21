@@ -83,12 +83,6 @@ the program to be compiled, respectively.
 anycc <rules_file_name> <cfg_file_name> <program_file_name>
 ```
 
-Example:
-
-```bash
-anycc ../input/rules.txt ../input/CFG.txt ../input/program.txt
-```
-
 ### Output
 
 Upon successful execution, the compiler will generate an output folder containing various artifacts which includes
@@ -108,7 +102,7 @@ Upon successful execution, the compiler will generate an output folder containin
 Here is an example of how to use the AnyCC Compiler
 
 ```bash
-./AnyCC ../lex_rules.txt ../cfg_rules.txt ../source_code.txt
+anycc ../input/rules.txt ../input/CFG.txt ../input/program.txt
 ```
 
 This example assumes that `lex_rules.txt` contains lexical rules, `cfg_rules.txt` contains context-free grammar rules,
