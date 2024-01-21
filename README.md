@@ -112,9 +112,6 @@ and `source_code.txt` contains the program source code.
 
 - The project is actively under development, and improvements and additional features will be added over time.
 
-- For detailed information about each component (Lex, Parser, Symbol Table), refer to their respective README files in
-  their corresponding directories.
-
 - Please report any issues or bugs on the project's GitHub repository.
 
 Enjoy using the AnyCC Compiler!
