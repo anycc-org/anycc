@@ -43,7 +43,7 @@ Ensure you have the necessary dependencies installed on your system
 
     ```bash
     git clone <repository_url>
-    cd AnyCC-Compiler
+    cd anycc
     ```
 
 2. Create a build directory and navigate into it
