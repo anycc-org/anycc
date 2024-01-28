@@ -11,7 +11,7 @@ set(
         include/Lex/DeterministicTransitionDiagramCreator.h
         include/Lex/Epsilon.h
         include/Lex/FileReader.h
-        include/Lex/InputReaderTests.h
+        include/Lex/InputReader.h
         include/Lex/Lex.h
         include/Lex/NFA.h
         include/Lex/NFAGenerator.h
@@ -22,7 +22,7 @@ set(
         include/Lex/Token.h
         include/Lex/TransitionDiagram.h
         include/Lex/TransitionDiagramMinimizer.h
-        include/Lex/UtilitiesTests.h
+        include/Lex/Utilities.h
 
         include/Parser/CellKey.h
         include/Parser/CellValue.h
