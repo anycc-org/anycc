@@ -23,6 +23,7 @@ add_executable(
         NFAStateTests.cpp
         NFATests.cpp
         TransitionDiagramTests.cpp
+        DeterministicTransitionDiagramCreatorTests.cpp
 )
 
 target_link_libraries(
