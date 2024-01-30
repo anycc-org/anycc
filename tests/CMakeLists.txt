@@ -21,6 +21,8 @@ add_executable(
         InputReaderTests.cpp
         NFAGeneratorTests.cpp
         NFAStateTests.cpp
+        NFATests.cpp
+        TransitionDiagramTests.cpp
 )
 
 target_link_libraries(
