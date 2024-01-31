@@ -1,0 +1,5 @@
+# E = T E1
+# E1 = 'add' T E1 | Epsilon
+# T = F T1
+# T1 = 'mul' F T1 | Epsilon
+# F = '(' E ')' | id
