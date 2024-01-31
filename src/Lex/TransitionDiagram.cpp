@@ -315,6 +315,7 @@ const NFAState *TransitionDiagram::mergeStates(TransitionDiagram *transition_dia
         // Newly Created states should be deleted using the NFAState Destructor 
         auto *new_state = new NFAState();
         if (TransitionDiagram::isEndStateNew(kv.first, transition_diagram->getEndStates())) {
+            new_state->setEndState(true);
             std::vector<std::string> tokens;
             for (auto kv2: kv.first) {
                 if (transition_diagram->getEndStatesTokensMap().find(kv2) !=
