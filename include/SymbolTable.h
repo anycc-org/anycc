@@ -40,6 +40,8 @@ public:
      */
     SymbolTableEntry *getEntry(std::string &lexeme);
 
+    const std::unordered_map<std::string, SymbolTableEntry *> &getTable() const;
+
     /**
      * @brief Print the symbol table
      */
