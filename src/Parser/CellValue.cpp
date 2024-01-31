@@ -5,9 +5,7 @@ CellValue::CellValue(const Production &production_value, const ParsingTableEntry
     this->entry_type = entry_type;
 }
 
-CellValue::~CellValue() {
-
-}
+CellValue::~CellValue() = default;
 
 const Production &CellValue::getProduction() const {
     return production;
