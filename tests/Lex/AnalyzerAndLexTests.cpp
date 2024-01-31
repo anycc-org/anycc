@@ -13,7 +13,7 @@ protected:
 
 
 TEST_F(AnalyzerAndLexTests, analyzerAndLex_javaRules_validProgram_returnsTokens) {
-    std::string program_file_name = "../../tests/test_files/program_test_1.txt";
+    std::string program_file_name = "../../tests/test_files/program_test_1_1.txt";
     std::string rules_file_name = "../../tests/test_files/rules_test_1.txt";
     Lex lex(rules_file_name, program_file_name);
 
@@ -89,7 +89,7 @@ TEST_F(AnalyzerAndLexTests, analyzerAndLex_javaRules_validProgram_returnsTokens)
 }
 
 TEST_F(AnalyzerAndLexTests, analyzerAndLex_javaRules_nonValidProgram_returnsTokens) {
-    std::string program_file_name = "../../tests/test_files/program_test_2.txt";
+    std::string program_file_name = "../../tests/test_files/program_test_1_2.txt";
     std::string rules_file_name = "../../tests/test_files/rules_test_1.txt";
     Lex lex(rules_file_name, program_file_name);
 
