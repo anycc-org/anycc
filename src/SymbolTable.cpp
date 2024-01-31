@@ -33,3 +33,7 @@ void SymbolTable::generateMarkdownTable(const std::string &filename) {
 
     tableFile.close();
 }
+
+const std::unordered_map<std::string, SymbolTableEntry *> &SymbolTable::getTable() const {
+    return table;
+}
