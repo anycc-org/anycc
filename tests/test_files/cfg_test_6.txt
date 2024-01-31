@@ -1,3 +1,1 @@
-# S = 'a' S | 'b' X
-# X = X X 'c' | X 'd' | Y
-# Y = Y 'e' | 'f' | 'g'
+abgefc
