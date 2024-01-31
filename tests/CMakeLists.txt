@@ -27,6 +27,8 @@ add_executable(
         Lex/AnalyzerAndLexTests.cpp
 
         Parser/CFGReaderTests.cpp
+        Parser/FirstAndFollowGeneratorTests.cpp
+        Parser/ConvertToLL1Tests.cpp
 )
 
 target_link_libraries(
