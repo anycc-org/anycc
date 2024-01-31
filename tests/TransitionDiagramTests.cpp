@@ -62,9 +62,9 @@ TEST_F(TransitionDiagramTest, FillTable) {
     TransitionDiagram diagram(state0, {state10}, {"(a|b)*abb"}, {{"(a|b)*abb", 1}});
 
     // Test the filled table
-    ASSERT_EQ(diagram.getStates().size(), 11); // Three states should be present
-    ASSERT_EQ(diagram.getEndStates().size(), 1); // Two end states should be present
-    ASSERT_EQ(diagram.getTokens().size(), 1); // Two tokens should be present
+    ASSERT_EQ(diagram.getStates().size(), 11); // 11 states should be present
+    ASSERT_EQ(diagram.getEndStates().size(), 1); // 1 end state should be present
+    ASSERT_EQ(diagram.getTokens().size(), 1); // 1 token should be present
     ASSERT_TRUE(!diagram.lookup(state2, 'a').empty()); // Check if transitions are correctly filled
 }
 
@@ -90,9 +90,9 @@ TEST_F(TransitionDiagramTest, mergeStates_ValidInput_1) {
                                                                                        {"abb",  2},
                                                                                        {"a*b+", 3}});
 
-    ASSERT_EQ(diagram.getStates().size(), 9); // Three states should be present
-    ASSERT_EQ(diagram.getEndStates().size(), 3); // Two end states should be present
-    ASSERT_EQ(diagram.getTokens().size(), 3); // Two tokens should be present
+    ASSERT_EQ(diagram.getStates().size(), 9); // 9 states should be present
+    ASSERT_EQ(diagram.getEndStates().size(), 3); // 3 end states should be present
+    ASSERT_EQ(diagram.getTokens().size(), 3); // 3 tokens should be present
     ASSERT_TRUE(!diagram.lookup(state4, 'b').empty()); // Check if transitions are correctly filled
 
     // Create a map of sets of NFAState pointers
@@ -126,8 +126,8 @@ TEST_F(TransitionDiagramTest, mergeStates_ValidInput_1) {
                       new_end_states_tokens_map, false);
 
     // Test the merged states
-    ASSERT_EQ(diagram.getStates().size(), 6); // Four states should be present after merging
-    ASSERT_EQ(diagram.getEndStates().size(), 4); // Three end states should be present after merging
+    ASSERT_EQ(diagram.getStates().size(), 6); // 6 states should be present after merging
+    ASSERT_EQ(diagram.getEndStates().size(), 4); // 4 end states should be present after merging
     ASSERT_TRUE(!diagram.lookup(new_start_state, 'a').empty()); // Check if transitions are correctly merged
 }
 
@@ -159,9 +159,9 @@ TEST_F(TransitionDiagramTest, mergeStates_ValidInput_2) {
                                {"double", 0},
                                {"id",     3}});
 
-    ASSERT_EQ(diagram.getStates().size(), 13); // Three states should be present
-    ASSERT_EQ(diagram.getEndStates().size(), 3); // Two end states should be present
-    ASSERT_EQ(diagram.getTokens().size(), 3); // Two tokens should be present
+    ASSERT_EQ(diagram.getStates().size(), 13); // 13 states should be present
+    ASSERT_EQ(diagram.getEndStates().size(), 3); // 3 end states should be present
+    ASSERT_EQ(diagram.getTokens().size(), 3); // 3 tokens should be present
     ASSERT_TRUE(!diagram.lookup(state11, 'b').empty()); // Check if transitions are correctly filled
 
     // Create a map of sets of NFAState pointers
@@ -202,8 +202,8 @@ TEST_F(TransitionDiagramTest, mergeStates_ValidInput_2) {
                       new_end_states_tokens_map, false);
 
     // Test the merged states
-    ASSERT_EQ(diagram.getStates().size(), 8); // Four states should be present after merging
-    ASSERT_EQ(diagram.getEndStates().size(), 3); // Three end states should be present after merging
+    ASSERT_EQ(diagram.getStates().size(), 8); // 8 states should be present after merging
+    ASSERT_EQ(diagram.getEndStates().size(), 3); // 3 end states should be present after merging
     ASSERT_EQ(diagram.getDeadStates().size(), 1);
     ASSERT_TRUE(!diagram.lookup(new_start_state, 'a').empty()); // Check if transitions are correctly merged
 }
@@ -230,9 +230,9 @@ TEST_F(TransitionDiagramTest, getRecursiveEpsilonClosure_validInput) {
     TransitionDiagram diagram(state0, {state10}, {"(a|b)*abb"}, {{"(a|b)*abb", 1}});
 
     // Test the filled table
-    ASSERT_EQ(diagram.getStates().size(), 11); // Three states should be present
-    ASSERT_EQ(diagram.getEndStates().size(), 1); // Two end states should be present
-    ASSERT_EQ(diagram.getTokens().size(), 1); // Two tokens should be present
+    ASSERT_EQ(diagram.getStates().size(), 11); // 11 states should be present
+    ASSERT_EQ(diagram.getEndStates().size(), 1); // 1 end state should be present
+    ASSERT_EQ(diagram.getTokens().size(), 1); // 1 token should be present
     ASSERT_TRUE(!diagram.lookup(state2, 'a').empty()); // Check if transitions are correctly filled
 
     auto visited0 = diagram.getRecursiveEpsilonClosure(state0);
