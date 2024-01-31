@@ -24,6 +24,7 @@ add_executable(
         Lex/NFATests.cpp
         Lex/TransitionDiagramTests.cpp
         Lex/DeterministicTransitionDiagramAndMinimizerTest.cpp
+        Lex/AnalyzerAndLexTests.cpp
 )
 
 target_link_libraries(
