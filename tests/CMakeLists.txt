@@ -17,13 +17,13 @@ enable_testing()
 
 add_executable(
         tests
-        UtilitiesTests.cpp
-        InputReaderTests.cpp
-        NFAGeneratorTests.cpp
-        NFAStateTests.cpp
-        NFATests.cpp
-        TransitionDiagramTests.cpp
-        DeterministicTransitionDiagramCreatorTests.cpp
+        Lex/UtilitiesTests.cpp
+        Lex/InputReaderTests.cpp
+        Lex/NFAGeneratorTests.cpp
+        Lex/NFAStateTests.cpp
+        Lex/NFATests.cpp
+        Lex/TransitionDiagramTests.cpp
+        Lex/DeterministicTransitionDiagramAndMinimizerTest.cpp
 )
 
 target_link_libraries(
