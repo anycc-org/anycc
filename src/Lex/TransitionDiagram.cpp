@@ -149,7 +149,7 @@ void TransitionDiagram::clear() {
 void TransitionDiagram::toDotFile(const std::string &file_name) {
     std::ofstream file("../output/" + file_name);
     if (!file.is_open()) {
-        std::cerr << "Error opening file!" << std::endl;
+        std::cerr << "Error opening file! or you are running tests" << std::endl;
         return;
     }
 
@@ -180,7 +180,7 @@ void TransitionDiagram::toDotFile(const std::string &file_name) {
 void TransitionDiagram::toCSVFile(const std::string &file_name) {
     std::ofstream file("../output/" + file_name);
     if (!file.is_open()) {
-        std::cerr << "Error opening file!" << std::endl;
+        std::cerr << "Error opening file! or you are running tests" << std::endl;
         return;
     }
 
@@ -212,7 +212,7 @@ void TransitionDiagram::toCSVFile(const std::string &file_name) {
 void TransitionDiagram::toMDFile(const std::string &file_name) {
     std::ofstream file("../output/" + file_name);
     if (!file.is_open()) {
-        std::cerr << "Error opening file!" << std::endl;
+        std::cerr << "Error opening file! or you are running tests" << std::endl;
         return;
     }
 
