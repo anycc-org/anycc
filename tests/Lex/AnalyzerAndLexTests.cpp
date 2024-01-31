@@ -195,10 +195,8 @@ TEST_F(AnalyzerAndLexFixture, AnalyzerAndLex_JavaRules_NonValidProgram_ReturnsTo
     while (*(token->getKey()) != "$") {
         ASSERT_EQ(*(token->getKey()), expected_tokens[i].first);
         ASSERT_EQ(*(token->getValue()), expected_tokens[i].second);
-        //ASSERT_EQ(token->getPosition()->line_number, expected_positions[i].first);
-        //ASSERT_EQ(token->getPosition()->column_number, expected_positions[i].second);
-        std::cout << "line: " << token->getPosition()->line_number << " column: " << token->getPosition()->column_number
-                  << '\n';
+        ASSERT_EQ(token->getPosition()->line_number, expected_positions[i].first);
+        ASSERT_EQ(token->getPosition()->column_number, expected_positions[i].second);
         i++;
         token = lex.getNextToken();
     }
