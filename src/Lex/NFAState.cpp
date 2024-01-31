@@ -80,7 +80,7 @@ void NFAState::setTransitions(std::unordered_map<char, std::vector<NFAState *>> 
 int NFAState::getStateId() const { return stateId; }
 
 bool NFAState::isEndState() const {
-    return transitions.empty();
+    return transitions.empty() || endState;
 }
 
 std::string NFAState::getTokenName() const { return tokenName; }
@@ -109,4 +109,8 @@ void NFAState::printState() const {
         }
         std::cout << std::endl;
     }
+}
+
+void NFAState::setEndState(bool isEnd) {
+    NFAState::endState = isEnd;
 }
