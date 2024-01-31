@@ -30,6 +30,7 @@ add_executable(
         Parser/FirstAndFollowGeneratorTests.cpp
         Parser/ConvertToLL1Tests.cpp
         Parser/PredictiveTableTests.cpp
+        AnyccTests.cpp
 )
 
 target_link_libraries(
