@@ -1,0 +1,3 @@
+# E = E 'add' T | T
+# T = T 'mul' F | F
+# F = '(' E ')' | id
