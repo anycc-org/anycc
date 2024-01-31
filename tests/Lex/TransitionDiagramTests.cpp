@@ -2,7 +2,7 @@
 #include "TransitionDiagram.h"
 #include "NFAState.h"
 
-class TransitionDiagramTest : public ::testing::Test {
+class TransitionDiagramFixture : public ::testing::Test {
 protected:
     void SetUp() override {
         // Create NFAState objects
@@ -40,7 +40,7 @@ protected:
     NFAState *state12{};
 };
 
-TEST_F(TransitionDiagramTest, FillTable) {
+TEST_F(TransitionDiagramFixture, FillTable) {
     // NFA for regular expression (a|b)*abb
     state0->addTransition('#', state1);
     state0->addTransition('#', state7);
@@ -68,7 +68,7 @@ TEST_F(TransitionDiagramTest, FillTable) {
     ASSERT_TRUE(!diagram.lookup(state2, 'a').empty()); // Check if transitions are correctly filled
 }
 
-TEST_F(TransitionDiagramTest, mergeStates_ValidInput_1) {
+TEST_F(TransitionDiagramFixture, MergeStates_ValidInput_1) {
     // NFA for regular expressions a, abb, a*b+
     state0->addTransition('#', state1);
     state0->addTransition('#', state3);
@@ -131,7 +131,7 @@ TEST_F(TransitionDiagramTest, mergeStates_ValidInput_1) {
     ASSERT_TRUE(!diagram.lookup(new_start_state, 'a').empty()); // Check if transitions are correctly merged
 }
 
-TEST_F(TransitionDiagramTest, mergeStates_ValidInput_2) {
+TEST_F(TransitionDiagramFixture, MergeStates_ValidInput_2) {
     // NFA for regular expressions do, double, id
     state0->addTransition('#', state1);
     state0->addTransition('#', state4);
@@ -208,7 +208,7 @@ TEST_F(TransitionDiagramTest, mergeStates_ValidInput_2) {
     ASSERT_TRUE(!diagram.lookup(new_start_state, 'a').empty()); // Check if transitions are correctly merged
 }
 
-TEST_F(TransitionDiagramTest, getRecursiveEpsilonClosure_validInput) {
+TEST_F(TransitionDiagramFixture, GetRecursiveEpsilonClosure_ValidInput) {
     // NFA for regular expression (a|b)*abb
     state0->addTransition('#', state1);
     state0->addTransition('#', state7);

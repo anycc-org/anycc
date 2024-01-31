@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include "Lex/Utilities.h"
 
-class UtilitiesTest : public ::testing::Test {
+class UtilitiesFixture : public ::testing::Test {
 protected:
     void SetUp() override {
         std::string input = "digit*|digit+ . digits(\\L|E digits)a-z";
@@ -14,14 +14,14 @@ protected:
     }
 };
 
-TEST_F(UtilitiesTest, CleanRegex_ValidInput_ReturnsCleanedRule) {
+TEST_F(UtilitiesFixture, CleanRegex_ValidInput_ReturnsCleanedRule) {
     std::string input = "  digit * | digit  +   .  digits  (\\L  | E digits  )  a  -  z ";
     std::string expected = "digit*|digit+ . digits(\\L|E digits)a-z";
     auto cleanedRule = Utilities::cleanRegex(&input);
     EXPECT_STREQ(cleanedRule->c_str(), expected.c_str());
 }
 
-TEST_F(UtilitiesTest, findAllLongestSubstringIndices_ValidInput_ReturnsVectorOfSubstringInfo) {
+TEST_F(UtilitiesFixture, FindAllLongestSubstringIndices_ValidInput_ReturnsVectorOfSubstringInfo) {
     std::string input = "digit*|digit+ . digits(\\L|E digits)a-z";
     std::set<std::string> substrings = {"digit", "digits"};
     std::vector<SubstringInfo> expected = {{0,  6},
@@ -37,7 +37,7 @@ TEST_F(UtilitiesTest, findAllLongestSubstringIndices_ValidInput_ReturnsVectorOfS
     }
 }
 
-TEST_F(UtilitiesTest, fixConcatGivenType_ValidInput_ModifiesRulesObject) {
+TEST_F(UtilitiesFixture, FixConcatGivenType_ValidInput_ModifiesRulesObject) {
     // Create input data
     std::unordered_map<std::string, std::pair<std::string, int>> expected_regular_rules = {
             {"num", {"digit+|digit+ . digits (\\L|E digits)", 0}}
@@ -63,7 +63,7 @@ TEST_F(UtilitiesTest, fixConcatGivenType_ValidInput_ModifiesRulesObject) {
     ASSERT_EQ(rules.getRegularExpressionsMap().size(), 1);
 }
 
-TEST_F(UtilitiesTest, detectConcatThenAddSpaces_ValidInput_ReturnsNewOffset) {
+TEST_F(UtilitiesFixture, DetectConcatThenAddSpaces_ValidInput_ReturnsNewOffset) {
     std::string expected_expression = "digit+|digit+ . digits(\\L|E digits)";
     std::string expression = "digit+|digit+.digits(\\L|Edigits)";
     std::vector<SubstringInfo> substringInfoVec = {{0,  6},
@@ -80,7 +80,7 @@ TEST_F(UtilitiesTest, detectConcatThenAddSpaces_ValidInput_ReturnsNewOffset) {
     EXPECT_STREQ(expression.c_str(), expected_expression.c_str());
 }
 
-TEST_F(UtilitiesTest, addSpaceAfterAndBeforeBraces_ValidInput_ReturnsModifiedExpression) {
+TEST_F(UtilitiesFixture, AddSpaceAfterAndBeforeBraces_ValidInput_ReturnsModifiedExpression) {
     std::string expected_expression = "(xyz)|(xyz)*|(digit+|digit)+ .digits (\\L|E digits)* ab*";
     std::string expression = "(xyz)|(xyz)*|(digit+|digit)+ .digits (\\L|E digits)*ab*";
 
@@ -89,7 +89,7 @@ TEST_F(UtilitiesTest, addSpaceAfterAndBeforeBraces_ValidInput_ReturnsModifiedExp
     EXPECT_STREQ(expression.c_str(), expected_expression.c_str());
 }
 
-TEST_F(UtilitiesTest, fixConcat_ValidInput_ModifiesRulesObject) {
+TEST_F(UtilitiesFixture, FixConcat_ValidInput_ModifiesRulesObject) {
     // Create input data
     std::unordered_map<std::string, std::pair<std::string, int>> expected_regular_rules = {
             {"num", {"digit+|digit+ . digits (\\L|E digits)", 0}}

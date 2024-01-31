@@ -25,6 +25,8 @@ add_executable(
         Lex/TransitionDiagramTests.cpp
         Lex/DeterministicTransitionDiagramAndMinimizerTest.cpp
         Lex/AnalyzerAndLexTests.cpp
+
+        Parser/CFGReaderTests.cpp
 )
 
 target_link_libraries(

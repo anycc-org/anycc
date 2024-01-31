@@ -2,7 +2,7 @@
 #include "Analyzer.h"
 #include "Lex.h"
 
-class AnalyzerAndLexTests : public ::testing::Test {
+class AnalyzerAndLexFixture : public ::testing::Test {
 protected:
     void SetUp() override {
     }
@@ -12,7 +12,7 @@ protected:
 };
 
 
-TEST_F(AnalyzerAndLexTests, analyzerAndLex_javaRules_validProgram_returnsTokens) {
+TEST_F(AnalyzerAndLexFixture, AnalyzerAndLex_JavaRules_ValidProgram_ReturnsTokens) {
     std::string program_file_name = "../../tests/test_files/program_test_1_1.txt";
     std::string rules_file_name = "../../tests/test_files/rules_test_1.txt";
     Lex lex(rules_file_name, program_file_name);
@@ -88,7 +88,7 @@ TEST_F(AnalyzerAndLexTests, analyzerAndLex_javaRules_validProgram_returnsTokens)
     }
 }
 
-TEST_F(AnalyzerAndLexTests, analyzerAndLex_javaRules_nonValidProgram_returnsTokens) {
+TEST_F(AnalyzerAndLexFixture, AnalyzerAndLex_JavaRules_NonValidProgram_ReturnsTokens) {
     std::string program_file_name = "../../tests/test_files/program_test_1_2.txt";
     std::string rules_file_name = "../../tests/test_files/rules_test_1.txt";
     Lex lex(rules_file_name, program_file_name);

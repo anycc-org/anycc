@@ -3,7 +3,7 @@
 #include "TransitionDiagramMinimizer.h"
 #include "NFAState.h"
 
-class DeterministicTransitionDiagramAndMinimizerTest : public ::testing::Test {
+class DeterministicTransitionDiagramAndMinimizerFixture : public ::testing::Test {
 protected:
     void SetUp() override {
         // Create NFAState objects
@@ -38,7 +38,7 @@ protected:
 };
 
 
-TEST_F(DeterministicTransitionDiagramAndMinimizerTest, DFA_minimize_validInput_returnsModifiedDiagram_inplace_true) {
+TEST_F(DeterministicTransitionDiagramAndMinimizerFixture, DFA_Minimize_ValidInput_ReturnsModifiedDiagram_Inplace_True) {
     // NFA for regular expression (a|b)*abb
     state0->addTransition('#', state1);
     state0->addTransition('#', state7);
@@ -81,8 +81,8 @@ TEST_F(DeterministicTransitionDiagramAndMinimizerTest, DFA_minimize_validInput_r
 }
 
 
-TEST_F(DeterministicTransitionDiagramAndMinimizerTest,
-       DFA_minimize_validInput_returnsModifiedDiagram_inplace_false) {
+TEST_F(DeterministicTransitionDiagramAndMinimizerFixture,
+       DFA_Minimize_ValidInput_ReturnsModifiedDiagram_Inplace_False) {
     // NFA for regular expression (a|b)*abb
     state0->addTransition('#', state1);
     state0->addTransition('#', state7);
@@ -125,8 +125,8 @@ TEST_F(DeterministicTransitionDiagramAndMinimizerTest,
 }
 
 
-TEST_F(DeterministicTransitionDiagramAndMinimizerTest,
-       DFA_minimize_validInput_returnsModifiedDiagram_multipleEndStates) {
+TEST_F(DeterministicTransitionDiagramAndMinimizerFixture,
+       DFA_Minimize_ValidInput_ReturnsModifiedDiagram_MultipleEndStates) {
     // NFA for regular expressions a, abb, a*b+
     state0->addTransition('#', state1);
     state0->addTransition('#', state3);

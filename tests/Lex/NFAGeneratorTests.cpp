@@ -1,8 +1,18 @@
 #include <gtest/gtest.h>
 #include "Lex/NFAGenerator.h"
 
+class NFAGeneratorFixture : public ::testing::Test {
+protected:
 
-TEST(NFAGeneratorTest, buildNFA_ValidInput_ReturnsCombinedNFA) {
+    void SetUp() override {
+    }
+
+    void TearDown() override {
+    }
+};
+
+
+TEST_F(NFAGeneratorFixture, BuildNFA_ValidInput_ReturnsCombinedNFA) {
     std::string num_key = "num";
     std::string id_key = "id";
     std::string relop_key = "relop";
@@ -64,7 +74,7 @@ TEST(NFAGeneratorTest, buildNFA_ValidInput_ReturnsCombinedNFA) {
     ASSERT_EQ(combinedNFA->getEndStates().size(), 18);
 }
 
-TEST(NFAGeneratorTest, regexToNFA_ValidInput_ReturnsNFA) {
+TEST_F(NFAGeneratorFixture, RegexToNFA_ValidInput_ReturnsNFA) {
     std::string regex = "digit+|digit+ . digits (\\L|E digits)";
 
     // Create an NFAGenerator instance
@@ -86,7 +96,7 @@ TEST(NFAGeneratorTest, regexToNFA_ValidInput_ReturnsNFA) {
     ASSERT_EQ(nfa->getEndStates().size(), 1);
 }
 
-TEST(NFAGeneratorTest, simpleRegexToNFA_ValidInput_ReturnsNFA_1) {
+TEST_F(NFAGeneratorFixture, SimpleRegexToNFA_ValidInput_ReturnsNFA_1) {
     std::string regex = "a a*|b b*";
 
     // Create an NFAGenerator instance
@@ -111,7 +121,7 @@ TEST(NFAGeneratorTest, simpleRegexToNFA_ValidInput_ReturnsNFA_1) {
     ASSERT_EQ(nfa->getEndStates().size(), 1);
 }
 
-TEST(NFAGeneratorTest, simpleRegexToNFA_ValidInput_ReturnsNFA_2) {
+TEST_F(NFAGeneratorFixture, SimpleRegexToNFA_ValidInput_ReturnsNFA_2) {
     std::string regex = "(a|b)* a b b";
 
     // Create an NFAGenerator instance

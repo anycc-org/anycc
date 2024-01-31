@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include "NFAState.h"
 
-class NFAStateTest : public ::testing::Test {
+class NFAStateFixture : public ::testing::Test {
 protected:
     void SetUp() override {
         // Setup code if needed
@@ -12,7 +12,7 @@ protected:
     }
 };
 
-TEST_F(NFAStateTest, addTransition_ValidTransition_TransitionAdded) {
+TEST_F(NFAStateFixture, AddTransition_ValidTransition_TransitionAdded) {
     // Arrange
     NFAState state1;
     NFAState state2;
@@ -27,7 +27,7 @@ TEST_F(NFAStateTest, addTransition_ValidTransition_TransitionAdded) {
     ASSERT_EQ(transitions['a'][0], &state2);
 }
 
-TEST_F(NFAStateTest, setTokenName_ValidTokenName_TokenNameSet) {
+TEST_F(NFAStateFixture, SetTokenName_ValidTokenName_TokenNameSet) {
     // Arrange
     NFAState state;
 
@@ -38,7 +38,7 @@ TEST_F(NFAStateTest, setTokenName_ValidTokenName_TokenNameSet) {
     ASSERT_EQ(state.getTokenName(), "TOKEN");
 }
 
-TEST_F(NFAStateTest, isEndState_NoTransitions_ReturnsTrue) {
+TEST_F(NFAStateFixture, IsEndState_NoTransitions_ReturnsTrue) {
     // Arrange
     NFAState state;
 
@@ -46,7 +46,7 @@ TEST_F(NFAStateTest, isEndState_NoTransitions_ReturnsTrue) {
     ASSERT_TRUE(state.isEndState());
 }
 
-TEST_F(NFAStateTest, isEndState_WithTransitions_ReturnsFalse) {
+TEST_F(NFAStateFixture, IsEndState_WithTransitions_ReturnsFalse) {
     // Arrange
     NFAState state1;
     NFAState state2;
@@ -56,7 +56,7 @@ TEST_F(NFAStateTest, isEndState_WithTransitions_ReturnsFalse) {
     ASSERT_FALSE(state1.isEndState());
 }
 
-TEST_F(NFAStateTest, copyConstructor_ValidState_StateCopiedCorrectly) {
+TEST_F(NFAStateFixture, CopyConstructor_ValidState_StateCopiedCorrectly) {
     NFAState state1;
     NFAState state2;
     state1.addTransition('a', &state2);

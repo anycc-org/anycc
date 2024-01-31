@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include "NFA.h"
 
-class NFATest : public ::testing::Test {
+class NFAFixture : public ::testing::Test {
 protected:
     void SetUp() override {
         nfa = new NFA();
@@ -27,7 +27,7 @@ protected:
     NFAState *nfaState3{};
 };
 
-TEST_F(NFATest, Constructor_DefaultConstructor) {
+TEST_F(NFAFixture, Constructor_DefaultConstructor) {
     // Check if start and end states are initialized correctly
     ASSERT_NE(nfa->getStartState(), nullptr);
     ASSERT_NE(nfa->getEndState(), nullptr);
@@ -35,7 +35,7 @@ TEST_F(NFATest, Constructor_DefaultConstructor) {
     ASSERT_NE(nfa->getStartState()->getStateId(), nfa->getEndState()->getStateId());
 }
 
-TEST_F(NFATest, Constructor_NFAWithStates) {
+TEST_F(NFAFixture, Constructor_NFAWithStates) {
     NFA nfaWithStates(nfaState1, nfaState2);
 
     NFAState *startState = nfaWithStates.getStartState();
@@ -45,7 +45,7 @@ TEST_F(NFATest, Constructor_NFAWithStates) {
     ASSERT_EQ(&(*endState), &(*nfaState2));
 }
 
-TEST_F(NFATest, CopyConstructor_ValidCopy) {
+TEST_F(NFAFixture, CopyConstructor_ValidCopy) {
     nfa->setTokenName("TOKEN");
 
     NFA copiedNFA(*nfa);
@@ -54,12 +54,12 @@ TEST_F(NFATest, CopyConstructor_ValidCopy) {
     ASSERT_NE(copiedNFA.getEndState(), nfa->getEndState());
 }
 
-TEST_F(NFATest, Destructor_NFA) {
+TEST_F(NFAFixture, Destructor_NFA) {
     // Ensure no memory leaks
     ASSERT_NO_THROW(delete nfa);
 }
 
-TEST_F(NFATest, GetTokenName_ValidName) {
+TEST_F(NFAFixture, GetTokenName_ValidName) {
     nfa->setTokenName("TOKEN");
 
     std::string tokenName = nfa->getTokenName();
@@ -67,13 +67,13 @@ TEST_F(NFATest, GetTokenName_ValidName) {
     ASSERT_EQ(tokenName, "TOKEN");
 }
 
-TEST_F(NFATest, AddEndState_ValidState) {
+TEST_F(NFAFixture, AddEndState_ValidState) {
     nfa->addEndState(nfaState1);
 
     ASSERT_EQ(nfa->getEndStates().size(), 3);
 }
 
-TEST_F(NFATest, basicCharToNFA_ValidChar) {
+TEST_F(NFAFixture, BasicCharToNFA_ValidChar) {
     char c = 'a';
 
     NFA *nfa = NFA::basicCharToNFA(c);
@@ -86,7 +86,7 @@ TEST_F(NFATest, basicCharToNFA_ValidChar) {
     ASSERT_EQ(nfa->getStartState()->getTransitions()['a'][0], nfa->getEndState());
 }
 
-TEST_F(NFATest, wordToNFA_ValidWord) {
+TEST_F(NFAFixture, WordToNFA_ValidWord) {
     std::string word = "hello";
 
     NFA *nfa = NFA::wordToNFA(word);
@@ -99,7 +99,7 @@ TEST_F(NFATest, wordToNFA_ValidWord) {
     ASSERT_NE(nfa->getStartState()->getTransitions()['h'][0], nfa->getEndState());
 }
 
-TEST_F(NFATest, unionNAFs_ValidNFAs) {
+TEST_F(NFAFixture, UnionNAFs_ValidNFAs) {
     NFA *nfa1 = new NFA();
     NFA *nfa2 = new NFA();
 
@@ -114,7 +114,7 @@ TEST_F(NFATest, unionNAFs_ValidNFAs) {
     ASSERT_EQ(nfa2->getEndState()->getTransitions()['#'][0], unionNFA->getEndState());
 }
 
-TEST_F(NFATest, concatNAFs_ValidNFAs) {
+TEST_F(NFAFixture, ConcatNAFs_ValidNFAs) {
     NFA *nfa1 = new NFA();
     NFA *nfa2 = new NFA();
 
@@ -127,7 +127,7 @@ TEST_F(NFATest, concatNAFs_ValidNFAs) {
     ASSERT_EQ(nfa2->getEndState(), concatNFA->getEndState());
 }
 
-TEST_F(NFATest, kleeneStarNFA_ValidNFA) {
+TEST_F(NFAFixture, KleeneStarNFA_ValidNFA) {
     NFA *kleeneStarNFA = NFA::kleeneStarNFA(nfa);
 
     ASSERT_NE(kleeneStarNFA, nullptr);
@@ -143,7 +143,7 @@ TEST_F(NFATest, kleeneStarNFA_ValidNFA) {
     ASSERT_EQ(nfa->getEndState()->getTransitions()['#'][1], kleeneStarNFA->getEndState());
 }
 
-TEST_F(NFATest, positiveClosureNFA_ValidNFA) {
+TEST_F(NFAFixture, PositiveClosureNFA_ValidNFA) {
     NFA *positiveClosureNFA = NFA::positiveClosureNFA(nfa);
 
     ASSERT_NE(positiveClosureNFA, nullptr);
@@ -158,7 +158,7 @@ TEST_F(NFATest, positiveClosureNFA_ValidNFA) {
     ASSERT_EQ(nfa->getEndState()->getTransitions()['#'][1], positiveClosureNFA->getEndState());
 }
 
-TEST_F(NFATest, unionRangeNFAs_ValidRange) {
+TEST_F(NFAFixture, UnionRangeNFAs_ValidRange) {
     NFA *rangeStartNFA = new NFA();
     NFA *rangeEndNFA = new NFA();
 

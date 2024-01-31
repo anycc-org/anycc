@@ -16,7 +16,7 @@ protected:
     }
 };
 
-TEST_F(InputReaderFixture, inputReaderFixture_validInput_readRules) {
+TEST_F(InputReaderFixture, InputReaderFixture_ValidInput_ReadRules) {
     std::string rules_file_name = "../../tests/test_files/rules_test_1.txt";
     inputReader = new InputReader(rules_file_name, rules);
 
