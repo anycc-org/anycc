@@ -29,9 +29,10 @@ TransitionDiagram *TransitionDiagramMinimizer::minimizeInplace(TransitionDiagram
         }
         all_sets[0].push_back(set);
     }
-    all_sets[0].push_back(std::set<const NFAState *>(
-            std::set<const NFAState *>(transition_diagram->getDeadStates().begin(),
-                                       transition_diagram->getDeadStates().end())));
+    if (!transition_diagram->getDeadStates().empty())
+        all_sets[0].push_back(std::set<const NFAState *>(
+                std::set<const NFAState *>(transition_diagram->getDeadStates().begin(),
+                                           transition_diagram->getDeadStates().end())));
     std::vector<std::set<const NFAState *>> prev_sets = all_sets[0];
     while (true) {
         auto equivalence_table = TransitionDiagramMinimizer::constructEquivalenceTable(transition_diagram, prev_sets);
@@ -88,8 +89,10 @@ TransitionDiagramMinimizer::constructEquivalenceTable(TransitionDiagram *transit
             for (auto c: transition_diagram->getInputs()) {
                 if (c != EPSILON) {
                     auto states_vec = transition_diagram->lookup(state, c);
-                    long long index = TransitionDiagramMinimizer::getSetIndex(states_vec[0], sets);
-                    if (index != -1) sets_nums.push_back(index);
+                    if (!states_vec.empty()) {
+                        long long index = TransitionDiagramMinimizer::getSetIndex(states_vec[0], sets);
+                        if (index != -1) sets_nums.push_back(index);
+                    }
                 }
             }
             equivalence_table[state] = sets_nums;

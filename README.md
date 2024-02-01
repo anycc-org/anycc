@@ -19,14 +19,23 @@ including how to build and use the compiler.
 
 ## Project Structure
 
-The project is organized into the following main components:
+The project is organized into the following main components
 
-- **Lex**: The Lexer component responsible for scanning the source code and generating tokens.
+- **The Lex Component** is a component responsible for scanning the source code and generating tokens.
 
-- **Parser**: The Parser component responsible for parsing the tokens and building the syntax tree.
+- **The Parser Component** is a component responsible for parsing the tokens and building the syntax tree.
 
-- **SymbolTable**: The Symbol Table component responsible for managing information about tokens encountered during
+- **The Symbol Table Component** is a component responsible for managing information about tokens encountered during
   lexical analysis.
+
+- **Tests** Using Google Test
+    - **Unit Tests** for public methods if it is not a simple getter/setter and not complex.
+    - **Integration Tests** for public methods when needed.
+
+> **Notes**
+>
+> - The project is not fully tested, but I tried to test as much as I can.
+> - Analyzer sometimes shifts the column number, but it is not a big problem and doesn't show up in important places.
 
 ## Building and Running
 

@@ -21,7 +21,7 @@ PredictiveTopDownParser::PredictiveTopDownParser(
     }
 }
 
-PredictiveTopDownParser::~PredictiveTopDownParser() {}
+PredictiveTopDownParser::~PredictiveTopDownParser() = default;
 
 void PredictiveTopDownParser::parseInputTokens() {
     std::cout << "Parsing input tokens..." << std::endl;

@@ -156,7 +156,7 @@ Token *Analyzer::maximalMunchWithErrorRecovery(bool bypass) {
         char b = buffer[j++];
         current_state = getNextState(b, current_state);
         if (isAcceptanceState(current_state)) {
-            acceptance_state = {current_state, {buffer.substr(0, j), line_number, column_number - j}};
+            acceptance_state = {current_state, {buffer.substr(0, j), line_number, column_number - j + 1}};
         } else if (isDeadState(current_state) || bypass) {
             std::string temp_buffer = buffer;
             j = 0;
@@ -170,7 +170,7 @@ Token *Analyzer::maximalMunchWithErrorRecovery(bool bypass) {
 }
 
 void Analyzer::logError(int line_number, size_t i, std::string &c) {
-    std::cout << '\"' << c << '\"' << " is bad token at " << line_number + 1 << ":" << i + 1 << '\n';
+    std::cerr << '\"' << c << '\"' << " is bad token at " << line_number + 1 << ":" << i + 1 << '\n';
 }
 
 bool Analyzer::isDeadState(const NFAState *state) { return state->getTokenName() == DEAD; }

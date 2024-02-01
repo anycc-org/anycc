@@ -4,6 +4,7 @@
 #include "InputReader.h"
 #include "Operator.h"
 #include "RuleType.h"
+#include "SubstringInfo.h"
 #include <regex>
 #include <vector>
 

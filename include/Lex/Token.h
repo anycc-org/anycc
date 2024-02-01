@@ -7,7 +7,10 @@ struct Position {
     int line_number;
     int column_number;
 
-    Position(int line_number, int column_number) : line_number(line_number), column_number(column_number) {}
+    Position(int line_number_param, int column_number_param) {
+        this->line_number = line_number_param;
+        this->column_number = column_number_param;
+    }
 
     Position() = default;
 };

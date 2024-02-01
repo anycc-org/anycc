@@ -1,0 +1,5 @@
+# S = R T
+# R = 's' U R 'b' | Epsilon
+# U = 'u' U | Epsilon
+# V = 'v' V | Epsilon
+# T = V 't' T | Epsilon

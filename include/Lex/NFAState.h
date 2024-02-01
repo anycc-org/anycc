@@ -25,6 +25,8 @@ public:
 
     void setTokenName(const std::string &name);
 
+    void setEndState(bool isEnd);
+
     bool isEndState() const;
 
     void printState() const;
@@ -32,6 +34,7 @@ public:
 private:
     static int id;
     int stateId;
+    bool endState = false;
     std::string tokenName;
     std::unordered_map<char, std::vector<NFAState *>> transitions;
 };
