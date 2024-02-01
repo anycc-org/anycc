@@ -19,7 +19,7 @@ including how to build and use the compiler.
 
 ## Project Structure
 
-The project is organized into the following main components:
+The project is organized into the following main components
 
 - **Lex** is a component responsible for scanning the source code and generating tokens.
 
@@ -28,9 +28,9 @@ The project is organized into the following main components:
 - **SymbolTable** is a component responsible for managing information about tokens encountered during
   lexical analysis.
 
-- **Unit Tests** for public methods if it is not a simple getter/setter and not complex.
-
-- **Integration Tests** for public methods when needed.
+- **Tests** Using Google Test
+    - **Unit Tests** for public methods if it is not a simple getter/setter and not complex.
+    - **Integration Tests** for public methods when needed.
 
 > **Notes**
 >
