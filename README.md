@@ -21,11 +21,11 @@ including how to build and use the compiler.
 
 The project is organized into the following main components
 
-- **Lex** is a component responsible for scanning the source code and generating tokens.
+- **The Lex Component** is a component responsible for scanning the source code and generating tokens.
 
-- **Parser** is a component responsible for parsing the tokens and building the syntax tree.
+- **The Parser Component** is a component responsible for parsing the tokens and building the syntax tree.
 
-- **SymbolTable** is a component responsible for managing information about tokens encountered during
+- **The Symbol Table Component** is a component responsible for managing information about tokens encountered during
   lexical analysis.
 
 - **Tests** Using Google Test
